@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Amor de Deus por Mim</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --pink:#f9a8d4;
+  --pink-dark:#ec4899;
+  --blue:#93c5fd;
+  --blue-dark:#3b82f6;
+  --sun:#fde047;
+  --gold:#f59e0b;
+  --gold-dark:#d97706;
+  --bg:#fffaf4;
+  --ink:#3a2e3f;
+  --ink-soft:#6b5c72;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans','Outfit','Segoe UI',Arial,sans-serif;
+  background:#e9e3e6;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{ font-family:'Outfit','Plus Jakarta Sans',sans-serif; }
+
+/* ============ BARRA DE CONTROLE (não imprime) ============ */
+.control-bar{
+  position:sticky; top:0; z-index:999;
+  background:linear-gradient(135deg, var(--pink-dark), var(--gold));
+  color:#fff; padding:14px 20px;
+  display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.16); padding:6px 10px 6px 14px; border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none; outline:none; border-radius:20px;
+  padding:7px 12px; font-family:inherit; font-size:14px; width:150px;
+}
+.control-bar button{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  border-radius:24px; padding:9px 16px; font-size:14px;
+  transition:transform .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{ background:#22c55e; color:#fff; }
+.btn-print{
+  background:var(--sun); color:#5c4a00; font-size:15px;
+  padding:11px 22px; box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+
+/* ============ CONTAINER DE PÁGINAS ============ */
+.book{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:30px 10px 60px; }
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+.corner-frame{
+  position:absolute; inset:9mm;
+  border:3px solid var(--frame-color, var(--gold));
+  border-radius:20px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:12.5mm;
+  border:1.5px dashed rgba(236,72,153,.35);
+  border-radius:16px;
+}
+
+.page-number{
+  position:absolute; bottom:7mm; right:14mm;
+  font-size:11px; color:var(--ink-soft); font-weight:600; letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block; color:#fff; padding:6px 22px; border-radius:30px;
+  font-weight:700; font-size:12.5px; letter-spacing:1.3px; text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+.child-name{ color:var(--pink-dark); font-weight:800; white-space:nowrap; }
+
+.verse-card{
+  background:var(--card); border-left:5px solid var(--gold); border-radius:12px;
+  padding:14px 18px; box-shadow:0 4px 14px rgba(0,0,0,.08);
+  font-style:italic; color:var(--ink-soft); font-size:14px; line-height:1.6;
+}
+.verse-card strong{ display:block; font-style:normal; color:var(--gold-dark); margin-top:6px; font-size:12px; letter-spacing:.5px; }
+
+.story-card{
+  background:var(--card); border-radius:18px; padding:20px 24px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08); border:1px solid rgba(236,72,153,.12);
+}
+.story-card p{ font-size:14.5px; line-height:1.72; color:var(--ink); margin-bottom:10px; }
+.story-card p:last-child{ margin-bottom:0; }
+
+.activity-box{
+  border:2.5px dashed var(--pink-dark); border-radius:18px;
+  background:#fff; padding:14px 16px;
+}
+.activity-title{
+  font-size:13px; font-weight:800; color:var(--pink-dark);
+  text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:8px;
+}
+
+/* ============================================================
+   PÁGINA 1 — CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(249,168,212,.32), transparent 45%),
+    radial-gradient(circle at 85% 18%, rgba(253,224,71,.30), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(147,197,253,.28), transparent 50%),
+    linear-gradient(180deg, #fff5f8 0%, #fffaf0 55%, #fff9e8 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18mm;
+}
+.cover .frame-outer{ position:absolute; inset:9mm; border:4px solid var(--gold); border-radius:22px; }
+.cover .frame-inner{ position:absolute; inset:13mm; border:1.5px solid rgba(236,72,153,.35); border-radius:18px; }
+.cover .eyebrow{
+  font-size:13px; letter-spacing:4px; color:var(--pink-dark); font-weight:700;
+  margin-bottom:16px; text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:42px; font-weight:800; color:var(--pink-dark); line-height:1.15;
+  text-shadow:0 2px 0 rgba(255,255,255,.6); margin-bottom:12px;
+}
+.cover .gold-underline{
+  width:120px; height:5px; background:linear-gradient(90deg, var(--gold), var(--sun));
+  border-radius:6px; margin:6px auto 20px;
+}
+.cover .subtitle{
+  font-size:18px; color:var(--ink-soft); font-weight:600; max-width:135mm;
+  line-height:1.5; margin-bottom:30px;
+}
+.cover .subtitle .child-name{ font-size:20px; }
+.cover-illustration{ margin-bottom:24px; }
+.cover .footer-tag{
+  position:absolute; bottom:16mm; font-size:12px; color:var(--ink-soft);
+  letter-spacing:2px; font-weight:600; text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINAS DE CONTEÚDO GENÉRICAS
+============================================================ */
+.content-page{ padding:15mm 17mm 12mm; display:flex; flex-direction:column; gap:12px; }
+.content-header{ text-align:center; margin-bottom:2px; }
+.content-header .ribbon-title{ margin-bottom:8px; }
+.content-header h2{ font-size:22px; color:var(--ink); font-weight:800; line-height:1.25; margin-top:6px;}
+.content-illustration{ display:flex; justify-content:center; margin:2px 0 4px; }
+
+/* coração grande para desenho */
+.big-heart-wrap{ display:flex; justify-content:center; align-items:center; flex:1; }
+
+/* diário da gratidão */
+.gratitude-grid{ display:flex; flex-direction:column; gap:14px; flex:1; }
+.gratitude-box{
+  background:var(--card); border-radius:16px; padding:16px 18px;
+  box-shadow:0 5px 16px rgba(0,0,0,.08); display:flex; gap:14px; align-items:flex-start;
+  border:2px solid var(--box-color, var(--pink));
+}
+.gratitude-box .g-icon{ font-size:30px; flex-shrink:0; }
+.gratitude-box .g-text{ flex:1; }
+.gratitude-box h3{ font-size:14.5px; color:var(--ink); margin-bottom:8px; font-weight:800; }
+.gratitude-lines{ border-bottom:1.5px dotted #c9b8c3; height:22px; }
+
+/* certificado */
+.certificate-page{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20mm; text-align:center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(253,224,71,.22), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(249,168,212,.24), transparent 45%),
+    #fffdf7;
+}
+.cert-eyebrow{
+  font-size:13px; letter-spacing:3px; color:var(--gold-dark); font-weight:800;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.certificate-page h2{ font-size:28px; color:var(--pink-dark); font-weight:800; margin-bottom:6px; }
+.certificate-page h3.subtitle-cert{ font-size:14px; color:var(--ink-soft); font-weight:600; margin-bottom:24px; }
+.cert-granted-to{ font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
+.cert-name{
+  font-size:32px; font-weight:800; color:var(--gold-dark);
+  margin-bottom:18px; font-family:'Outfit',sans-serif;
+}
+.cert-text{ font-size:14px; color:var(--ink); max-width:135mm; line-height:1.7; margin-bottom:24px; }
+.cert-signatures{ display:flex; gap:60px; margin-top:6px; }
+.cert-sign-block{ text-align:center; }
+.cert-sign-line{ width:150px; border-bottom:1.5px solid var(--ink-soft); margin-bottom:6px; height:26px; }
+.cert-sign-label{ font-size:11px; color:var(--ink-soft); letter-spacing:.5px; }
+
+/* oração */
+.prayer-page{ padding:20mm 20mm; display:flex; flex-direction:column; justify-content:center; gap:16px; }
+.prayer-box{
+  background:linear-gradient(135deg, #fff0f6, #fff9e6); border-radius:20px;
+  padding:26px 28px; box-shadow:0 6px 20px rgba(0,0,0,.08); border:1px solid rgba(236,72,153,.16);
+}
+.prayer-box h3{ color:var(--pink-dark); font-size:19px; margin-bottom:14px; text-align:center; }
+.prayer-box p{ font-size:14.5px; line-height:1.75; color:var(--ink); font-style:italic; }
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{ size:A4 portrait; margin:0; }
+  html,body{ width:210mm; height:297mm; background:#fff; }
+  .control-bar{ display:none !important; }
+  .book{ padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always; break-after:page;
+    margin:0; width:210mm; height:297mm;
+  }
+  .page:last-child{ page-break-after:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE (não imprime) ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<div class="book" id="bookContainer">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <div class="eyebrow">Jornada Afetiva & Espiritual</div>
+
+    <div class="cover-illustration">
+      <svg width="230" height="160" viewBox="0 0 230 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- raio de luz -->
+        <polygon points="115,0 150,55 115,45 130,110 95,55 115,60" fill="#fde047" opacity="0.65"/>
+        <!-- mãos protetoras -->
+        <path d="M40 140 Q60 95 95 100 Q100 80 120 85 Q140 78 150 100 Q180 98 190 140 Q160 150 115 150 Q65 150 40 140 Z" fill="#f9a8d4" opacity="0.55"/>
+        <!-- coração central -->
+        <path d="M115 130 C90 108 70 92 70 70 C70 52 84 40 100 40 C108 40 115 45 115 55 C115 45 122 40 130 40 C146 40 160 52 160 70 C160 92 140 108 115 130 Z" fill="#ec4899"/>
+        <path d="M100 62 C97 58 92 60 92 66 C92 72 100 78 100 78 C100 78 108 72 108 66 C108 60 103 58 100 62 Z" fill="#ffffff" opacity="0.7"/>
+        <!-- bíblia pequena -->
+        <path d="M85 148 Q115 138 145 148 L145 158 Q115 150 85 158 Z" fill="#3b82f6"/>
+      </svg>
+    </div>
+
+    <h1 class="main-title">O AMOR DE DEUS<br>POR MIM</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">Uma jornada no coração do Pai para <span class="child-name">Gabriel</span></p>
+
+    <svg width="240" height="40" viewBox="0 0 240 40" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#ec4899" opacity="0.8">
+        <path d="M20 30 C10 22 5 16 5 10 C5 5 9 2 14 2 C17 2 20 4 20 8 C20 4 23 2 26 2 C31 2 35 5 35 10 C35 16 30 22 20 30 Z" transform="translate(0,0) scale(0.6)"/>
+      </g>
+      <g fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.55">
+        <path d="M10 20 Q120 2 230 20"/>
+      </g>
+    </svg>
+
+    <div class="footer-tag">Edição Especial • Feito com Amor para Você</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 2 — DEUS TE CONHECIA ANTES DE VOCÊ NASCER
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#ec4899;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#ec4899;">Reflexão do Coração</span>
+      <h2>Deus te conhecia antes de você nascer</h2>
+    </div>
+
+    <div class="content-illustration">
+      <svg width="200" height="90" viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 82 C70 60 50 44 50 24 C50 10 62 2 76 2 C86 2 100 8 100 20 C100 8 114 2 124 2 C138 2 150 10 150 24 C150 44 130 60 100 82 Z" fill="#f9a8d4"/>
+        <circle cx="100" cy="34" r="10" fill="#fff" opacity="0.85"/>
+      </svg>
+    </div>
+
+    <div class="story-card">
+      <p>Muito antes de <span class="child-name">Gabriel</span> nascer, muito antes de qualquer pessoa
+      ver seu rostinho lindo, Deus já conhecia cada detalhe seu! Ele já sabia a cor dos seus olhos,
+      o seu sorriso e até os pensamentos do seu coraçãozinho.</p>
+      <p><span class="child-name">Gabriel</span> não é um acaso — é um presente planejado com muito
+      cuidado pelas mãos de Deus! Cada detalhezinho seu foi pensado com amor, porque Deus faz tudo
+      com capricho e carinho.</p>
+      <p>Quando <span class="child-name">Gabriel</span> se olhar no espelho, pode sorrir e pensar:
+      "Eu sou uma obra de arte de Deus, feita especialmente para existir!"</p>
+    </div>
+
+    <div class="verse-card">
+      "Pois tu formaste o meu interior; tu me teceste no ventre de minha mãe."
+      <strong>SALMOS 139:13</strong>
+    </div>
+
+    <div class="activity-box" style="flex:1; display:flex; flex-direction:column;">
+      <div class="activity-title">🎨 Atividade: Eu no coração de Deus</div>
+      <div class="big-heart-wrap">
+        <svg width="230" height="200" viewBox="0 0 230 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M115 190 C70 150 25 115 25 70 C25 38 50 15 82 15 C98 15 112 24 115 40 C118 24 132 15 148 15 C180 15 205 38 205 70 C205 115 160 150 115 190 Z"
+                fill="none" stroke="#ec4899" stroke-width="3" stroke-dasharray="6,5"/>
+          <text x="115" y="105" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="12" fill="#c9a8bb">
+            desenhe-se aqui dentro ✏️
+          </text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="page-number">2</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 3 — O AMOR DE DEUS É MAIOR QUE O CÉU
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#3b82f6;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#3b82f6;">Reflexão do Coração</span>
+      <h2>O amor de Deus é maior que o céu</h2>
+    </div>
+
+    <div class="story-card">
+      <p>Você já tentou imaginar o tamanho do amor de Deus por <span class="child-name">Gabriel</span>?
+      Ele é maior que o oceano mais fundo, mais alto que as montanhas mais altas e mais brilhante
+      que todas as estrelas do céu juntas!</p>
+      <p>Não importa quanto <span class="child-name">Gabriel</span> tente medir esse amor — ele não
+      cabe em nenhuma régua, balde ou caixa, porque é um amor sem fim, que alcança toda largura,
+      todo comprimento, toda altura e toda profundidade da vida.</p>
+    </div>
+
+    <div class="verse-card">
+      "Para que, arraigados e fundados em amor, possais compreender... qual seja a largura, e o
+      comprimento, e a altura, e a profundidade."
+      <strong>EFÉSIOS 3:18</strong>
+    </div>
+
+    <div class="activity-box" style="flex:1; display:flex; flex-direction:column;">
+      <div class="activity-title">⭐ Atividade: Ligue os pontos e descubra o símbolo do amor de Deus</div>
+      <div id="dotsToDotArea" class="big-heart-wrap" style="flex:1;"></div>
+      <div style="text-align:center; font-size:12px; color:#8b7c86; margin-top:4px;">
+        Ligue as estrelinhas na ordem, de 1 a 24 😉
+      </div>
+    </div>
+
+    <div class="page-number">3</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 4 — DIÁRIO DA GRATIDÃO INFANTIL
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#f59e0b;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#f59e0b;">Atividade do Coração</span>
+      <h2>Diário da gratidão de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p>Agradecer é uma forma linda de mostrar amor a Deus! Hoje, <span class="child-name">Gabriel</span>
+      vai parar um pouquinho e pensar em três coisas especiais para agradecer. Vamos lá?</p>
+    </div>
+
+    <div class="gratitude-grid">
+      <div class="gratitude-box" style="--box-color:#fde68a;">
+        <div class="g-icon">🌟</div>
+        <div class="g-text">
+          <h3>1 coisa boa que aconteceu hoje:</h3>
+          <div class="gratitude-lines"></div>
+          <div class="gratitude-lines"></div>
+        </div>
+      </div>
+
+      <div class="gratitude-box" style="--box-color:#f9a8d4;">
+        <div class="g-icon">💗</div>
+        <div class="g-text">
+          <h3>1 pessoa que eu amo muito:</h3>
+          <div class="gratitude-lines"></div>
+          <div class="gratitude-lines"></div>
+        </div>
+      </div>
+
+      <div class="gratitude-box" style="--box-color:#93c5fd;">
+        <div class="g-icon">🙏</div>
+        <div class="g-text">
+          <h3>1 oração de agradecimento a Deus:</h3>
+          <div class="gratitude-lines"></div>
+          <div class="gratitude-lines"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Em tudo dai graças, porque esta é a vontade de Deus."
+      <strong>1 TESSALONICENSES 5:18</strong>
+    </div>
+
+    <div class="page-number">4</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 5 — NADA PODE ME SEPARAR DO AMOR DE DEUS
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#22c55e;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#22c55e;">Reflexão do Coração</span>
+      <h2>Nada pode me separar do amor de Deus</h2>
+    </div>
+
+    <div class="story-card">
+      <p>Às vezes acontecem dias difíceis, tempestades ou momentos de medo. Mas <span class="child-name">Gabriel</span>
+      pode ficar bem tranquilo: nada — absolutamente nada — pode afastar o amor de Deus de perto dele!
+      Nem a tristeza, nem o escuro, nem os monstros da imaginação.</p>
+      <p>O amor de Deus é como um abraço que nunca solta. Vamos ajudar <span class="child-name">Gabriel</span>
+      a encontrar o caminho até os braços de Jesus?</p>
+    </div>
+
+    <div class="verse-card">
+      "Nem a morte, nem a vida... nem quaisquer outras coisas, poderá separar-nos do amor de Deus."
+      <strong>ROMANOS 8:38-39</strong>
+    </div>
+
+    <div class="activity-box" style="flex:1; display:flex; flex-direction:column;">
+      <div class="activity-title">🧭 Atividade: Labirinto da Fé — Caminho até os braços de Jesus</div>
+      <div id="mazeArea" style="flex:1; display:flex; align-items:center; justify-content:center;"></div>
+    </div>
+
+    <div class="page-number">5</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 6 — ORAÇÃO DO CORAÇÃO AGRADECIDO
+  ============================================================ -->
+  <section class="page prayer-page" style="--frame-color:#ec4899;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#ec4899;">Momento em Família</span>
+    </div>
+
+    <div class="prayer-box">
+      <h3>🙏 Oração do Coração Agradecido</h3>
+      <p>Querido Deus, obrigado por criar <span class="child-name">Gabriel</span> com tanto amor e
+      cuidado, muito antes mesmo de nascer. Obrigado porque o Teu amor por <span class="child-name">Gabriel</span>
+      é maior que o céu, mais fundo que o oceano e não tem fim. Ensina <span class="child-name">Gabriel</span>
+      a ser grato todos os dias, e ajuda a lembrar sempre que nada pode separá-lo do Teu amor —
+      nem o medo, nem a tristeza, nem os dias difíceis. Que <span class="child-name">Gabriel</span>
+      cresça sabendo, no fundo do coração, que é muito, muito amado por Ti. Em nome de Jesus, amém. 💗</p>
+    </div>
+
+    <svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg" style="align-self:center;">
+      <g fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.55">
+        <path d="M10 20 Q100 2 190 20"/>
+      </g>
+      <g fill="#ec4899">
+        <circle cx="30" cy="20" r="4"/>
+        <circle cx="100" cy="20" r="4"/>
+        <circle cx="170" cy="20" r="4"/>
+      </g>
+    </svg>
+
+    <div class="page-number">6</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 7 — CERTIFICADO
+  ============================================================ -->
+  <section class="page certificate-page">
+    <div class="corner-frame" style="--frame-color:#f59e0b; inset:9mm; border:5px double #f59e0b;"></div>
+    <div class="corner-frame inner"></div>
+
+    <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:6px;">
+      <path d="M35 62 C15 45 4 32 4 18 C4 8 12 1 22 1 C28 1 35 5 35 14 C35 5 42 1 48 1 C58 1 66 8 66 18 C66 32 55 45 35 62 Z" fill="#ec4899"/>
+      <path d="M22 20 C19 16 14 18 14 24 C14 30 22 36 22 36 C22 36 30 30 30 24 C30 18 25 16 22 20 Z" fill="#ffffff" opacity="0.75"/>
+    </svg>
+
+    <div class="cert-eyebrow">Certificado Especial</div>
+    <h2>Criança Muito Amada por Deus</h2>
+    <h3 class="subtitle-cert">O Amor de Deus por Mim • Jornada Completa</h3>
+
+    <div class="cert-granted-to">Este certificado é concedido, com muito carinho, a</div>
+    <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+
+    <p class="cert-text">
+      por descobrir, em cada página desta jornada, o quanto é amado(a), cuidado(a) e especial para
+      Deus — desde antes de nascer, maior que o céu, cheio(a) de gratidão, e seguro(a) para sempre
+      nos braços do Pai que nunca solta.
+    </p>
+
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">DATA: <span id="certDate"></span></div>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">ASSINATURA DOS PAIS</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  /* ============================================================
+     1) PERSONALIZAÇÃO DO NOME DA CRIANÇA
+  ============================================================ */
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){ return null; }
+  }
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){ el.textContent = finalName; });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{ window.localStorage.setItem(STORAGE_KEY, finalName); }catch(e){ /* segue sem salvar */ }
+  }
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){ applyName(urlName); return; }
+    const savedName = getSavedName();
+    if(savedName){ applyName(savedName); return; }
+    applyName(DEFAULT_NAME);
+  }
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  /* ============================================================
+     2) ATIVIDADE: LIGUE OS PONTOS (CORAÇÃO)
+  ============================================================ */
+  function buildDotsToDot(){
+    const container = document.getElementById("dotsToDotArea");
+    if(!container) return;
+
+    const n = 24;
+    const points = [];
+    for(let i=0; i<n; i++){
+      const t = (i / n) * Math.PI * 2;
+      const hx = 16 * Math.pow(Math.sin(t), 3);
+      const hy = -(13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t));
+      // escala e translação para caber no viewBox 0 0 220 200
+      const x = 110 + hx * 6.2;
+      const y = 105 + hy * 6.2;
+      points.push([x,y]);
+    }
+
+    let svg = '<svg width="220" height="200" viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">';
+    points.forEach(function(p, i){
+      const num = i + 1;
+      // pequena estrela em cada ponto
+      const cx = p[0], cy = p[1];
+      svg += '<g>';
+      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="2.6" fill="#3b82f6"/>';
+      // posição do número, deslocado para fora do centro aproximado da figura
+      const dx = cx - 110, dy = cy - 105;
+      const len = Math.sqrt(dx*dx+dy*dy) || 1;
+      const nx = cx + (dx/len) * 11;
+      const ny = cy + (dy/len) * 11;
+      svg += '<text x="'+nx+'" y="'+ny+'" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#6b5c72" text-anchor="middle">'+num+'</text>';
+      svg += '</g>';
+    });
+    svg += '</svg>';
+    container.innerHTML = svg;
+  }
+
+  /* ============================================================
+     3) ATIVIDADE: LABIRINTO DA FÉ (caminho até os braços de Jesus)
+  ============================================================ */
+  function buildMaze(){
+    const container = document.getElementById("mazeArea");
+    if(!container) return;
+
+    const cols = 6, rows = 8, cell = 46;
+    const marginX = 30, marginY = 30;
+
+    // gera caminho em "serpentina" (boustrophedon) cobrindo todas as células
+    const path = [];
+    for(let r=0; r<rows; r++){
+      if(r % 2 === 0){
+        for(let c=0; c<cols; c++) path.push([r,c]);
+      }else{
+        for(let c=cols-1; c>=0; c--) path.push([r,c]);
+      }
+    }
+
+    // conjunto de arestas abertas (conexões entre células consecutivas do caminho)
+    const openEdges = new Set();
+    function edgeKey(a,b){ return a[0]+','+a[1]+'-'+b[0]+','+b[1]; }
+    for(let i=0; i<path.length-1; i++){
+      openEdges.add(edgeKey(path[i], path[i+1]));
+      openEdges.add(edgeKey(path[i+1], path[i]));
+    }
+
+    const startCell = path[0];
+    const endCell = path[path.length-1];
+
+    const w = cols*cell + marginX*2;
+    const h = rows*cell + marginY*2;
+
+    let svg = '<svg width="100%" height="auto" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="max-width:150mm;">';
+
+    // fundo suave
+    svg += '<rect x="'+marginX+'" y="'+marginY+'" width="'+(cols*cell)+'" height="'+(rows*cell)+'" fill="#ffffff" rx="10"/>';
+
+    // desenha paredes
+    for(let r=0; r<rows; r++){
+      for(let c=0; c<cols; c++){
+        const x = marginX + c*cell;
+        const y = marginY + r*cell;
+
+        // parede de cima
+        if(r === 0 || !openEdges.has(edgeKey([r,c],[r-1,c]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+y+'" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>';
+        }
+        // parede da esquerda
+        if(c === 0 || !openEdges.has(edgeKey([r,c],[r,c-1]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+cell)+'" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>';
+        }
+        // parede da direita (apenas na borda direita do grid)
+        if(c === cols-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+(x+cell)+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>';
+        }
+        // parede de baixo (apenas na borda inferior do grid)
+        if(r === rows-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+x+'" y1="'+(y+cell)+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/>';
+        }
+      }
+    }
+
+    // marca de início ("Você aqui")
+    const sx = marginX + startCell[1]*cell + cell/2;
+    const sy = marginY + startCell[0]*cell + cell/2;
+    svg += '<circle cx="'+sx+'" cy="'+sy+'" r="14" fill="#fde047"/>';
+    svg += '<text x="'+sx+'" y="'+(sy+5)+'" text-anchor="middle" font-size="16">🙂</text>';
+    svg += '<text x="'+sx+'" y="'+(marginY-10)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b5c72">Você aqui</text>';
+
+    // marca de chegada ("Jesus")
+    const ex = marginX + endCell[1]*cell + cell/2;
+    const ey = marginY + endCell[0]*cell + cell/2;
+    svg += '<circle cx="'+ex+'" cy="'+ey+'" r="14" fill="#f9a8d4"/>';
+    svg += '<text x="'+ex+'" y="'+(ey+5)+'" text-anchor="middle" font-size="16">🙌</text>';
+    svg += '<text x="'+ex+'" y="'+(marginY + rows*cell + 18)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b5c72">Jesus te espera de braços abertos!</text>';
+
+    svg += '</svg>';
+    container.innerHTML = svg;
+  }
+
+  /* ============================================================
+     4) INICIALIZAÇÃO
+  ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    buildDotsToDot();
+    buildMaze();
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){ applyName(input.value); });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ applyName(input.value); }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
