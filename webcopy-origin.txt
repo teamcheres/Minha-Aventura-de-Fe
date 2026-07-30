@@ -1,0 +1,20 @@
+Uri: https://arcalivros.vercel.app/
+File Name: C:\Downloaded Web Sites\arcalivros.vercel.app\index.htm
+Content Type: text/html
+
+Uri: https://arcalivros.vercel.app/assets/index-ClG9q0mi.js
+File Name: C:\Downloaded Web Sites\arcalivros.vercel.app\assets\index-ClG9q0mi.js
+Content Type: application/javascript
+
+Uri: https://arcalivros.vercel.app/assets/index-MvbvMNrs.css
+File Name: C:\Downloaded Web Sites\arcalivros.vercel.app\assets\index-MvbvMNrs.css
+Content Type: text/css
+
+Uri: https://connect.facebook.net/en_US/fbevents.js
+File Name: C:\Downloaded Web Sites\arcalivros.vercel.app\en_US\fbevents.js
+Content Type: application/x-javascript
+
+Uri: https://www.clarity.ms/
+File Name: C:\Downloaded Web Sites\arcalivros.vercel.app\index-1.htm
+Content Type: 
+
