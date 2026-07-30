@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Aventura de Fé - Livro Infantil Cristão Personalizado</title>
     <meta name="description" content="Qual o nome da criança que você quer ver brilhando nas histórias de Jesus? Crie uma demonstração mágica em segundos.">
-    <link rel="canonical" href="https://minha-aventura-de-fe.vercel.app/">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,9 +24,7 @@
         padding: 20px;
         box-sizing: border-box;
       }
-      h1 {
-        font-family: 'Outfit', sans-serif;
-      }
+      h1 { font-family: 'Outfit', sans-serif; }
       .card-container {
         background: #ffffff;
         border-radius: 24px;
@@ -87,11 +84,6 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        letter-spacing: 0.5px;
-      }
-      .btn-submit:hover {
-        transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 12px 28px rgba(34, 197, 94, 0.45);
       }
       .badge-free {
         display: inline-flex;
@@ -106,44 +98,22 @@
         margin-top: 24px;
         border: 1px solid #fef08a;
       }
-      .error-msg {
-        color: #ef4444;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-top: -12px;
-        margin-bottom: 16px;
-        display: none;
-      }
     </style>
   </head>
 
   <body>
     <div class="card-container">
       <div class="sparkle-badge">✨</div>
-      
       <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 leading-snug">
         Qual o nome da criança que você quer ver brilhando nas histórias de Jesus?
       </h1>
-      
       <p class="text-slate-500 text-sm sm:text-base mb-8">
         Vamos preparar uma demonstração mágica para vocês.
       </p>
 
       <form id="child-name-form">
-        <input 
-          type="text" 
-          id="child-name-input" 
-          class="input-name" 
-          placeholder="Digite o primeiro nome aqui" 
-          required 
-          autocomplete="off" 
-          autofocus
-        >
-        <div id="error-message" class="error-msg">Por favor, digite o nome da criança.</div>
-
-        <button type="submit" class="btn-submit">
-          ✨ CRIAR AVENTURA MÁGICA
-        </button>
+        <input type="text" id="child-name-input" class="input-name" placeholder="Digite o primeiro nome aqui" required autocomplete="off" autofocus>
+        <button type="submit" class="btn-submit">✨ CRIAR AVENTURA MÁGICA</button>
       </form>
 
       <div class="badge-free">
@@ -154,22 +124,13 @@
     <script>
       document.getElementById('child-name-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        var input = document.getElementById('child-name-input');
-        var error = document.getElementById('error-message');
-        var val = input.value ? input.value.trim() : '';
-
-        if (!val) {
-          error.style.display = 'block';
-          return;
+        var val = document.getElementById('child-name-input').value.trim();
+        if (val) {
+          var nameFormatted = val.charAt(0).toUpperCase() + val.slice(1);
+          localStorage.setItem('childName', nameFormatted);
+          // Redireciona apontando diretamente para oferta.html sem dar 404!
+          window.location.href = '/oferta.html';
         }
-
-        error.style.display = 'none';
-        var nameFormatted = val.charAt(0).toUpperCase() + val.slice(1);
-        
-        localStorage.setItem('childName', nameFormatted);
-        
-        var target = window.location.pathname.endsWith('/') ? window.location.pathname + 'oferta' : window.location.pathname + '/oferta';
-        window.location.href = target;
       });
     </script>
   </body>
