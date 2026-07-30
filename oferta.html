@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Aventura de Fé - Livro Infantil Cristão Personalizado</title>
+    <meta name="description" content="Transforme seu filho no protagonista das histórias de Jesus. Livro cristão 100% personalizado para crianças de 3 a 8 anos. Acesso instantâneo.">
+    <link rel="canonical" href="https://minha-aventura-de-fe.vercel.app/oferta">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #faf9f6;
+        color: #1e293b;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      h1, h2, h3, h4, .font-heading {
+        font-family: 'Outfit', sans-serif;
+      }
+      .bg-gradient-soft {
+        background: linear-gradient(180deg, #f7f9fc 0%, #eef4fb 100%);
+      }
+      .shadow-soft {
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.12);
+      }
+      .shadow-card {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      }
+      .btn-cta {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #ffffff;
+        font-weight: 800;
+        border-radius: 9999px;
+        padding: 18px 36px;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .btn-cta:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 12px 28px rgba(34, 197, 94, 0.45);
+      }
+      .breathing-button {
+        animation: breathingSlow 2s ease-in-out infinite;
+      }
+      @keyframes breathingSlow {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+      }
+      .bonus-grid-5col {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      @media (min-width: 640px) {
+        .bonus-grid-5col { grid-template-columns: repeat(3, 1fr); }
+      }
+      @media (min-width: 1024px) {
+        .bonus-grid-5col { grid-template-columns: repeat(5, 1fr); }
+      }
+      .bonus-card-exact {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .bonus-card-body {
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        text-align: left;
+      }
+      .bonus-card-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1e1b4b;
+        margin-bottom: 6px;
+      }
+      .bonus-card-desc {
+        font-size: 0.82rem;
+        color: #64748b;
+        line-height: 1.4;
+      }
+      .faq-item {
+        background: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 12px;
+        overflow: hidden;
+      }
+      .faq-question {
+        padding: 18px 24px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .faq-answer {
+        padding: 0 24px 18px 24px;
+        color: #64748b;
+        display: none;
+        line-height: 1.6;
+      }
+      .faq-item.open .faq-answer { display: block; }
+      .page-preview-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- HERO SECTION -->
+    <section class="bg-gradient-soft py-10 md:py-16 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+          Imagine a alegria de <span style="color: #3b82f6;" id="hero-child-name">Gabriel</span> ao descobrir que é protagonista das histórias de Jesus
+        </h1>
+        <p class="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+          O primeiro livro infantil cristão 100% digital e personalizado que transforma seu filho no herói das parábolas de Jesus.
+        </p>
+
+        <div class="mb-8 max-w-2xl mx-auto">
+          <img src="/livro-principal.png" 
+               alt="Livro Minha Aventura de Fé" 
+               class="w-full rounded-2xl shadow-soft border border-slate-200"
+               onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80'">
+        </div>
+
+        <div>
+          <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button" id="hero-cta-btn">
+            SIM, QUERO O LIVRO AGORA!
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREVIEW SECTION -->
+    <section class="py-12 md:py-16 px-4 bg-white">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-2">
+          Veja por dentro da Aventura de Fé de <span class="text-blue-500 child-name-text">Gabriel</span>
+        </h2>
+        <p class="text-center text-slate-500 mb-10 text-base sm:text-lg">
+          Cada página foi criada para capturar a atenção e o coração da sua criança
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="page-preview-card">
+            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 1</div>
+            <p class="text-slate-700 leading-relaxed">
+              "Era uma vez uma criança muito especial, chamada <strong class="child-name-text text-blue-600">Gabriel</strong>. Este livro é sobre uma descoberta incrível..."
+            </p>
+          </div>
+
+          <div class="page-preview-card">
+            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 2</div>
+            <p class="text-slate-700 leading-relaxed">
+              "Quando um trovão fazia 'BUUUM!', <strong class="child-name-text text-blue-600">Gabriel</strong> confiava no amor de Jesus para se sentir seguro..."
+            </p>
+          </div>
+
+          <div class="page-preview-card">
+            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 3</div>
+            <p class="text-slate-700 leading-relaxed">
+              "<strong class="child-name-text text-blue-600">Gabriel</strong> perguntou: 'Quem é você?' A voz respondeu: 'Eu sou Jesus. Eu te amo mais do que todas as estrelas do céu.'"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING BOX -->
+    <section class="py-12 md:py-16 px-4 bg-blue-50/50">
+      <div class="mt-4 bg-white rounded-2xl p-8 border border-slate-200 text-center shadow-card max-w-2xl mx-auto">
+        <p class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">Oferta Especial de Hoje</p>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">Livro personalizado + 10 bônus cristãos</h3>
+        <p class="text-slate-400 line-through text-base mb-1">De R$ 159,70</p>
+        <p class="text-slate-600 text-sm font-semibold mb-2">Por apenas</p>
+        <p class="text-5xl font-extrabold text-blue-600 leading-tight mb-2">R$ 29,90</p>
+        <p class="text-green-600 font-bold text-sm mb-6">💰 Economia imediata de R$ 129,80</p>
+
+        <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button w-full block text-center">
+          COMPRAR COM DESCONTO AGORA!
+        </a>
+
+        <div class="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500 font-medium">
+          <span>🔒 Compra 100% segura</span>
+          <span>💻 Produto digital com acesso imediato</span>
+          <span>🛡️ Garantia de 7 Dias</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCRIPT DE LEITURA DO NOME -->
+    <script>
+      (function() {
+        var name = localStorage.getItem('childName') || 'Gabriel';
+        var nameEls = document.querySelectorAll('.child-name-text');
+        nameEls.forEach(function(el) { el.textContent = name; });
+        var heroNameEl = document.getElementById('hero-child-name');
+        if (heroNameEl) heroNameEl.textContent = name;
+        var heroBtn = document.getElementById('hero-cta-btn');
+        if (heroBtn && name && name !== 'Gabriel') {
+          heroBtn.textContent = 'SIM, QUERO O LIVRO DE ' + name.toUpperCase() + ' AGORA!';
+        }
+      })();
+    </script>
+  </body>
+</html>
