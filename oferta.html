@@ -13,9 +13,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Styles -->
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -30,6 +30,34 @@
       h1, h2, h3, h4, .font-heading {
         font-family: 'Outfit', sans-serif;
       }
+
+      /* Bar de Urgência no Topo */
+      .cro-announcement-bar {
+        background: #dc2626;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      }
+      .timer-badge {
+        background: #ffffff;
+        color: #dc2626;
+        padding: 2px 10px;
+        border-radius: 9999px;
+        font-family: monospace;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
       .bg-gradient-soft {
         background: linear-gradient(180deg, #f7f9fc 0%, #eef4fb 100%);
       }
@@ -39,6 +67,8 @@
       .shadow-card {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
       }
+      
+      /* Botão Principal Verde Vibe CRO */
       .btn-cta {
         background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
         color: #ffffff;
@@ -65,6 +95,8 @@
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.03); }
       }
+
+      /* Grid dos 10 Bônus */
       .bonus-grid-5col {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -76,6 +108,7 @@
       @media (min-width: 1024px) {
         .bonus-grid-5col { grid-template-columns: repeat(5, 1fr); }
       }
+
       .bonus-card-exact {
         background: #ffffff;
         border-radius: 16px;
@@ -84,6 +117,18 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .bonus-card-exact:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+      }
+      .bonus-card-exact img {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        display: block;
+        background: #f1f5f9;
       }
       .bonus-card-body {
         padding: 14px;
@@ -98,12 +143,15 @@
         font-weight: 700;
         color: #1e1b4b;
         margin-bottom: 6px;
+        line-height: 1.3;
       }
       .bonus-card-desc {
         font-size: 0.82rem;
         color: #64748b;
         line-height: 1.4;
       }
+
+      /* FAQ Accordion */
       .faq-item {
         background: #ffffff;
         border-radius: 12px;
@@ -118,6 +166,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        user-select: none;
       }
       .faq-answer {
         padding: 0 24px 18px 24px;
@@ -126,6 +175,9 @@
         line-height: 1.6;
       }
       .faq-item.open .faq-answer { display: block; }
+      .faq-item.open .faq-icon { transform: rotate(180deg); }
+      .faq-icon { transition: transform 0.3s ease; }
+
       .page-preview-card {
         background: #ffffff;
         border-radius: 16px;
@@ -133,96 +185,431 @@
         border: 1px solid #e2e8f0;
         box-shadow: 0 6px 16px rgba(0,0,0,0.05);
       }
+
+      /* Notification Toast Social Proof */
+      .cro-social-proof-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border-radius: 14px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 99;
+        font-size: 0.85rem;
+        transform: translateY(150%);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .cro-social-proof-toast.show {
+        transform: translateY(0);
+      }
+      .cro-toast-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #3b82f6;
+        color: #fff;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      /* WhatsApp Button */
+      .cro-whatsapp-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        background: #25d366;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        z-index: 99;
+        transition: transform 0.3s ease;
+      }
+      .cro-whatsapp-btn:hover {
+        transform: scale(1.1);
+      }
+      .cro-whatsapp-btn svg {
+        width: 30px;
+        height: 30px;
+        fill: #ffffff;
+      }
     </style>
   </head>
 
   <body>
 
-    <!-- HERO SECTION -->
-    <section class="bg-gradient-soft py-10 md:py-16 px-4">
-      <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
-          Imagine a alegria de <span style="color: #3b82f6;" id="hero-child-name">Gabriel</span> ao descobrir que é protagonista das histórias de Jesus
-        </h1>
-        <p class="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-          O primeiro livro infantil cristão 100% digital e personalizado que transforma seu filho no herói das parábolas de Jesus.
-        </p>
+    <!-- BARRA DE URGÊNCIA E CRONÔMETRO DE TOPO -->
+    <div class="cro-announcement-bar">
+      <span>🔥 <strong>OFERTA LIMITADA:</strong> 60% OFF + 10 Bônus Exclusivos expiram em:</span>
+      <span class="timer-badge" id="cro-timer-display">14:59</span>
+    </div>
 
-        <div class="mb-8 max-w-2xl mx-auto">
-          <img src="/livro-principal.png" 
-               alt="Livro Minha Aventura de Fé" 
-               class="w-full rounded-2xl shadow-soft border border-slate-200"
-               onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80'">
+    <!-- MAIN PAGE CONTENT -->
+    <div id="main-content">
+      
+      <!-- HERO SECTION -->
+      <section class="bg-gradient-soft py-10 md:py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+            Imagine a alegria de <span style="color: #3b82f6;" id="hero-child-name">Gabriel</span> ao descobrir que é protagonista das histórias de Jesus
+          </h1>
+          <p class="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            O primeiro livro infantil cristão 100% digital e personalizado que transforma seu filho no herói das parábolas de Jesus.
+          </p>
+
+          <div class="mb-8 max-w-2xl mx-auto">
+            <img src="/assets/hero-ebook-mockup-B4QZR5Jx.webp" 
+                 alt="Livro Minha Aventura de Fé" 
+                 class="w-full rounded-2xl shadow-soft border border-slate-200"
+                 onerror="this.src='livro-principal.png'">
+          </div>
+
+          <div>
+            <a href="#oferta-box" class="btn-cta breathing-button" id="hero-cta-btn">
+              SIM, QUERO O LIVRO AGORA!
+            </a>
+          </div>
         </div>
+      </section>
 
-        <div>
-          <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button" id="hero-cta-btn">
-            SIM, QUERO O LIVRO AGORA!
+      <!-- PAIN / PROBLEM SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-white">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-8">
+            Você sente que está perdendo seu filho para as telas?
+          </h2>
+          <div class="space-y-6 text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p>Você não está sozinha. Toda mãe de fé sente isso.</p>
+            <p>Aquela culpa silenciosa quando você cede ao tablet "só mais 10 minutinhos" porque você está exausta e precisa de paz.</p>
+            <p>O medo de que, em um mundo tão barulhento e distraído, você não consiga plantar a semente da fé a tempo.</p>
+            
+            <div class="bg-slate-100 p-6 rounded-xl border-l-4 border-blue-500">
+              <p class="font-semibold text-slate-900">
+                "Eu oro. Eu tento. Mas será que estou fazendo o suficiente?"
+              </p>
+            </div>
+
+            <p>E você sabe que o problema não é a criança. O problema é que nada parece mais interessante do que um desenho animado.</p>
+            <p class="font-bold text-blue-600 text-xl">Até agora.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOLUTION SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-gradient-soft">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-8">
+            E se, hoje à noite, <span class="child-name-text">Gabriel</span> pedisse para orar?
+          </h2>
+          <div class="space-y-6 text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p>Não porque você mandou. Mas porque <span class="child-name-text">Gabriel</span> quer.</p>
+            <p>Imagine isso: você abre o <strong>Minha Aventura de Fé</strong>, e nos primeiros 10 segundos, <span class="child-name-text">Gabriel</span> vê o próprio nome brilhando na capa.</p>
+            
+            <div class="bg-white p-8 rounded-xl shadow-card border border-blue-100 text-center">
+              <p class="text-xl font-bold text-blue-600 mb-2">"Mãe, esse sou EU na história?"</p>
+              <p class="text-slate-500">E de repente, tudo muda.</p>
+            </div>
+
+            <div class="bg-amber-50 p-6 rounded-xl border-l-4 border-amber-400">
+              <p class="italic text-slate-800">
+                Imagine ler para <span class="child-name-text">Gabriel</span>:<br>
+                <span class="font-bold">"E assim como Davi foi corajoso, <span class="child-name-text">Gabriel</span>, você também pode ser..."</span>
+              </p>
+              <p class="mt-4 font-semibold text-slate-900">
+                Isso muda tudo. <span class="child-name-text">Gabriel</span> não está mais ouvindo uma história. Está vivendo a Palavra.
+              </p>
+            </div>
+
+            <p class="font-medium">Porque quando uma criança se vê como parte da história de Deus, ela não esquece. Ela carrega isso para sempre.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PREVIEW SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-white">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-2">
+            Veja por dentro da Aventura de Fé de <span class="text-blue-500 child-name-text">Gabriel</span>
+          </h2>
+          <p class="text-center text-slate-500 mb-10 text-base sm:text-lg">
+            Cada página foi criada para capturar a atenção e o coração da sua criança
+          </p>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="page-preview-card">
+              <div class="text-xs font-bold text-blue-600 uppercase mb-2">Página 2</div>
+              <p class="text-slate-700 leading-relaxed">
+                "Era uma vez uma criança muito especial, chamada <strong class="child-name-text text-blue-600">Gabriel</strong>. Este livro é sobre uma descoberta incrível que <strong class="child-name-text text-blue-600">Gabriel</strong> fez... Uma descoberta que mudou tudo!"
+              </p>
+            </div>
+
+            <div class="page-preview-card">
+              <div class="text-xs font-bold text-blue-600 uppercase mb-2">Página 6</div>
+              <p class="text-slate-700 leading-relaxed">
+                'Outras vezes, quando um trovão fazia "BUUUM!", <strong class="child-name-text text-blue-600">Gabriel</strong> sentia um medinho lá no fundo. Para quem podia pedir ajuda quando estava com medo?'
+              </p>
+            </div>
+
+            <div class="page-preview-card">
+              <div class="text-xs font-bold text-blue-600 uppercase mb-2">Página 10</div>
+              <p class="text-slate-700 leading-relaxed">
+                '<strong class="child-name-text text-blue-600">Gabriel</strong> perguntou: "Quem é você?" A voz respondeu: "Eu sou Jesus. Eu te amo mais do que todas as estrelas do céu."'
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BONUSES SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-blue-50/50 border-y border-blue-100" id="oferta-box">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-10">
+            <span class="inline-block bg-amber-400 text-slate-900 px-4 py-2 rounded-full text-xs font-bold mb-4 uppercase tracking-wide">
+              🎁 BÔNUS EXCLUSIVOS INCLUÍDOS
+            </span>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">
+              Receba GRÁTIS junto com seu Livro:
+            </h2>
+          </div>
+
+          <!-- 10 BONUS CARDS -->
+          <div class="bonus-grid-5col">
+            
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/alfabeto-biblico.png" alt="Alfabeto Bíblico" onerror="this.src='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Alfabeto Bíblico</h3>
+                <p class="bonus-card-desc">Aprendizado do alfabeto com palavras e conceitos bíblicos para a criança aprender letras com a Palavra.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/amor-de-deus.png" alt="Amor de Deus" onerror="this.src='https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Amor de Deus</h3>
+                <p class="bonus-card-desc">Atividade que ensina às crianças o amor incondicional de Deus de forma visual e simples.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/antigo-testamento.png" alt="Antigo Testamento" onerror="this.src='https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Antigo Testamento</h3>
+                <p class="bonus-card-desc">Conteúdos e atividades das principais histórias do Antigo Testamento de forma clara.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/aprendendo-a-orar.png" alt="Aprendendo a Orar" onerror="this.src='https://images.unsplash.com/photo-1499209974431-9dac3cea0047?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Aprendendo a Orar</h3>
+                <p class="bonus-card-desc">Atividades práticas que ajudam a criança a aprender a conversar com Deus diariamente.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/aprendendo-com-alegria.png" alt="Aprendendo com Alegria" onerror="this.src='https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Aprendendo com Alegria</h3>
+                <p class="bonus-card-desc">Atividades educativas que unem diversão e aprendizado cristão leve e prazeroso.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/atividade-abc-biblica.png" alt="Atividade ABC Bíblica" onerror="this.src='https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Atividades ABC</h3>
+                <p class="bonus-card-desc">Exercícios de alfabetização com temática bíblica para reforçar letras e valores.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/aventuras-biblicas.png" alt="Aventuras Bíblicas" onerror="this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Aventuras Bíblicas</h3>
+                <p class="bonus-card-desc">Histórias e atividades para explorar as maiores aventuras da Bíblia.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/colorindo-com-proposito.png" alt="Colorindo com Propósito" onerror="this.src='https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Colorindo com Propósito</h3>
+                <p class="bonus-card-desc">Desenhos para colorir que estimulam a criatividade enquanto ensinam princípios bíblicos.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/complete-os-nomes-dos-animais.png" alt="Animais da Bíblia" onerror="this.src='https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Nomes dos Animais</h3>
+                <p class="bonus-card-desc">Atividade interativa para reforçar a leitura usando animais da criação de Deus.</p>
+              </div>
+            </div>
+
+            <div class="bonus-card-exact">
+              <img src="/entregaveis-png/passatempo-biblico.png" alt="Passatempo Bíblico" onerror="this.src='https://images.unsplash.com/photo-1501686637-b7aa9c48a882?auto=format&fit=crop&w=400&q=80'">
+              <div class="bonus-card-body">
+                <h3 class="bonus-card-title">Passatempo Bíblico</h3>
+                <p class="bonus-card-desc">Passatempos cristãos que estimulam o raciocínio enquanto reforçam valores.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- PRICING BOX -->
+          <div class="mt-12 bg-white rounded-2xl p-8 border border-slate-200 text-center shadow-card max-w-2xl mx-auto">
+            <p class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">Oferta Especial de Hoje</p>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Livro personalizado + 10 bônus cristãos</h3>
+            <p class="text-slate-400 line-through text-base mb-1">De R$ 159,70</p>
+            <p class="text-slate-600 text-sm font-semibold mb-2">Por apenas</p>
+            <p class="text-5xl font-extrabold text-blue-600 leading-tight mb-2">R$ 29,90</p>
+            <p class="text-green-600 font-bold text-sm mb-6">💰 Economia imediata de R$ 129,80</p>
+
+            <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button w-full block text-center" style="box-sizing: border-box;">
+              COMPRAR COM DESCONTO AGORA!
+            </a>
+
+            <div class="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500 font-medium">
+              <span>🔒 Compra 100% segura</span>
+              <span>💻 Produto digital com acesso imediato</span>
+              <span>🛡️ Garantia de 7 Dias</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-gradient-soft">
+        <div class="max-w-5xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-10">
+            O que mães de fé estão dizendo
+          </h2>
+          <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-card border border-slate-100">
+              <p class="text-slate-700 italic mb-4">"Nunca vi a Maria tão focada na hora de dormir. Ela pede para ler 'o livro dela' toda noite. Mágico!"</p>
+              <p class="font-bold text-slate-900 text-sm">— Amanda S.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-card border border-slate-100">
+              <p class="text-slate-700 italic mb-4">"Eu estava com dificuldade de ensinar sobre Jesus para o Enzo. Esse Livro mudou tudo. Ele se sente especial por estar na história. Obrigada!"</p>
+              <p class="font-bold text-slate-900 text-sm">— Carla M.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-card border border-slate-100">
+              <p class="text-slate-700 italic mb-4">"Troquei 30 min de telas por 10 min de conexão com Deus e meu filho. Valeu cada centavo."</p>
+              <p class="font-bold text-slate-900 text-sm">— Juliana P.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ SECTION -->
+      <section class="py-12 md:py-16 px-4 bg-white">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-10">
+            Ainda tem dúvidas?
+          </h2>
+
+          <div class="faq-list">
+            <div class="faq-item">
+              <div class="faq-question">
+                <span>Como vou receber o Livro?</span>
+                <span class="faq-icon">▼</span>
+              </div>
+              <div class="faq-answer">
+                Você receberá o Livro personalizado instantaneamente no seu e-mail logo após a confirmação do pagamento. É um arquivo em PDF de altíssima qualidade.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <span>Posso imprimir em casa?</span>
+                <span class="faq-icon">▼</span>
+              </div>
+              <div class="faq-answer">
+                Sim! O Livro está em formato PDF de alta resolução, perfeito para impressão caseira ou em gráfica.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <span>Para qual idade é recomendado?</span>
+                <span class="faq-icon">▼</span>
+              </div>
+              <div class="faq-answer">
+                O Livro é ideal para crianças de 3 a 8 anos.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                <span>O pagamento é seguro?</span>
+                <span class="faq-icon">▼</span>
+              </div>
+              <div class="faq-answer">
+                Totalmente seguro! Criptografia de ponta a ponta com garantia de 7 dias.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA SECTION -->
+      <section class="py-14 md:py-20 px-4 bg-blue-600 text-white text-center">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+            <span class="child-name-text">Gabriel</span> merece crescer sabendo que é amado por Deus
+          </h2>
+          <p class="text-lg sm:text-xl opacity-90 mb-8">
+            E você merece ver isso acontecer. Hoje.
+          </p>
+          <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button" style="background: #22c55e; color: #ffffff;">
+            GARANTIR MINHA AVENTURA DE FÉ AGORA
           </a>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- PREVIEW SECTION -->
-    <section class="py-12 md:py-16 px-4 bg-white">
-      <div class="max-w-5xl mx-auto">
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900 mb-2">
-          Veja por dentro da Aventura de Fé de <span class="text-blue-500 child-name-text">Gabriel</span>
-        </h2>
-        <p class="text-center text-slate-500 mb-10 text-base sm:text-lg">
-          Cada página foi criada para capturar a atenção e o coração da sua criança
-        </p>
+    </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="page-preview-card">
-            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 1</div>
-            <p class="text-slate-700 leading-relaxed">
-              "Era uma vez uma criança muito especial, chamada <strong class="child-name-text text-blue-600">Gabriel</strong>. Este livro é sobre uma descoberta incrível..."
-            </p>
-          </div>
-
-          <div class="page-preview-card">
-            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 2</div>
-            <p class="text-slate-700 leading-relaxed">
-              "Quando um trovão fazia 'BUUUM!', <strong class="child-name-text text-blue-600">Gabriel</strong> confiava no amor de Jesus para se sentir seguro..."
-            </p>
-          </div>
-
-          <div class="page-preview-card">
-            <div class="text-xs font-bold text-blue-600 uppercase mb-2">Capítulo 3</div>
-            <p class="text-slate-700 leading-relaxed">
-              "<strong class="child-name-text text-blue-600">Gabriel</strong> perguntou: 'Quem é você?' A voz respondeu: 'Eu sou Jesus. Eu te amo mais do que todas as estrelas do céu.'"
-            </p>
-          </div>
+    <!-- NOTIFICAÇÃO SOCIAL PROOF TOAST -->
+    <div class="cro-social-proof-toast" id="cro-social-toast">
+      <div class="cro-toast-avatar" id="cro-toast-avatar">M</div>
+      <div>
+        <div class="cro-toast-text" id="cro-toast-text">
+          <strong>Mariana S.</strong> acabou de adquirir para o <strong>Gabriel</strong>
         </div>
+        <div class="text-slate-400 text-xs mt-0.5">Verificado • há 2 minutos</div>
       </div>
-    </section>
+    </div>
 
-    <!-- PRICING BOX -->
-    <section class="py-12 md:py-16 px-4 bg-blue-50/50">
-      <div class="mt-4 bg-white rounded-2xl p-8 border border-slate-200 text-center shadow-card max-w-2xl mx-auto">
-        <p class="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">Oferta Especial de Hoje</p>
-        <h3 class="text-xl font-bold text-slate-900 mb-2">Livro personalizado + 10 bônus cristãos</h3>
-        <p class="text-slate-400 line-through text-base mb-1">De R$ 159,70</p>
-        <p class="text-slate-600 text-sm font-semibold mb-2">Por apenas</p>
-        <p class="text-5xl font-extrabold text-blue-600 leading-tight mb-2">R$ 29,90</p>
-        <p class="text-green-600 font-bold text-sm mb-6">💰 Economia imediata de R$ 129,80</p>
+    <!-- WHATSAPP SUPPORT BUTTON -->
+    <a href="https://api.whatsapp.com/send?phone=5511999999999&text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20livro%20personalizado" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="cro-whatsapp-btn" 
+       title="Falar no WhatsApp">
+      <svg viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l.999 1.59-1.05 3.834 3.794-.993.999.63z"/>
+      </svg>
+    </a>
 
-        <a href="https://pay.cakto.com.br/bdki5a5_1011097" class="btn-cta breathing-button w-full block text-center">
-          COMPRAR COM DESCONTO AGORA!
-        </a>
-
-        <div class="mt-6 flex flex-wrap justify-center gap-4 text-xs text-slate-500 font-medium">
-          <span>🔒 Compra 100% segura</span>
-          <span>💻 Produto digital com acesso imediato</span>
-          <span>🛡️ Garantia de 7 Dias</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- SCRIPT DE LEITURA DO NOME -->
+    <!-- SCRIPTS DE NOME, TEMPORIZADOR E INTERAÇÃO -->
     <script>
       (function() {
+        // Leitura Automática do Nome da Criança
         var name = localStorage.getItem('childName') || 'Gabriel';
         var nameEls = document.querySelectorAll('.child-name-text');
         nameEls.forEach(function(el) { el.textContent = name; });
@@ -230,8 +617,47 @@
         if (heroNameEl) heroNameEl.textContent = name;
         var heroBtn = document.getElementById('hero-cta-btn');
         if (heroBtn && name && name !== 'Gabriel') {
-          heroBtn.textContent = 'SIM, QUERO O LIVRO DE ' + name.toUpperCase() + ' AGORA!';
+          heroBtn.textContent = 'SIM, QUERO O LIVRO ' + name.toUpperCase() + ' AGORA!';
         }
+
+        // Cronômetro Regressivo de 14:59
+        var timerDisplay = document.getElementById('cro-timer-display');
+        var duration = 14 * 60 + 59;
+        setInterval(function() {
+          var minutes = parseInt(duration / 60, 10);
+          var seconds = parseInt(duration % 60, 10);
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+          if (timerDisplay) timerDisplay.textContent = minutes + ":" + seconds;
+          if (--duration < 0) duration = 14 * 60 + 59;
+        }, 1000);
+
+        // FAQ Accordion
+        var faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(function(item) {
+          var q = item.querySelector('.faq-question');
+          q.addEventListener('click', function() {
+            var isOpen = item.classList.contains('open');
+            faqItems.forEach(function(i) { i.classList.remove('open'); });
+            if (!isOpen) item.classList.add('open');
+          });
+        });
+
+        // Toast Social Proof Notificação
+        var toast = document.getElementById('cro-social-toast');
+        var toastText = document.getElementById('cro-toast-text');
+        var toastAvatar = document.getElementById('cro-toast-avatar');
+        var names = ['Mariana S.', 'Camila R.', 'Patrícia M.', 'Fernanda K.', 'Beatriz L.'];
+        
+        setInterval(function() {
+          var randomName = names[Math.floor(Math.random() * names.length)];
+          toastAvatar.textContent = randomName.charAt(0);
+          toastText.innerHTML = '<strong>' + randomName + '</strong> acabou de adquirir para o <strong>' + name + '</strong>';
+          toast.classList.add('show');
+          setTimeout(function() {
+            toast.classList.remove('show');
+          }, 4000);
+        }, 10000);
       })();
     </script>
   </body>
