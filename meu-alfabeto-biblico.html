@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Alfabeto Bíblico</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --blue:#3b82f6;
+  --blue-dark:#2563eb;
+  --gold:#fbbf24;
+  --gold-dark:#f59e0b;
+  --green:#22c55e;
+  --green-dark:#16a34a;
+  --purple:#a78bfa;
+  --purple-dark:#7c3aed;
+  --bg:#faf9f6;
+  --ink:#25324a;
+  --ink-soft:#4b5876;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans','Outfit','Segoe UI',Arial,sans-serif;
+  background:#dfe4ea;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{ font-family:'Outfit','Plus Jakarta Sans',sans-serif; }
+
+/* ============ BARRA DE CONTROLE (não imprime) ============ */
+.control-bar{
+  position:sticky;
+  top:0;
+  z-index:999;
+  background:linear-gradient(135deg, var(--purple), var(--blue));
+  color:#fff;
+  padding:14px 20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.14);
+  padding:6px 10px 6px 14px;
+  border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none; outline:none; border-radius:20px;
+  padding:7px 12px; font-family:inherit; font-size:14px; width:150px;
+}
+.control-bar button{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  border-radius:24px; padding:9px 16px; font-size:14px;
+  transition:transform .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{ background:var(--green); color:#fff; }
+.btn-print{
+  background:var(--gold); color:#4a3200; font-size:15px;
+  padding:11px 22px; box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+
+/* ============ CONTAINER DE PÁGINAS ============ */
+.book{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:30px 10px 60px; }
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+.corner-frame{
+  position:absolute; inset:9mm;
+  border:3px solid var(--frame-color, var(--gold));
+  border-radius:18px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:12.5mm;
+  border:1.5px dashed rgba(59,130,246,.4);
+  border-radius:14px;
+}
+
+.page-number{
+  position:absolute; bottom:7mm; right:14mm;
+  font-size:11px; color:var(--ink-soft); font-weight:600; letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block;
+  color:#fff;
+  padding:6px 22px;
+  border-radius:30px;
+  font-weight:700;
+  font-size:12.5px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+/* ============================================================
+   PÁGINA 1 — CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(167,139,250,.22), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(251,191,36,.22), transparent 45%),
+    radial-gradient(circle at 80% 85%, rgba(34,197,94,.18), transparent 50%),
+    linear-gradient(180deg, #eef4ff 0%, #faf9f6 55%, #fff7e6 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18mm;
+}
+.cover .frame-outer{ position:absolute; inset:9mm; border:4px solid var(--gold); border-radius:22px; }
+.cover .frame-inner{ position:absolute; inset:13mm; border:1.5px solid rgba(124,58,237,.35); border-radius:18px; }
+.cover .eyebrow{
+  font-size:13px; letter-spacing:4px; color:var(--purple-dark); font-weight:700;
+  margin-bottom:16px; text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:44px; font-weight:800; color:var(--blue-dark); line-height:1.12;
+  text-shadow:0 2px 0 rgba(255,255,255,.6); margin-bottom:10px;
+}
+.cover .gold-underline{
+  width:120px; height:5px; background:linear-gradient(90deg, var(--gold), var(--gold-dark));
+  border-radius:6px; margin:6px auto 18px;
+}
+.cover .subtitle{
+  font-size:17px; color:var(--ink-soft); font-weight:600; max-width:135mm;
+  line-height:1.5; margin-bottom:26px;
+}
+.cover-illustration{ margin-bottom:22px; }
+.owner-box{
+  background:var(--card); border-radius:20px; padding:16px 30px;
+  box-shadow:0 6px 18px rgba(0,0,0,.09); border:2px dashed var(--purple);
+  font-size:15px; color:var(--ink); font-weight:600; margin-bottom:20px;
+}
+.owner-box .child-name{ color:var(--blue-dark); font-weight:800; font-size:18px; }
+.cover .alpha-row{ display:flex; gap:10px; margin-bottom:20px; }
+.alpha-chip{
+  width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:22px; color:#fff; box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+.cover .footer-tag{
+  position:absolute; bottom:16mm; font-size:12px; color:var(--ink-soft);
+  letter-spacing:2px; font-weight:600; text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINAS DE LETRA
+============================================================ */
+.letter-page{ padding:15mm 16mm 12mm; display:flex; flex-direction:column; }
+.letter-page-header{ text-align:center; margin-bottom:10px; }
+.letter-page-header .ribbon-title{ margin-bottom:8px; }
+
+.letter-hero{
+  display:flex; align-items:center; justify-content:center; gap:20px;
+  margin:8px 0 14px;
+}
+.letter-badge{
+  width:82px; height:82px; border-radius:22px;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:800; font-size:38px;
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
+  font-family:'Outfit',sans-serif;
+  flex-shrink:0;
+}
+.letter-word-block{ text-align:left; }
+.letter-word-block .icon{ font-size:26px; margin-right:6px; }
+.letter-word-block h2{ font-size:24px; color:var(--ink); font-weight:800; display:inline; }
+.letter-word-block .word-highlight{ color:var(--accent-color, var(--blue-dark)); }
+
+.explanation-card{
+  background:var(--card); border-radius:16px; padding:16px 20px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08); border:1px solid rgba(0,0,0,.05);
+  font-size:14px; line-height:1.65; color:var(--ink); margin-bottom:12px;
+}
+
+.verse-card{
+  background:linear-gradient(135deg, rgba(0,0,0,.02), rgba(0,0,0,0));
+  border-left:5px solid var(--accent-color, var(--gold));
+  border-radius:10px; padding:12px 16px; font-style:italic; color:var(--ink-soft);
+  font-size:13px; line-height:1.55; margin-bottom:16px;
+}
+
+.trace-section{
+  margin-top:auto;
+  background:#fff;
+  border:2px dashed var(--accent-color, var(--purple));
+  border-radius:16px;
+  padding:12px 16px 16px;
+}
+.trace-section .trace-title{
+  font-size:12.5px; font-weight:700; color:var(--ink-soft);
+  text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; text-align:center;
+}
+.trace-row{ display:flex; justify-content:center; }
+.trace-row svg{ width:100%; height:auto; max-width:170mm; }
+
+/* ============================================================
+   CERTIFICADO
+============================================================ */
+.certificate-page{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20mm; text-align:center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(251,191,36,.18), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(124,58,237,.15), transparent 45%),
+    #fffdf7;
+}
+.certificate-page .frame-outer{ position:absolute; inset:9mm; border:5px double var(--gold); border-radius:22px; }
+.certificate-page .frame-inner{ position:absolute; inset:14mm; border:1.5px solid rgba(59,130,246,.25); border-radius:16px; }
+.cert-eyebrow{
+  font-size:13px; letter-spacing:3px; color:var(--gold-dark); font-weight:800;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.certificate-page h2{ font-size:30px; color:var(--blue-dark); font-weight:800; margin-bottom:6px; }
+.certificate-page h3.subtitle-cert{ font-size:15px; color:var(--ink-soft); font-weight:600; margin-bottom:26px; }
+.cert-granted-to{ font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
+.cert-name{
+  font-size:34px; font-weight:800; color:var(--purple-dark);
+  margin-bottom:20px; font-family:'Outfit',sans-serif;
+}
+.cert-text{
+  font-size:14px; color:var(--ink); max-width:135mm; line-height:1.7; margin-bottom:26px;
+}
+.cert-alphabet-strip{ display:flex; flex-wrap:wrap; justify-content:center; gap:5px; max-width:150mm; margin-bottom:28px; }
+.cert-alphabet-strip span{
+  width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+  color:#fff; font-size:12px; font-weight:800;
+}
+.cert-signatures{ display:flex; gap:60px; margin-top:10px; }
+.cert-sign-block{ text-align:center; }
+.cert-sign-line{ width:150px; border-bottom:1.5px solid var(--ink-soft); margin-bottom:6px; height:26px; }
+.cert-sign-label{ font-size:11px; color:var(--ink-soft); letter-spacing:.5px; }
+.cert-medal{ margin-bottom:6px; }
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{ size:A4 portrait; margin:0; }
+  html,body{ width:210mm; height:297mm; background:#fff; }
+  .control-bar{ display:none !important; }
+  .book{ padding:0; gap:0; }
+  .page{
+    box-shadow:none;
+    page-break-after:always;
+    break-after:page;
+    margin:0;
+    width:210mm;
+    height:297mm;
+  }
+  .page:last-child{ page-break-after:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE (não imprime) ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR ALFABETO EM PDF</button>
+</div>
+
+<div class="book" id="bookContainer">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <div class="eyebrow">Livro de Atividades Bíblicas</div>
+
+    <div class="cover-illustration">
+      <svg width="210" height="150" viewBox="0 0 210 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- bíblia aberta -->
+        <path d="M20 100 Q105 78 190 100 L190 130 Q105 110 20 130 Z" fill="#3b82f6"/>
+        <path d="M105 82 L105 122" stroke="#ffffff" stroke-width="2" opacity="0.55"/>
+        <path d="M20 100 Q105 78 190 100" fill="none" stroke="#2563eb" stroke-width="3"/>
+        <!-- estrelas -->
+        <g fill="#fbbf24">
+          <path d="M40 30 l4 10 11 1 -8 7 3 11 -10-6 -10 6 3-11 -8-7 11-1z"/>
+          <path d="M170 25 l3 8 9 1 -7 6 2 9 -7-5 -7 5 2-9 -7-6 9-1z"/>
+          <path d="M105 12 l3 8 9 1 -7 6 2 9 -7-5 -7 5 2-9 -7-6 9-1z"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="alpha-row">
+      <div class="alpha-chip" style="background:#3b82f6;">A</div>
+      <div class="alpha-chip" style="background:#fbbf24; color:#4a3200;">B</div>
+      <div class="alpha-chip" style="background:#22c55e;">C</div>
+    </div>
+
+    <h1 class="main-title">MEU ALFABETO<br>BÍBLICO</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">Aprendendo as Letras com a Palavra de Deus</p>
+
+    <div class="owner-box">Este livro pertence a: <span class="child-name">Gabriel</span></div>
+
+    <div class="footer-tag">Edição Especial • Feito com Amor para Você</div>
+  </section>
+
+  <!-- as 26 páginas de letras (A a Z) são inseridas aqui automaticamente pelo script -->
+
+  <!-- ============================================================
+       PÁGINA FINAL — CERTIFICADO
+  ============================================================ -->
+  <section class="page certificate-page">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <svg width="70" height="70" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" class="cert-medal">
+      <circle cx="35" cy="28" r="20" fill="#fbbf24"/>
+      <circle cx="35" cy="28" r="13" fill="#fff7e0"/>
+      <path d="M35 18 l3.5 8 8.5 1 -6.5 5.5 2.3 8.5 -7.8-4.7 -7.8 4.7 2.3-8.5 -6.5-5.5 8.5-1z" fill="#f59e0b"/>
+      <path d="M23 44 L15 63 L35 55 L55 63 L47 44 Z" fill="#7c3aed"/>
+    </svg>
+
+    <div class="cert-eyebrow">Certificado Especial</div>
+    <h2>Pequeno Sábio da Palavra</h2>
+    <h3 class="subtitle-cert">Meu Alfabeto Bíblico • A a Z</h3>
+
+    <div class="cert-granted-to">Este certificado é concedido, com muito carinho, a</div>
+    <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+
+    <p class="cert-text">
+      por ter aprendido, com muita dedicação e alegria, todo o Alfabeto Bíblico —
+      da letra <strong>A de Amor</strong> até a letra <strong>Z de Zaqueu</strong> —
+      descobrindo em cada letrinha um pouquinho mais do imenso amor de Deus.
+    </p>
+
+    <div class="cert-alphabet-strip" id="certAlphabetStrip"></div>
+
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">DATA: <span id="certDate"></span></div>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">ASSINATURA DOS PAIS</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  /* ============================================================
+     1) DADOS DO ALFABETO BÍBLICO — A a Z (nenhuma letra omitida)
+  ============================================================ */
+  const ALPHABET = [
+    { l:"A", w:"Amor", icon:"❤️",
+      text:"Deus ama muito, muito, muito você! O amor dEle é tão grande que Ele mandou Jesus para cuidar de nós. Amar é abraçar, dividir e ser gentil com todos.",
+      verse:"“Deus é amor.” — 1 João 4:8" },
+    { l:"B", w:"Bíblia", icon:"📖",
+      text:"A Bíblia é a carta de amor que Deus escreveu para você! Nela aprendemos como viver, amar e confiar em Deus todos os dias. Vamos ler juntinhos uma pagininha?",
+      verse:"“Lâmpada para os meus pés é a tua palavra.” — Salmos 119:105" },
+    { l:"C", w:"Cruz", icon:"✝️",
+      text:"Na cruz, Jesus mostrou o maior amor do mundo por você. Ele foi corajoso e cheio de amor até o fim. Por causa da cruz, hoje podemos ser amigos de Deus.",
+      verse:"“Cristo morreu por nós.” — Romanos 5:8" },
+    { l:"D", w:"Davi", icon:"🦁",
+      text:"Davi era só um menino pastorzinho, mas confiava muito em Deus! Com coragem e fé, ele venceu o gigante Golias com uma pedrinha e uma estilingue. Deus pode fazer coisas grandes através de você também!",
+      verse:"“O Senhor é o meu pastor.” — Salmos 23:1" },
+    { l:"E", w:"Estrela", icon:"⭐",
+      text:"Uma estrela brilhante guiou os sábios até o bebê Jesus em Belém! Ela brilhou forte no céu escuro para mostrar o caminho. Assim como a estrela, você também pode brilhar a luz de Jesus por onde passar!",
+      verse:"“Vimos a sua estrela... e viemos adorá-lo.” — Mateus 2:2" },
+    { l:"F", w:"Fé", icon:"🙏",
+      text:"Fé é confiar em Deus mesmo sem ver! É acreditar que Ele cuida de você o tempo todo, em cada aventura. Com uma fezinha pequenininha, já dá pra confiar bem grande!",
+      verse:"“A fé é a certeza daquilo que esperamos.” — Hebreus 11:1" },
+    { l:"G", w:"Graça", icon:"🎁",
+      text:"Graça é um presente lindo de Deus que a gente não precisa merecer, só receber com o coração! É o amor de Deus nos abraçando mesmo quando erramos. Que presente maravilhoso!",
+      verse:"“Pela graça sois salvos, mediante a fé.” — Efésios 2:8" },
+    { l:"H", w:"Hosana", icon:"🌿",
+      text:"“Hosana” é uma palavra de festa que o povo gritava quando Jesus entrou em Jerusalém! Eles agitavam ramos de palmeira e cantavam de alegria. Hosana quer dizer “salva-nos, Senhor!”",
+      verse:"“Hosana ao Filho de Davi!” — Mateus 21:9" },
+    { l:"I", w:"Igreja", icon:"⛪",
+      text:"Igreja não é só um prédio — é a grande família de Deus reunida! Lá cantamos, oramos e aprendemos juntos sobre o amor de Jesus. Você faz parte dessa família especial!",
+      verse:"“Onde dois ou três estiverem reunidos em meu nome, aí estou no meio deles.” — Mateus 18:20" },
+    { l:"J", w:"Jesus", icon:"✨",
+      text:"Jesus é o Filho de Deus que veio ao mundo para te amar de um jeito muito especial! Ele é o melhor amigo que você pode ter, hoje e sempre. Jesus te ama exatamente do jeitinho que você é!",
+      verse:"“Porque Deus amou o mundo... deu o seu Filho unigênito.” — João 3:16" },
+    { l:"K", w:"Kadosh (Santo)", icon:"👑",
+      text:"“Kadosh” é uma palavra em hebraico que significa “Santo”! Deus é tão especial, tão puro e tão maravilhoso que os anjos cantam sem parar: Santo, Santo, Santo! Podemos cantar essa canção para Deus também.",
+      verse:"“Santo, santo, santo é o Senhor dos Exércitos.” — Isaías 6:3" },
+    { l:"L", w:"Luz do Mundo", icon:"💡",
+      text:"Jesus disse que Ele é a Luz do Mundo! A luz dEle espanta o medo e a escuridão do nosso coração. E sabia que você também pode brilhar essa luz por onde passar?",
+      verse:"“Eu sou a luz do mundo.” — João 8:12" },
+    { l:"M", w:"Moisés", icon:"🌊",
+      text:"Moisés foi escolhido por Deus para libertar o Seu povo do Egito! Deus abriu o Mar Vermelho para o povo passar em segurança. Deus faz coisas incríveis para cuidar de quem ama!",
+      verse:"“O Senhor pelejará por vós.” — Êxodo 14:14" },
+    { l:"N", w:"Noé", icon:"🌈",
+      text:"Noé confiou em Deus e construiu uma arca gigante para salvar sua família e os animais! Depois da chuva, Deus pintou um lindo arco-íris no céu como promessa de cuidado. Deus sempre cumpre o que promete!",
+      verse:"“Porei o meu arco nas nuvens...” — Gênesis 9:13" },
+    { l:"O", w:"Ovelha", icon:"🐑",
+      text:"Assim como uma ovelhinha que se perdeu, Jesus sempre vem te procurar quando você se sente perdido ou triste. Ele é o Bom Pastor que ama e cuida de cada ovelhinha. Você é muito precioso para Jesus!",
+      verse:"“Somos ovelhas do seu pasto.” — Salmos 100:3" },
+    { l:"P", w:"Pastor", icon:"🌾",
+      text:"O Bom Pastor conhece cada ovelhinha pelo nome e cuida de todas com muito carinho. Jesus é o nosso Bom Pastor, que nos guia para lugares seguros e cheios de paz. Ele nunca desiste de nenhuma ovelhinha!",
+      verse:"“Eu sou o bom Pastor.” — João 10:11" },
+    { l:"Q", w:"Querubim", icon:"👼",
+      text:"Os querubins são seres especiais que Deus criou para adorá-lo e proteger lugares sagrados! Eles aparecem em várias histórias da Bíblia, cheios de força e brilho. Deus tem criaturas maravilhosas cuidando do Seu reino!",
+      verse:"“E pôs querubins ao oriente do jardim do Éden.” — Gênesis 3:24" },
+    { l:"R", w:"Ressurreição", icon:"🌅",
+      text:"No domingo de Páscoa, aconteceu o maior milagre: Jesus ressuscitou! Ele venceu a morte para que um dia todos que O amam vivam para sempre com Ele. Que alegria maior pode existir?",
+      verse:"“Ele não está aqui, pois ressuscitou!” — Mateus 28:6" },
+    { l:"S", w:"Salvação", icon:"🛟",
+      text:"Salvação é o presente mais lindo que existe: Jesus nos salva e nos dá vida nova para sempre! Basta crer nEle e amá-lo com todo o coração. Que alegria saber que somos salvos!",
+      verse:"“Todo aquele que invocar o nome do Senhor será salvo.” — Romanos 10:13" },
+    { l:"T", w:"Templo", icon:"🏛️",
+      text:"O templo era um lugar muito especial onde o povo ia adorar a Deus. Hoje, sabia que o seu coração também pode ser um templo, um lugar onde Deus mora? Que privilégio ter Deus tão pertinho!",
+      verse:"“Não sabeis que sois santuário de Deus?” — 1 Coríntios 3:16" },
+    { l:"U", w:"Unção", icon:"🕊️",
+      text:"Unção é quando Deus derrama Seu poder e cuidado especial sobre alguém, como um óleo perfumado de bênção! Reis, sacerdotes e profetas recebiam esse sinal de Deus. Você também é escolhido e abençoado por Ele!",
+      verse:"“Ungiste a minha cabeça com óleo.” — Salmos 23:5" },
+    { l:"V", w:"Verdade", icon:"🧭",
+      text:"Jesus disse que Ele é o Caminho, a Verdade e a Vida! Podemos sempre confiar no que Jesus fala, porque Ele nunca mente. Seguir a verdade é seguir bem pertinho de Jesus.",
+      verse:"“Eu sou o caminho, a verdade e a vida.” — João 14:6" },
+    { l:"W", w:"Waw", icon:"🔤",
+      text:"“Waw” é uma letrinha do alfabeto hebraico, a língua em que boa parte da Bíblia foi escrita! Ela aparece no Salmo 119, o maior capítulo da Bíblia, cheio de amor pela Palavra de Deus. Que Palavra tão rica e cheia de tesouros!",
+      verse:"“Lâmpada para os meus pés é a tua palavra.” — Salmos 119:105" },
+    { l:"X", w:"Xô, Medo!", icon:"🚫",
+      text:"Quando o medo chegar, podemos dizer bem forte: “Xô, medo! Deus está comigo!” Deus não nos deu espírito de medo, mas de amor, poder e domínio próprio. Com Deus, você é corajoso(a)!",
+      verse:"“Deus não nos deu espírito de covardia...” — 2 Timóteo 1:7" },
+    { l:"Y", w:"Yeshua", icon:"💛",
+      text:"“Yeshua” é o nome de Jesus em hebraico, e significa “Deus salva”! Esse foi o lindo nome escolhido pelo próprio Deus para o Seu Filho. Que nome tão poderoso e cheio de amor!",
+      verse:"“Chamarás o seu nome Jesus, porque Ele salvará o Seu povo.” — Mateus 1:21" },
+    { l:"Z", w:"Zaqueu", icon:"🌳",
+      text:"Zaqueu era baixinho e subiu em uma árvore só para conseguir ver Jesus passar! Jesus olhou para cima, sorriu e foi visitar a casa dele. Não importa o tamanho, Jesus sempre nos enxerga e nos ama!",
+      verse:"“O Filho do Homem veio buscar e salvar o que se havia perdido.” — Lucas 19:10" }
+  ];
+
+  const PALETTE = [
+    { main:"#3b82f6", dark:"#2563eb", name:"blue"   },
+    { main:"#fbbf24", dark:"#f59e0b", name:"gold"   },
+    { main:"#22c55e", dark:"#16a34a", name:"green"  },
+    { main:"#a78bfa", dark:"#7c3aed", name:"purple" }
+  ];
+
+  function escapeHTML(str){
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  /* Gera o SVG de traçado pontilhado para uma letra (maiúscula + minúscula) */
+  function traceSVG(upper, lower, color){
+    const w = 640, h = 190;
+    function dashedLetterRow(y, letter, size){
+      let out = "";
+      const xs = [90, 300, 510];
+      xs.forEach(function(x){
+        out += '<text x="'+x+'" y="'+y+'" font-family="Outfit, sans-serif" font-weight="700" ' +
+          'font-size="'+size+'" text-anchor="middle" fill="none" stroke="'+color+'" ' +
+          'stroke-width="2" stroke-dasharray="4,5" opacity="0.75">'+letter+'</text>';
+      });
+      return out;
+    }
+    let svg = '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">';
+    // linha de base maiúscula
+    svg += '<line x1="30" y1="70" x2="'+(w-30)+'" y2="70" stroke="#c9d3e0" stroke-width="1.5" stroke-dasharray="3,4"/>';
+    svg += dashedLetterRow(75, upper, 60);
+    // linha de base minúscula
+    svg += '<line x1="30" y1="165" x2="'+(w-30)+'" y2="165" stroke="#c9d3e0" stroke-width="1.5" stroke-dasharray="3,4"/>';
+    svg += dashedLetterRow(170, lower, 60);
+    svg += '</svg>';
+    return svg;
+  }
+
+  /* Gera o HTML completo de uma página de letra */
+  function buildLetterPage(entry, index){
+    const color = PALETTE[index % PALETTE.length];
+    const upper = entry.l;
+    const lower = entry.l.toLowerCase();
+    const pageNum = index + 2; // página 1 é a capa
+
+    return (
+      '<section class="page letter-page" style="--frame-color:'+color.main+';">' +
+        '<div class="corner-frame"></div>' +
+        '<div class="corner-frame inner"></div>' +
+
+        '<div class="letter-page-header">' +
+          '<span class="ribbon-title" style="background:'+color.main+';">Letra '+upper+' de '+escapeHTML(entry.w)+'</span>' +
+        '</div>' +
+
+        '<div class="letter-hero">' +
+          '<div class="letter-badge" style="background:linear-gradient(135deg,'+color.main+','+color.dark+');">'+upper+' '+lower+'</div>' +
+          '<div class="letter-word-block">' +
+            '<span class="icon">'+entry.icon+'</span>' +
+            '<h2>'+upper+' de <span class="word-highlight" style="--accent-color:'+color.dark+';">'+escapeHTML(entry.w)+'</span></h2>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="explanation-card">'+entry.text+'</div>' +
+
+        '<div class="verse-card" style="--accent-color:'+color.main+';">'+entry.verse+'</div>' +
+
+        '<div class="trace-section" style="--accent-color:'+color.main+';">' +
+          '<div class="trace-title">✏️ Vamos treinar a letra '+upper+lower+'!</div>' +
+          '<div class="trace-row">'+traceSVG(upper, lower, color.main)+'</div>' +
+        '</div>' +
+
+        '<div class="page-number">'+pageNum+'</div>' +
+      '</section>'
+    );
+  }
+
+  /* ============================================================
+     2) MONTA TODAS AS PÁGINAS DO ALFABETO NO DOM
+  ============================================================ */
+  function renderAlphabetPages(){
+    const container = document.getElementById("bookContainer");
+    const certificatePage = container.querySelector(".certificate-page");
+    let html = "";
+    ALPHABET.forEach(function(entry, index){
+      html += buildLetterPage(entry, index);
+    });
+    certificatePage.insertAdjacentHTML("beforebegin", html);
+  }
+
+  /* Monta a faixinha colorida A-Z do certificado */
+  function renderCertAlphabetStrip(){
+    const strip = document.getElementById("certAlphabetStrip");
+    if(!strip) return;
+    let html = "";
+    ALPHABET.forEach(function(entry, index){
+      const color = PALETTE[index % PALETTE.length];
+      html += '<span style="background:'+color.main+';">'+entry.l+'</span>';
+    });
+    strip.innerHTML = html;
+  }
+
+  /* ============================================================
+     3) PERSONALIZAÇÃO DO NOME DA CRIANÇA
+  ============================================================ */
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){ return null; }
+  }
+
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){
+      el.textContent = finalName;
+    });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{ window.localStorage.setItem(STORAGE_KEY, finalName); }catch(e){ /* segue sem salvar */ }
+  }
+
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){ applyName(urlName); return; }
+    const savedName = getSavedName();
+    if(savedName){ applyName(savedName); return; }
+    applyName(DEFAULT_NAME);
+  }
+
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  /* ============================================================
+     4) INICIALIZAÇÃO
+  ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    renderAlphabetPages();
+    renderCertAlphabetStrip();
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){ applyName(input.value); });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ applyName(input.value); }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
