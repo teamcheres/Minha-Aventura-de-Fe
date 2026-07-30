@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Aventura de Fé - Livro Infantil Cristão Personalizado</title>
+    <meta name="description" content="Qual o nome da criança que você quer ver brilhando nas histórias de Jesus? Crie uma demonstração mágica em segundos.">
+    <link rel="canonical" href="https://minha-aventura-de-fe.vercel.app/">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      h1 {
+        font-family: 'Outfit', sans-serif;
+      }
+      .card-container {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
+        border: 1px solid #e2e8f0;
+        padding: 40px 32px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+      }
+      .sparkle-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: #eff6ff;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+      .input-name {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 1.1rem;
+        border: 2px solid #cbd5e1;
+        border-radius: 14px;
+        outline: none;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+        text-align: center;
+        font-weight: 600;
+        color: #1e293b;
+        background-color: #f8fafc;
+        margin-bottom: 20px;
+      }
+      .input-name:focus {
+        border-color: #3b82f6;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+      }
+      .btn-submit {
+        width: 100%;
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: #ffffff;
+        font-weight: 800;
+        border-radius: 9999px;
+        padding: 18px 24px;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 0.5px;
+      }
+      .btn-submit:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 12px 28px rgba(34, 197, 94, 0.45);
+      }
+      .badge-free {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fef9c3;
+        color: #854d0e;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        margin-top: 24px;
+        border: 1px solid #fef08a;
+      }
+      .error-msg {
+        color: #ef4444;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: -12px;
+        margin-bottom: 16px;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card-container">
+      <div class="sparkle-badge">✨</div>
+      
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 leading-snug">
+        Qual o nome da criança que você quer ver brilhando nas histórias de Jesus?
+      </h1>
+      
+      <p class="text-slate-500 text-sm sm:text-base mb-8">
+        Vamos preparar uma demonstração mágica para vocês.
+      </p>
+
+      <form id="child-name-form">
+        <input 
+          type="text" 
+          id="child-name-input" 
+          class="input-name" 
+          placeholder="Digite o primeiro nome aqui" 
+          required 
+          autocomplete="off" 
+          autofocus
+        >
+        <div id="error-message" class="error-msg">Por favor, digite o nome da criança.</div>
+
+        <button type="submit" class="btn-submit">
+          ✨ CRIAR AVENTURA MÁGICA
+        </button>
+      </form>
+
+      <div class="badge-free">
+        <span>🟡 100% Gratuito • Sem Cadastro</span>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('child-name-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var input = document.getElementById('child-name-input');
+        var error = document.getElementById('error-message');
+        var val = input.value ? input.value.trim() : '';
+
+        if (!val) {
+          error.style.display = 'block';
+          return;
+        }
+
+        error.style.display = 'none';
+        var nameFormatted = val.charAt(0).toUpperCase() + val.slice(1);
+        
+        localStorage.setItem('childName', nameFormatted);
+        
+        var target = window.location.pathname.endsWith('/') ? window.location.pathname + 'oferta' : window.location.pathname + '/oferta';
+        window.location.href = target;
+      });
+    </script>
+  </body>
+</html>
