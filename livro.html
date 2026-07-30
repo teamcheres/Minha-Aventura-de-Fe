@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha Aventura de Fé</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --blue:#3b82f6;
+  --blue-dark:#2563eb;
+  --gold:#fbbf24;
+  --gold-dark:#f59e0b;
+  --green:#22c55e;
+  --bg:#faf9f6;
+  --ink:#25324a;
+  --ink-soft:#4b5876;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans', 'Outfit', 'Segoe UI', Arial, sans-serif;
+  background:#dfe4ea;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{
+  font-family:'Outfit','Plus Jakarta Sans',sans-serif;
+}
+
+/* ============ BARRA DE CONTROLE (não imprime) ============ */
+.control-bar{
+  position:sticky;
+  top:0;
+  z-index:999;
+  background:linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color:#fff;
+  padding:14px 20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(255,255,255,.12);
+  padding:6px 10px 6px 14px;
+  border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none;
+  outline:none;
+  border-radius:20px;
+  padding:7px 12px;
+  font-family:inherit;
+  font-size:14px;
+  width:150px;
+}
+.control-bar button{
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+  font-weight:700;
+  border-radius:24px;
+  padding:9px 16px;
+  font-size:14px;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{
+  background:var(--green);
+  color:#fff;
+}
+.btn-print{
+  background:var(--gold);
+  color:#4a3200;
+  font-size:15px;
+  padding:11px 22px;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+
+/* ============ CONTAINER DE PÁGINAS (visualização em tela) ============ */
+.book{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:26px;
+  padding:30px 10px 60px;
+}
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+/* ============ ELEMENTOS DECORATIVOS ============ */
+.corner-frame{
+  position:absolute;
+  inset:10mm;
+  border:3px solid var(--gold);
+  border-radius:14px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:13mm;
+  border:1.5px dashed rgba(59,130,246,.45);
+  border-radius:10px;
+}
+
+.stars-bg{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.55;
+}
+
+.page-number{
+  position:absolute;
+  bottom:8mm;
+  right:14mm;
+  font-size:11px;
+  color:var(--ink-soft);
+  font-weight:600;
+  letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block;
+  background:var(--blue);
+  color:#fff;
+  padding:6px 22px;
+  border-radius:30px;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(59,130,246,.35);
+}
+
+.verse-card{
+  background:var(--card);
+  border-left:6px solid var(--gold);
+  border-radius:12px;
+  padding:16px 20px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+  font-style:italic;
+  color:var(--ink-soft);
+  font-size:14.5px;
+  line-height:1.6;
+}
+.verse-card strong{
+  display:block;
+  font-style:normal;
+  color:var(--blue-dark);
+  margin-top:6px;
+  font-size:12.5px;
+  letter-spacing:.5px;
+}
+
+.story-card{
+  background:var(--card);
+  border-radius:18px;
+  padding:22px 26px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  border:1px solid rgba(59,130,246,.12);
+}
+
+.child-name{
+  color:var(--blue-dark);
+  font-weight:800;
+  white-space:nowrap;
+}
+
+/* ============ SVG helpers ============ */
+svg{display:block;}
+
+/* ============================================================
+   PÁGINA 1 — CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 20% 15%, rgba(251,191,36,.25), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(59,130,246,.22), transparent 50%),
+    linear-gradient(180deg, #eaf2ff 0%, #faf9f6 55%, #fff7e6 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20mm;
+}
+.cover .frame-outer{
+  position:absolute;
+  inset:9mm;
+  border:4px solid var(--gold);
+  border-radius:20px;
+}
+.cover .frame-inner{
+  position:absolute;
+  inset:13mm;
+  border:1.5px solid rgba(37,99,235,.4);
+  border-radius:16px;
+}
+.cover .eyebrow{
+  font-size:14px;
+  letter-spacing:4px;
+  color:var(--blue-dark);
+  font-weight:700;
+  margin-bottom:18px;
+  text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:52px;
+  font-weight:800;
+  color:var(--blue-dark);
+  line-height:1.08;
+  text-shadow:0 2px 0 rgba(255,255,255,.6);
+  margin-bottom:14px;
+}
+.cover .gold-underline{
+  width:120px;
+  height:5px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-dark));
+  border-radius:6px;
+  margin:6px auto 22px;
+}
+.cover .subtitle{
+  font-size:19px;
+  color:var(--ink-soft);
+  font-weight:600;
+  max-width:130mm;
+  line-height:1.5;
+  margin-bottom:36px;
+}
+.cover .subtitle .child-name{ font-size:21px; }
+.cover-illustration{
+  margin-bottom:30px;
+}
+.cover .footer-tag{
+  position:absolute;
+  bottom:18mm;
+  font-size:13px;
+  color:var(--ink-soft);
+  letter-spacing:2px;
+  font-weight:600;
+  text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINA 2 — DEDICATÓRIA
+============================================================ */
+.dedication{
+  background:linear-gradient(180deg, #fffaf0 0%, #faf9f6 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24mm 22mm;
+}
+.dedication h2{
+  font-size:24px;
+  color:var(--blue-dark);
+  margin-bottom:24px;
+  letter-spacing:1px;
+}
+.dedication .heart-frame{
+  margin-bottom:26px;
+}
+.dedication-box{
+  background:var(--card);
+  border-radius:20px;
+  padding:34px 32px;
+  box-shadow:0 8px 24px rgba(0,0,0,.09);
+  border:2px dashed var(--gold);
+  max-width:145mm;
+}
+.dedication-box p{
+  font-size:19px;
+  line-height:1.75;
+  color:var(--ink);
+  font-weight:500;
+}
+.dedication-box .signature-line{
+  margin-top:26px;
+  font-size:13px;
+  color:var(--ink-soft);
+  letter-spacing:1px;
+}
+.dedication .verse-card{
+  margin-top:30px;
+  max-width:140mm;
+}
+
+/* ============================================================
+   CAPÍTULOS
+============================================================ */
+.chapter{
+  padding:16mm 18mm 14mm;
+  display:flex;
+  flex-direction:column;
+}
+.chapter-header{
+  text-align:center;
+  margin-bottom:14px;
+}
+.chapter-number{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;height:34px;
+  border-radius:50%;
+  background:var(--gold);
+  color:#4a3200;
+  font-weight:800;
+  font-size:15px;
+  margin-bottom:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,.15);
+}
+.chapter-header h2{
+  font-size:23px;
+  color:var(--blue-dark);
+  font-weight:800;
+  line-height:1.25;
+}
+.chapter-illustration{
+  display:flex;
+  justify-content:center;
+  margin:6px 0 14px;
+}
+.chapter-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  justify-content:flex-start;
+}
+.chapter-body p{
+  font-size:14.5px;
+  line-height:1.72;
+  color:var(--ink);
+}
+.chapter-body p strong{ color:var(--blue-dark); }
+.teaching-box{
+  background:linear-gradient(135deg, rgba(34,197,94,.10), rgba(34,197,94,.04));
+  border-left:5px solid var(--green);
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:13.5px;
+  color:#14532d;
+  font-weight:600;
+  line-height:1.55;
+}
+
+/* ============================================================
+   PÁGINA FINAL — ORAÇÃO + CERTIFICADO
+============================================================ */
+.final-page{
+  padding:14mm 18mm;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.prayer-box{
+  background:linear-gradient(135deg, #eaf2ff, #fdf6e3);
+  border-radius:18px;
+  padding:20px 24px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  border:1px solid rgba(59,130,246,.15);
+}
+.prayer-box h3{
+  color:var(--blue-dark);
+  font-size:18px;
+  margin-bottom:10px;
+  text-align:center;
+}
+.prayer-box p{
+  font-size:13.5px;
+  line-height:1.68;
+  color:var(--ink);
+  font-style:italic;
+}
+
+.certificate{
+  border:4px double var(--gold);
+  border-radius:16px;
+  padding:20px 26px;
+  text-align:center;
+  background:#fffdf7;
+  position:relative;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.certificate .cert-eyebrow{
+  font-size:12px;
+  letter-spacing:3px;
+  color:var(--gold-dark);
+  font-weight:800;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.certificate h3{
+  font-size:26px;
+  color:var(--blue-dark);
+  font-weight:800;
+  margin-bottom:10px;
+}
+.certificate .cert-name{
+  font-size:30px;
+  font-weight:800;
+  color:var(--gold-dark);
+  margin:8px 0 14px;
+  font-family:'Outfit', sans-serif;
+}
+.certificate .cert-text{
+  font-size:13.5px;
+  color:var(--ink-soft);
+  max-width:130mm;
+  margin:0 auto 14px;
+  line-height:1.6;
+}
+.certificate .cert-date{
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-top:10px;
+}
+.certificate .medal{
+  margin:0 auto 8px;
+}
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:0;
+  }
+  html,body{
+    width:210mm;
+    height:297mm;
+    background:#fff;
+  }
+  .control-bar{ display:none !important; }
+  .book{
+    padding:0;
+    gap:0;
+  }
+  .page{
+    box-shadow:none;
+    page-break-after:always;
+    break-after:page;
+    margin:0;
+    width:210mm;
+    height:297mm;
+  }
+  .page:last-child{
+    page-break-after:auto;
+  }
+}
+
+@media screen{
+  .page{ margin-top:0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE (não imprime) ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR LIVRO EM PDF</button>
+</div>
+
+<div class="book">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <!-- estrelas decorativas -->
+    <svg class="stars-bg" viewBox="0 0 800 1131" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#fbbf24" opacity="0.55">
+        <path d="M90 60 l6 16 17 2 -13 11 4 17 -14-9 -14 9 4-17 -13-11 17-2z"/>
+        <path d="M700 120 l5 13 14 2 -11 9 3 14 -11-7 -11 7 3-14 -11-9 14-2z"/>
+        <path d="M650 900 l6 16 17 2 -13 11 4 17 -14-9 -14 9 4-17 -13-11 17-2z"/>
+        <path d="M110 980 l5 13 14 2 -11 9 3 14 -11-7 -11 7 3-14 -11-9 14-2z"/>
+        <path d="M60 500 l4 10 11 1 -9 7 3 11 -9-6 -9 6 3-11 -9-7 11-1z"/>
+        <path d="M740 520 l4 10 11 1 -9 7 3 11 -9-6 -9 6 3-11 -9-7 11-1z"/>
+      </g>
+    </svg>
+
+    <div class="eyebrow">Livro de Histórias Bíblicas Personalizado</div>
+
+    <div class="cover-illustration">
+      <svg width="200" height="170" viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg">
+        <!-- livro/bíblia -->
+        <g>
+          <path d="M30 40 Q100 20 170 40 L170 140 Q100 120 30 140 Z" fill="#3b82f6"/>
+          <path d="M100 30 L100 130" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+          <path d="M30 40 Q100 20 170 40" fill="none" stroke="#2563eb" stroke-width="3"/>
+          <circle cx="100" cy="80" r="18" fill="#fbbf24"/>
+          <path d="M100 68 L104 78 115 78 106 85 109 96 100 89 91 96 94 85 85 78 96 78 Z" fill="#ffffff"/>
+        </g>
+        <!-- raios de luz -->
+        <g stroke="#fbbf24" stroke-width="3" stroke-linecap="round" opacity="0.8">
+          <line x1="100" y1="8" x2="100" y2="20"/>
+          <line x1="60" y1="18" x2="68" y2="27"/>
+          <line x1="140" y1="18" x2="132" y2="27"/>
+        </g>
+      </svg>
+    </div>
+
+    <h1 class="main-title">MINHA AVENTURA<br>DE FÉ</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">A Jornada Inesquecível de <span class="child-name">Gabriel</span> com Jesus</p>
+
+    <svg width="260" height="46" viewBox="0 0 260 46" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.55">
+        <path d="M10 23 Q65 5 130 23 Q195 41 250 23"/>
+      </g>
+      <g fill="#22c55e">
+        <circle cx="40" cy="23" r="4"/>
+        <circle cx="130" cy="23" r="4"/>
+        <circle cx="220" cy="23" r="4"/>
+      </g>
+    </svg>
+
+    <div class="footer-tag">Edição Especial • Feita com Amor para Você</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 2 — DEDICATÓRIA
+  ============================================================ -->
+  <section class="page dedication">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="ribbon-title">Dedicatória</div>
+
+    <div class="heart-frame" style="margin-top:22px;">
+      <svg width="90" height="80" viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M45 75 C10 50 0 30 10 15 C18 3 35 3 45 20 C55 3 72 3 80 15 C90 30 80 50 45 75 Z" fill="#fbbf24" opacity="0.9"/>
+        <path d="M45 65 C18 45 10 28 18 17 C24 9 36 9 45 22 C54 9 66 9 72 17 C80 28 72 45 45 65 Z" fill="#3b82f6" opacity="0.15"/>
+      </svg>
+    </div>
+
+    <h2>Este livro pertence a</h2>
+
+    <div class="dedication-box">
+      <p><span class="child-name" style="font-size:24px;">Gabriel</span>,<br>
+      um tesouro amado por Deus.<br>
+      Que cada página desta jornada encha seu coraçãozinho de fé,
+      coragem e amor por Jesus, hoje e sempre.</p>
+      <div class="signature-line">Com carinho, sua família ✦</div>
+    </div>
+
+    <div class="verse-card">
+      "Eu te louvarei, porque de um modo assombroso e maravilhoso fui feito;
+      maravilhosas são as tuas obras, e a minha alma o sabe muito bem."
+      <strong>SALMOS 139:14</strong>
+    </div>
+
+    <div class="page-number">2</div>
+  </section>
+
+  <!-- ============================================================
+       CAPÍTULO 1 — O SEMEADOR E A SEMENTE
+  ============================================================ -->
+  <section class="page chapter">
+    <div class="corner-frame"></div>
+    <div class="chapter-header">
+      <div class="chapter-number">1</div>
+      <h2>O Semeador e a Semente<br>no Coração de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="chapter-illustration">
+      <svg width="230" height="110" viewBox="0 0 230 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- sol -->
+        <circle cx="30" cy="25" r="16" fill="#fbbf24"/>
+        <g stroke="#fbbf24" stroke-width="3" stroke-linecap="round">
+          <line x1="30" y1="0" x2="30" y2="6"/>
+          <line x1="30" y1="44" x2="30" y2="50"/>
+          <line x1="5" y1="25" x2="11" y2="25"/>
+          <line x1="49" y1="25" x2="55" y2="25"/>
+        </g>
+        <!-- solo -->
+        <path d="M0 90 Q115 70 230 90 L230 110 L0 110 Z" fill="#a7794f" opacity="0.35"/>
+        <!-- plantinhas crescendo -->
+        <g stroke="#22c55e" stroke-width="4" stroke-linecap="round" fill="none">
+          <path d="M90 92 Q90 75 80 68"/>
+          <path d="M90 92 Q90 75 100 68"/>
+          <path d="M130 92 Q130 70 122 60"/>
+          <path d="M130 92 Q130 70 138 60"/>
+          <path d="M170 92 Q170 78 163 72"/>
+          <path d="M170 92 Q170 78 177 72"/>
+        </g>
+        <g fill="#22c55e">
+          <ellipse cx="122" cy="58" rx="6" ry="9" transform="rotate(-20 122 58)"/>
+          <ellipse cx="138" cy="58" rx="6" ry="9" transform="rotate(20 138 58)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="chapter-body">
+      <p>Era uma tarde ensolarada quando Jesus reuniu as crianças ao redor de si e contou uma
+      história muito especial — e <span class="child-name">Gabriel</span> estava bem ali, sentado na primeira fila, com os olhos brilhando de curiosidade.</p>
+
+      <p>Jesus contou sobre um semeador que saiu para plantar sementes em seu campo. Algumas
+      sementes caíram no caminho duro e os passarinhos as comeram. Outras caíram entre pedras e
+      não conseguiram criar raízes fortes. Mas as sementes que caíram em terra boa e macia
+      cresceram e deram muitos, muitos frutos!</p>
+
+      <p>Jesus olhou com carinho para <span class="child-name">Gabriel</span> e disse: <strong>"O seu coração também
+      é como um terreno especial, e cada palavra de amor, bondade e verdade que você guarda nele é
+      como uma sementinha."</strong> Quanto mais <span class="child-name">Gabriel</span> cuidasse do seu coração — sendo
+      gentil, orando e amando os outros — mais essas sementes cresceriam e se transformariam em
+      lindos frutos de bondade!</p>
+
+      <p><span class="child-name">Gabriel</span> sorriu e prometeu: "Vou cuidar do meu coração como um jardim
+      lindo para Jesus!"</p>
+    </div>
+
+    <div class="teaching-box">
+      🌱 Ensinamento: Assim como uma planta precisa de cuidado, nosso coração precisa ser regado
+      todos os dias com amor, oração e boas ações.
+    </div>
+
+    <div class="page-number">3</div>
+  </section>
+
+  <!-- ============================================================
+       CAPÍTULO 2 — A TEMPESTADE ACALMADA
+  ============================================================ -->
+  <section class="page chapter">
+    <div class="corner-frame"></div>
+    <div class="chapter-header">
+      <div class="chapter-number">2</div>
+      <h2><span class="child-name">Gabriel</span> e a Tempestade Acalmada</h2>
+    </div>
+
+    <div class="chapter-illustration">
+      <svg width="230" height="110" viewBox="0 0 230 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- ondas -->
+        <path d="M0 85 Q40 70 80 85 T160 85 T230 85 L230 110 L0 110 Z" fill="#3b82f6" opacity="0.35"/>
+        <path d="M0 95 Q40 82 80 95 T160 95 T230 95 L230 110 L0 110 Z" fill="#2563eb" opacity="0.45"/>
+        <!-- barco -->
+        <path d="M70 80 L160 80 L145 100 L85 100 Z" fill="#fbbf24"/>
+        <rect x="110" y="45" width="4" height="35" fill="#7c5a3a"/>
+        <path d="M114 48 L140 70 L114 70 Z" fill="#ffffff" stroke="#3b82f6" stroke-width="1.5"/>
+        <!-- nuvem com raio -->
+        <g fill="#94a3b8" opacity="0.85">
+          <ellipse cx="60" cy="28" rx="22" ry="14"/>
+          <ellipse cx="80" cy="22" rx="16" ry="12"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="chapter-body">
+      <p>Certa noite, <span class="child-name">Gabriel</span> estava com Jesus e os discípulos em um barquinho
+      no meio do mar. De repente, o céu escureceu, o vento começou a soprar forte e ondas
+      enormes balançavam o barco de um lado para o outro. Alguns discípulos ficaram com muito
+      medo!</p>
+
+      <p>E onde estava Jesus? Ele estava dormindo tranquilamente na popa do barco, em paz,
+      mesmo com a tempestade lá fora. <span class="child-name">Gabriel</span> correu até Ele e disse:
+      "Jesus, acorda! Estamos com medo, a tempestade está muito forte!"</p>
+
+      <p>Jesus se levantou calmamente, olhou para o mar agitado e disse com voz mansa:
+      <strong>"Paz! Fica quieto!"</strong> E, no mesmo instante, o vento parou e o mar ficou
+      completamente calmo, como um espelho.</p>
+
+      <p>Jesus então olhou para <span class="child-name">Gabriel</span> com ternura e perguntou:
+      "Por que você teve medo? Não sabe que Eu estou sempre com você, mesmo nas tempestades da
+      vida?" Desde aquele dia, sempre que <span class="child-name">Gabriel</span> ouve um trovão ou sente medo
+      à noite, ele se lembra: Jesus está no barco com ele, e Ele tem o poder de acalmar qualquer
+      tempestade.</p>
+    </div>
+
+    <div class="teaching-box">
+      ⛵ Ensinamento: Quando tivermos medo, podemos confiar que Jesus está sempre por perto,
+      trazendo paz ao nosso coração.
+    </div>
+
+    <div class="page-number">4</div>
+  </section>
+
+  <!-- ============================================================
+       CAPÍTULO 3 — A OVELHINHA PERDIDA
+  ============================================================ -->
+  <section class="page chapter">
+    <div class="corner-frame"></div>
+    <div class="chapter-header">
+      <div class="chapter-number">3</div>
+      <h2>A Ovelhinha Perdida<br>Encontrada por Jesus</h2>
+    </div>
+
+    <div class="chapter-illustration">
+      <svg width="230" height="110" viewBox="0 0 230 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- colina -->
+        <path d="M0 90 Q115 55 230 90 L230 110 L0 110 Z" fill="#22c55e" opacity="0.30"/>
+        <!-- pastor -->
+        <circle cx="60" cy="55" r="10" fill="#f2c19d"/>
+        <path d="M50 65 Q60 58 70 65 L68 95 L52 95 Z" fill="#3b82f6"/>
+        <line x1="72" y1="55" x2="85" y2="35" stroke="#7c5a3a" stroke-width="3" stroke-linecap="round"/>
+        <!-- ovelha perdida -->
+        <g>
+          <ellipse cx="170" cy="80" rx="18" ry="13" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+          <circle cx="185" cy="75" r="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+          <circle cx="188" cy="73" r="1.6" fill="#25324a"/>
+        </g>
+        <!-- estrela guia -->
+        <path d="M40 20 l3 8 8 1 -6 6 2 8 -7-4 -7 4 2-8 -6-6 8-1z" fill="#fbbf24"/>
+      </svg>
+    </div>
+
+    <div class="chapter-body">
+      <p>Jesus adorava contar histórias sobre um pastor que cuidava de cem ovelhinhas. Um dia, o
+      pastor percebeu que uma delas — a menorzinha e mais desajeitada — havia se afastado do
+      rebanho e se perdido nas montanhas.</p>
+
+      <p>O que você acha que o pastor fez? Ele deixou as noventa e nove ovelhas seguras e saiu
+      procurando, sem desistir, até encontrar aquela que estava perdida! Quando finalmente a
+      encontrou, tremendo e assustada entre as pedras, o pastor a pegou com cuidado, colocou nos
+      ombros e a levou para casa cheio de alegria.</p>
+
+      <p>Jesus olhou para <span class="child-name">Gabriel</span> e disse: <strong>"Esse pastor sou Eu, e
+      cada ovelhinha é muito preciosa para Mim — assim como você, <span class="child-name">Gabriel</span>."</strong>
+      Mesmo quando <span class="child-name">Gabriel</span> se sente sozinho, triste ou perdido, Jesus nunca desiste
+      dele. Ele sempre vai procurar, encontrar e cuidar, com todo o amor de um bom Pastor.</p>
+
+      <p><span class="child-name">Gabriel</span> sentiu seu coração se encher de alegria ao saber que, não importa
+      o que aconteça, ele nunca estará sozinho — porque Jesus sempre vem ao seu encontro.</p>
+    </div>
+
+    <div class="teaching-box">
+      🐑 Ensinamento: Jesus é o Bom Pastor que nunca desiste de nós, não importa o quão longe
+      possamos nos sentir.
+    </div>
+
+    <div class="page-number">5</div>
+  </section>
+
+  <!-- ============================================================
+       CAPÍTULO 4 — A CASA NA ROCHA
+  ============================================================ -->
+  <section class="page chapter">
+    <div class="corner-frame"></div>
+    <div class="chapter-header">
+      <div class="chapter-number">4</div>
+      <h2>A Casa na Rocha de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="chapter-illustration">
+      <svg width="230" height="110" viewBox="0 0 230 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- rocha -->
+        <path d="M60 95 L90 60 L150 60 L175 95 Z" fill="#94a3b8" opacity="0.55"/>
+        <!-- casa -->
+        <rect x="95" y="55" width="50" height="35" fill="#fbbf24"/>
+        <path d="M90 58 L120 32 L150 58 Z" fill="#3b82f6"/>
+        <rect x="112" y="70" width="16" height="20" fill="#ffffff"/>
+        <!-- chuva -->
+        <g stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" opacity="0.6">
+          <line x1="30" y1="20" x2="24" y2="34"/>
+          <line x1="45" y1="15" x2="39" y2="29"/>
+          <line x1="200" y1="18" x2="194" y2="32"/>
+          <line x1="185" y1="12" x2="179" y2="26"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="chapter-body">
+      <p>Jesus reuniu as crianças e contou mais uma história incrível para <span class="child-name">Gabriel</span>:
+      "Imagine dois amigos que decidiram construir cada um a sua própria casa. O primeiro construiu
+      sua casa sobre a areia, porque era mais rápido e fácil. O segundo trabalhou com esforço e
+      construiu sua casa sobre uma rocha bem firme."</p>
+
+      <p>Então veio uma tempestade forte: choveu muito, os ventos sopraram e as águas subiram.
+      A casa construída sobre a areia balançou, balançou... e caiu! Mas a casa construída sobre a
+      rocha permaneceu firme, sem se abalar, porque tinha um alicerce sólido.</p>
+
+      <p>Jesus explicou a <span class="child-name">Gabriel</span>: <strong>"Quando você ouve minhas palavras e as
+      guarda em seu coração — orando, sendo gentil, dizendo a verdade e amando ao próximo — você
+      está construindo sua vida sobre a Rocha, e nada poderá te abalar!"</strong></p>
+
+      <p><span class="child-name">Gabriel</span> entendeu que, mesmo quando as tempestades da vida vierem —
+      um dia difícil, uma tristeza ou um medo — se ele mantiver a Palavra de Deus em seu coração,
+      sua casa (sua vida) ficará firme e segura, como uma casa construída sobre a rocha.</p>
+    </div>
+
+    <div class="teaching-box">
+      🏠 Ensinamento: Construir a vida sobre a Palavra de Deus nos torna fortes e seguros diante
+      de qualquer dificuldade.
+    </div>
+
+    <div class="page-number">6</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA FINAL — ORAÇÃO + CERTIFICADO
+  ============================================================ -->
+  <section class="page final-page">
+    <div class="corner-frame"></div>
+
+    <div class="prayer-box">
+      <h3>🌙 Oração da Noite</h3>
+      <p>Querido Jesus, obrigado por mais um dia cheio de aventuras ao seu lado. Obrigado por
+      cuidar de <span class="child-name">Gabriel</span> como o Bom Pastor cuida de suas ovelhinhas, por acalmar
+      as tempestades do coração e por ensinar a construir a vida sobre a rocha firme do Teu amor.
+      Abençoa o sono de <span class="child-name">Gabriel</span> essa noite, enche seu coraçãozinho de paz, coragem
+      e muita fé. Que amanhã seja mais um dia lindo para brincar, aprender e amar como Tu ensinas.
+      Em nome de Jesus, amém. 🙏</p>
+    </div>
+
+    <div class="certificate">
+      <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" class="medal">
+        <circle cx="30" cy="24" r="18" fill="#fbbf24"/>
+        <circle cx="30" cy="24" r="12" fill="#fff7e0"/>
+        <path d="M30 16 l3 7 8 1 -6 5 2 8 -7-4 -7 4 2-8 -6-5 8-1z" fill="#f59e0b"/>
+        <path d="M20 38 L14 54 L30 47 L46 54 L40 38 Z" fill="#3b82f6"/>
+      </svg>
+      <div class="cert-eyebrow">Certificado Especial</div>
+      <h3>Herói da Fé</h3>
+      <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+      <p class="cert-text">
+        Este certificado comprova que <span class="child-name">Gabriel</span> viveu uma incrível
+        Aventura de Fé, aprendendo a cultivar um coração bondoso, confiar em Jesus nas tempestades,
+        acreditar que nunca está sozinho e construir sua vida sobre a Rocha firme da Palavra de Deus.
+      </p>
+      <div class="cert-date">Concedido com muito amor e oração • <span id="certDate"></span></div>
+    </div>
+
+    <div class="page-number">7</div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){
+      el.textContent = finalName;
+    });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{
+      window.localStorage.setItem(STORAGE_KEY, finalName);
+    }catch(e){ /* localStorage indisponível — segue sem salvar */ }
+  }
+
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){
+      applyName(urlName);
+      return;
+    }
+    const savedName = getSavedName();
+    if(savedName){
+      applyName(savedName);
+      return;
+    }
+    applyName(DEFAULT_NAME);
+  }
+
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){
+        applyName(input.value);
+      });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){
+          applyName(input.value);
+        }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
