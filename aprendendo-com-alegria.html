@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendendo com Alegria</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --orange:#fb923c;
+  --orange-dark:#ea580c;
+  --sun:#facc15;
+  --sun-dark:#eab308;
+  --green:#84cc16;
+  --green-dark:#4d7c0f;
+  --blue:#7dd3fc;
+  --blue-dark:#0284c7;
+  --bg:#fffaf2;
+  --ink:#2f2a1e;
+  --ink-soft:#6b6152;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans','Outfit','Segoe UI',Arial,sans-serif;
+  background:#e8e2d4;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{ font-family:'Outfit','Plus Jakarta Sans',sans-serif; }
+
+/* ============ BARRA DE CONTROLE ============ */
+.control-bar{
+  position:sticky; top:0; z-index:999;
+  background:linear-gradient(135deg, var(--orange-dark), var(--blue-dark));
+  color:#fff; padding:14px 20px;
+  display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.16); padding:6px 10px 6px 14px; border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none; outline:none; border-radius:20px;
+  padding:7px 12px; font-family:inherit; font-size:14px; width:150px;
+}
+.control-bar button{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  border-radius:24px; padding:9px 16px; font-size:14px; transition:transform .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{ background:var(--green); color:#1f2f05; }
+.btn-print{
+  background:var(--sun); color:#5c4300; font-size:15px;
+  padding:11px 22px; box-shadow:0 3px 10px rgba(0,0,0,.2); font-weight:800;
+}
+
+/* ============ CONTAINER DE PÁGINAS ============ */
+.book{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:30px 10px 60px; }
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+.corner-frame{
+  position:absolute; inset:9mm;
+  border:3px solid var(--frame-color, var(--orange));
+  border-radius:20px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:12.5mm;
+  border:1.5px dashed rgba(2,132,199,.35);
+  border-radius:16px;
+}
+
+.page-number{
+  position:absolute; bottom:7mm; right:14mm;
+  font-size:11px; color:var(--ink-soft); font-weight:600; letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block; color:#fff; padding:6px 22px; border-radius:30px;
+  font-weight:700; font-size:12.5px; letter-spacing:1.3px; text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+.child-name{ color:var(--orange-dark); font-weight:800; white-space:nowrap; }
+
+.verse-card{
+  background:var(--card); border-left:5px solid var(--sun-dark); border-radius:12px;
+  padding:14px 18px; box-shadow:0 4px 14px rgba(0,0,0,.08);
+  font-style:italic; color:var(--ink-soft); font-size:13.5px; line-height:1.6;
+}
+.verse-card strong{ display:block; font-style:normal; color:var(--sun-dark); margin-top:6px; font-size:12px; letter-spacing:.5px; }
+
+.story-card{
+  background:var(--card); border-radius:18px; padding:16px 20px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08); border:1px solid rgba(234,88,12,.10);
+}
+.story-card p{ font-size:13.6px; line-height:1.65; color:var(--ink); margin-bottom:8px; }
+.story-card p:last-child{ margin-bottom:0; }
+
+.activity-box{
+  border:2.5px dashed var(--orange-dark); border-radius:18px;
+  background:#fff; padding:14px 16px; flex:1; display:flex; flex-direction:column;
+}
+.activity-title{
+  font-size:12.5px; font-weight:800; color:var(--orange-dark);
+  text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:8px;
+}
+
+/* ============================================================
+   CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(250,204,21,.32), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(251,146,60,.26), transparent 45%),
+    radial-gradient(circle at 80% 88%, rgba(125,211,252,.28), transparent 50%),
+    linear-gradient(180deg, #fff8ea 0%, #fffaf2 55%, #eef8ff 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18mm;
+}
+.cover .frame-outer{ position:absolute; inset:9mm; border:4px solid var(--sun-dark); border-radius:22px; }
+.cover .frame-inner{ position:absolute; inset:13mm; border:1.5px solid rgba(2,132,199,.30); border-radius:18px; }
+.cover .eyebrow{
+  font-size:13px; letter-spacing:4px; color:var(--blue-dark); font-weight:700;
+  margin-bottom:16px; text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:40px; font-weight:800; color:var(--orange-dark); line-height:1.15;
+  text-shadow:0 2px 0 rgba(255,255,255,.6); margin-bottom:12px;
+}
+.cover .gold-underline{
+  width:120px; height:5px; background:linear-gradient(90deg, var(--sun-dark), var(--sun));
+  border-radius:6px; margin:6px auto 20px;
+}
+.cover .subtitle{
+  font-size:18px; color:var(--ink-soft); font-weight:600; max-width:135mm;
+  line-height:1.5; margin-bottom:26px;
+}
+.cover-illustration{ margin-bottom:20px; }
+.cover .footer-tag{
+  position:absolute; bottom:16mm; font-size:12px; color:var(--ink-soft);
+  letter-spacing:2px; font-weight:600; text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINAS DE CONTEÚDO
+============================================================ */
+.content-page{ padding:14mm 17mm 12mm; display:flex; flex-direction:column; gap:10px; }
+.content-header{ text-align:center; margin-bottom:2px; }
+.content-header .ribbon-title{ margin-bottom:8px; }
+.content-header h2{ font-size:21px; color:var(--ink); font-weight:800; line-height:1.25; margin-top:6px;}
+
+/* matching genérico (contagem, cores, formas) */
+.match-columns{ display:flex; justify-content:space-between; gap:20px; padding:6px 14px; }
+.match-col{ display:flex; flex-direction:column; gap:12px; flex:1; }
+.match-item{
+  display:flex; align-items:center; gap:10px; background:#fff; border-radius:12px;
+  padding:8px 14px; box-shadow:0 3px 10px rgba(0,0,0,.07); font-size:13.5px; font-weight:700; color:var(--ink);
+}
+.match-item .dot{ width:12px; height:12px; border-radius:50%; background:var(--dot-color,#0284c7); flex-shrink:0; }
+.match-item .emoji-row{ letter-spacing:2px; font-size:16px; }
+
+/* pintura por código de cores */
+.color-legend{ display:flex; justify-content:center; gap:14px; margin-bottom:10px; flex-wrap:wrap; }
+.legend-chip{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; }
+.legend-swatch{ width:20px; height:20px; border-radius:6px; border:2px solid #fff; box-shadow:0 0 0 1.5px #d8cdb0; }
+
+/* jogo dos 7 erros */
+.diff-scenes{ display:flex; gap:14px; justify-content:center; }
+.diff-scene{ background:#fff; border-radius:14px; padding:8px; box-shadow:0 4px 14px rgba(0,0,0,.08); border:2px solid #eee; }
+.diff-answers{
+  margin-top:8px; font-size:10.5px; color:#b8ab8f; text-align:center; line-height:1.5;
+}
+
+/* certificado */
+.certificate-page{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20mm; text-align:center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(250,204,21,.22), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(125,211,252,.24), transparent 45%),
+    #fffdf7;
+}
+.cert-eyebrow{
+  font-size:13px; letter-spacing:3px; color:var(--sun-dark); font-weight:800;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.certificate-page h2{ font-size:26px; color:var(--orange-dark); font-weight:800; margin-bottom:6px; }
+.certificate-page h3.subtitle-cert{ font-size:14px; color:var(--ink-soft); font-weight:600; margin-bottom:22px; }
+.cert-granted-to{ font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
+.cert-name{
+  font-size:32px; font-weight:800; color:var(--blue-dark);
+  margin-bottom:18px; font-family:'Outfit',sans-serif;
+}
+.cert-text{ font-size:13.5px; color:var(--ink); max-width:135mm; line-height:1.7; margin-bottom:22px; }
+.cert-signatures{ display:flex; gap:60px; margin-top:6px; }
+.cert-sign-block{ text-align:center; }
+.cert-sign-line{ width:150px; border-bottom:1.5px solid var(--ink-soft); margin-bottom:6px; height:26px; }
+.cert-sign-label{ font-size:11px; color:var(--ink-soft); letter-spacing:.5px; }
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{ size:A4 portrait; margin:0; }
+  html,body{ width:210mm; height:297mm; background:#fff; }
+  .control-bar{ display:none !important; }
+  .book{ padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always; break-after:page;
+    margin:0; width:210mm; height:297mm;
+  }
+  .page:last-child{ page-break-after:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<div class="book" id="bookContainer">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <div class="eyebrow">Jogos e Descobertas Cristãs</div>
+
+    <div class="cover-illustration">
+      <svg width="260" height="150" viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- sol brilhante -->
+        <circle cx="45" cy="40" r="24" fill="#facc15"/>
+        <g stroke="#facc15" stroke-width="4" stroke-linecap="round">
+          <line x1="45" y1="4" x2="45" y2="12"/>
+          <line x1="45" y1="68" x2="45" y2="76"/>
+          <line x1="9" y1="40" x2="17" y2="40"/>
+          <line x1="73" y1="40" x2="81" y2="40"/>
+        </g>
+        <circle cx="38" cy="35" r="2" fill="#7a5b00"/>
+        <circle cx="52" cy="35" r="2" fill="#7a5b00"/>
+        <path d="M36 46 Q45 53 54 46" fill="none" stroke="#7a5b00" stroke-width="2" stroke-linecap="round"/>
+        <!-- arco-íris -->
+        <path d="M100 110 A70 70 0 0 1 240 110" fill="none" stroke="#ef4444" stroke-width="6"/>
+        <path d="M110 110 A60 60 0 0 1 230 110" fill="none" stroke="#fb923c" stroke-width="6"/>
+        <path d="M120 110 A50 50 0 0 1 220 110" fill="none" stroke="#facc15" stroke-width="6"/>
+        <path d="M130 110 A40 40 0 0 1 210 110" fill="none" stroke="#84cc16" stroke-width="6"/>
+        <path d="M140 110 A30 30 0 0 1 200 110" fill="none" stroke="#0284c7" stroke-width="6"/>
+        <!-- formas sorridentes -->
+        <g>
+          <circle cx="150" cy="35" r="16" fill="#ef4444"/>
+          <circle cx="145" cy="32" r="1.6" fill="#fff"/><circle cx="155" cy="32" r="1.6" fill="#fff"/>
+          <path d="M144 40 Q150 44 156 40" stroke="#fff" stroke-width="1.5" fill="none"/>
+        </g>
+        <g>
+          <rect x="185" y="20" width="30" height="30" rx="7" fill="#0284c7"/>
+          <circle cx="195" cy="32" r="1.6" fill="#fff"/><circle cx="205" cy="32" r="1.6" fill="#fff"/>
+          <path d="M193 40 Q200 44 207 40" stroke="#fff" stroke-width="1.5" fill="none"/>
+        </g>
+        <!-- números coloridos -->
+        <text x="30" y="120" font-family="Outfit, sans-serif" font-weight="800" font-size="26" fill="#ef4444">1</text>
+        <text x="60" y="128" font-family="Outfit, sans-serif" font-weight="800" font-size="26" fill="#84cc16">2</text>
+        <text x="90" y="120" font-family="Outfit, sans-serif" font-weight="800" font-size="26" fill="#0284c7">3</text>
+      </svg>
+    </div>
+
+    <h1 class="main-title">APRENDENDO<br>COM ALEGRIA</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">Descobertas Divertidas de <span class="child-name">Gabriel</span> com Jesus</p>
+
+    <div class="footer-tag">Edição Especial • Feito com Amor para Você</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 2 — CONTANDO AS BÊNÇÃOS DE DEUS (1 A 10)
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0284c7;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0284c7;">Matemática Inicial</span>
+      <h2>Contando as bênçãos de Deus com <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p><span class="child-name">Gabriel</span>, vamos aprender brincando com Jesus? Deus encheu
+      o mundo de coisas lindas para contarmos! Ligue cada grupinho ao número certo.</p>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🔢 Atividade: Ligue a quantidade ao número certo</div>
+      <div class="match-columns">
+        <div class="match-col">
+          <div class="match-item"><span class="dot" style="--dot-color:#ef4444;"></span><span class="emoji-row">☀️</span> 1 Sol</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#fb923c;"></span><span class="emoji-row">🐦🐦</span> Passarinhos</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#facc15;"></span><span class="emoji-row">🌸🌸🌸</span> Flores</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#84cc16;"></span><span class="emoji-row">⭐⭐⭐⭐</span> Estrelas</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#22c55e;"></span><span class="emoji-row">🐟🐟🐟🐟🐟</span> Peixinhos</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#0284c7;"></span><span class="emoji-row">🐑🐑🐑🐑🐑🐑</span> Ovelhinhas</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#7c3aed;"></span><span class="emoji-row">🍇🍇🍇🍇🍇🍇🍇🍇</span> Uvas</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#ec4899;"></span><span class="emoji-row">✨✨✨✨✨✨✨✨✨</span> Estrelinhas</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#b45309;"></span><span class="emoji-row">🌈</span> Cores do arco-íris</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#14b8a6;"></span><span class="emoji-row">💕💕💕💕💕💕💕💕💕💕</span> Corações de amor</div>
+        </div>
+        <div class="match-col">
+          <div class="match-item"><span class="dot" style="--dot-color:#84cc16;"></span>4</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#ef4444;"></span>1</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#14b8a6;"></span>10</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#0284c7;"></span>6</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#b45309;"></span>7</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#fb923c;"></span>2</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#ec4899;"></span>9</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#facc15;"></span>3</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#22c55e;"></span>5</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#7c3aed;"></span>8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Grandes são as obras do Senhor, e delas se recordam todos os que nelas se comprazem."
+      <strong>SALMOS 111:2</strong>
+    </div>
+
+    <div class="page-number">2</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 3 — AS CORES DA CRIAÇÃO DE DEUS
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#84cc16;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#4d7c0f;">Percepção Visual</span>
+      <h2>As cores da Criação de Deus</h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p>Deus pintou o mundo inteiro com cores lindas, <span class="child-name">Gabriel</span>!
+      O azul do céu, o verde das árvores, o amarelo do sol e o vermelho que lembra o grande amor
+      de Jesus por nós. Vamos pintar seguindo o código de cores?</p>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🎨 Atividade: Pinte seguindo o código de cores</div>
+
+      <div class="color-legend">
+        <div class="legend-chip"><span class="legend-swatch" style="background:#0284c7;"></span>1 = Azul do céu</div>
+        <div class="legend-chip"><span class="legend-swatch" style="background:#4d7c0f;"></span>2 = Verde das árvores</div>
+        <div class="legend-chip"><span class="legend-swatch" style="background:#facc15;"></span>3 = Amarelo do sol</div>
+        <div class="legend-chip"><span class="legend-swatch" style="background:#ef4444;"></span>4 = Vermelho do amor de Deus</div>
+      </div>
+
+      <div style="display:flex; justify-content:center; flex:1; align-items:center;">
+        <svg width="260" height="180" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- céu -->
+          <rect x="10" y="10" width="240" height="70" fill="#fff" stroke="#cfcabb" stroke-width="1.5"/>
+          <text x="130" y="50" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="26" fill="#9c9483">1</text>
+          <!-- sol -->
+          <circle cx="205" cy="45" r="20" fill="#fff" stroke="#cfcabb" stroke-width="1.5"/>
+          <text x="205" y="51" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="18" fill="#9c9483">3</text>
+          <!-- árvore copa -->
+          <circle cx="70" cy="110" r="34" fill="#fff" stroke="#cfcabb" stroke-width="1.5"/>
+          <text x="70" y="116" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="20" fill="#9c9483">2</text>
+          <!-- árvore tronco -->
+          <rect x="60" y="140" width="20" height="34" fill="#fff" stroke="#cfcabb" stroke-width="1.5"/>
+          <text x="70" y="160" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="14" fill="#9c9483">4</text>
+          <!-- coração -->
+          <path d="M180 150 C165 138 155 128 155 115 C155 106 162 100 170 100 C175 100 180 103 180 109 C180 103 185 100 190 100 C198 100 205 106 205 115 C205 128 195 138 180 150 Z" fill="#fff" stroke="#cfcabb" stroke-width="1.5"/>
+          <text x="180" y="122" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="16" fill="#9c9483">4</text>
+          <!-- chão -->
+          <rect x="10" y="174" width="240" height="0" fill="none"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Tu formaste todos os limites da terra; tu fizeste o verão e o inverno."
+      <strong>SALMOS 74:17</strong>
+    </div>
+
+    <div class="page-number">3</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 4 — FORMAS GEOMÉTRICAS NA BÍBLIA
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#fb923c;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#ea580c;">Raciocínio Lógico</span>
+      <h2>Formas geométricas na Bíblia</h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p><span class="child-name">Gabriel</span>, as formas geométricas também aparecem nas
+      histórias da Bíblia! Vamos descobrir e ligar cada forma ao seu objeto bíblico?</p>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🔺 Atividade: Ligue a forma ao objeto bíblico</div>
+      <div class="match-columns">
+        <div class="match-col">
+          <div class="match-item">
+            <svg width="26" height="26"><circle cx="13" cy="13" r="11" fill="#facc15"/></svg>
+            Círculo
+          </div>
+          <div class="match-item">
+            <svg width="26" height="26"><polygon points="13,3 24,23 2,23" fill="#b45309"/></svg>
+            Triângulo
+          </div>
+          <div class="match-item">
+            <svg width="26" height="26"><rect x="2" y="6" width="22" height="14" rx="2" fill="#0284c7"/></svg>
+            Retângulo
+          </div>
+          <div class="match-item">
+            <svg width="26" height="26"><path d="M13 1 l3.5 8 8.5 1 -6.5 5.5 2.3 8.5 -7.8-4.7 -7.8 4.7 2.3-8.5 -6.5-5.5 8.5-1z" fill="#7c3aed"/></svg>
+            Estrela
+          </div>
+        </div>
+        <div class="match-col">
+          <div class="match-item"><span class="emoji-row">☀️🪙</span> Sol / Moeda</div>
+          <div class="match-item"><span class="emoji-row">⛺</span> Tenda</div>
+          <div class="match-item"><span class="emoji-row">🚢</span> Arca de Noé</div>
+          <div class="match-item"><span class="emoji-row">✨</span> Estrela de Belém</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Tudo fez formoso em seu tempo." <strong>ECLESIASTES 3:11</strong>
+    </div>
+
+    <div class="page-number">4</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 5 — JOGO DOS 7 ERROS BÍBLICO
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0284c7;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0284c7;">Atenção e Concentração</span>
+      <h2>Jogo dos 7 erros — Jesus abençoando as crianças</h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px; padding:12px 18px;">
+      <p><span class="child-name">Gabriel</span>, observe bem as duas cenas abaixo e circule as
+      7 diferenças entre elas! Preste bastante atenção aos detalhes. 🔍</p>
+    </div>
+
+    <div class="diff-scenes">
+      <!-- CENA A -->
+      <div class="diff-scene">
+        <svg width="230" height="230" viewBox="0 0 230 230" xmlns="http://www.w3.org/2000/svg">
+          <rect width="230" height="230" fill="#eaf6ff"/>
+          <!-- sol amarelo -->
+          <circle cx="30" cy="30" r="16" fill="#facc15"/>
+          <!-- nuvem -->
+          <ellipse cx="185" cy="35" rx="22" ry="12" fill="#ffffff"/>
+          <ellipse cx="205" cy="30" rx="14" ry="9" fill="#ffffff"/>
+          <!-- 2 pássaros -->
+          <path d="M100 25 q6 -6 12 0 q6 -6 12 0" fill="none" stroke="#334155" stroke-width="2"/>
+          <path d="M140 40 q5 -5 10 0 q5 -5 10 0" fill="none" stroke="#334155" stroke-width="2"/>
+          <!-- grama -->
+          <rect x="0" y="190" width="230" height="40" fill="#bbf7d0"/>
+          <!-- flor rosa -->
+          <circle cx="40" cy="205" r="6" fill="#f9a8d4"/>
+          <line x1="40" y1="211" x2="40" y2="225" stroke="#4d7c0f" stroke-width="2"/>
+          <!-- Jesus -->
+          <circle cx="115" cy="120" r="13" fill="#f2c19d"/>
+          <circle cx="115" cy="102" r="15" fill="#fde68a" opacity="0.6"/>
+          <path d="M95 140 Q115 128 135 140 L130 190 L100 190 Z" fill="#e5e7eb"/>
+          <!-- criança 1 camisa azul -->
+          <circle cx="75" cy="155" r="9" fill="#f2c19d"/>
+          <path d="M63 168 Q75 160 87 168 L84 195 L66 195 Z" fill="#0284c7"/>
+          <!-- criança 2 camisa laranja -->
+          <circle cx="155" cy="155" r="9" fill="#f2c19d"/>
+          <path d="M143 168 Q155 160 167 168 L164 195 L146 195 Z" fill="#fb923c"/>
+          <!-- estrela extra no céu -->
+          <path d="M170 60 l2 5 5 0.5 -3.5 3.5 1 5 -4.5-2.5 -4.5 2.5 1-5 -3.5-3.5 5-0.5z" fill="#7c3aed"/>
+        </svg>
+      </div>
+      <!-- CENA B (com 7 diferenças) -->
+      <div class="diff-scene">
+        <svg width="230" height="230" viewBox="0 0 230 230" xmlns="http://www.w3.org/2000/svg">
+          <rect width="230" height="230" fill="#eaf6ff"/>
+          <!-- 1) sol laranja (era amarelo) -->
+          <circle cx="30" cy="30" r="16" fill="#fb923c"/>
+          <!-- 2) apenas 1 nuvem (eram 2 partes maiores) -->
+          <ellipse cx="190" cy="32" rx="18" ry="10" fill="#ffffff"/>
+          <!-- 3) só 1 pássaro (eram 2) -->
+          <path d="M100 25 q6 -6 12 0 q6 -6 12 0" fill="none" stroke="#334155" stroke-width="2"/>
+          <!-- grama -->
+          <rect x="0" y="190" width="230" height="40" fill="#bbf7d0"/>
+          <!-- 4) flor vermelha (era rosa) -->
+          <circle cx="40" cy="205" r="6" fill="#ef4444"/>
+          <line x1="40" y1="211" x2="40" y2="225" stroke="#4d7c0f" stroke-width="2"/>
+          <!-- 5) auréola maior -->
+          <circle cx="115" cy="102" r="20" fill="#fde68a" opacity="0.6"/>
+          <!-- Jesus -->
+          <circle cx="115" cy="120" r="13" fill="#f2c19d"/>
+          <path d="M95 140 Q115 128 135 140 L130 190 L100 190 Z" fill="#e5e7eb"/>
+          <!-- criança 1 camisa verde (era azul) -->
+          <circle cx="75" cy="155" r="9" fill="#f2c19d"/>
+          <!-- 6) -->
+          <path d="M63 168 Q75 160 87 168 L84 195 L66 195 Z" fill="#4d7c0f"/>
+          <!-- criança 2 camisa laranja -->
+          <circle cx="155" cy="155" r="9" fill="#f2c19d"/>
+          <path d="M143 168 Q155 160 167 168 L164 195 L146 195 Z" fill="#fb923c"/>
+          <!-- 7) sem estrela extra no céu (removida) -->
+        </svg>
+      </div>
+    </div>
+
+    <div class="diff-answers">
+      Respostas (para os pais conferirem): 1) cor do sol • 2) tamanho da nuvem • 3) quantidade de
+      pássaros • 4) cor da flor • 5) tamanho da auréola • 6) cor da camisa da criança • 7) estrela
+      que sumiu do céu.
+    </div>
+
+    <div class="page-number">5</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 6 — LABIRINTO DA ALEGRIA
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#facc15;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#eab308;">Atenção e Concentração</span>
+      <h2>Labirinto da Alegria de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p><span class="child-name">Gabriel</span>, ajude o coração feliz a encontrar o caminho até
+      Jesus e descobrir a verdadeira alegria!</p>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🧭 Atividade: Encontre o caminho até Jesus</div>
+      <div id="mazeArea" style="flex:1; display:flex; align-items:center; justify-content:center;"></div>
+    </div>
+
+    <div class="page-number">6</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 7 — O FRUTO DO ESPÍRITO É ALEGRIA
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#84cc16;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#4d7c0f;">Reflexão do Coração</span>
+      <h2>O fruto do Espírito é alegria!</h2>
+    </div>
+
+    <div class="content-illustration" style="display:flex; justify-content:center; margin-bottom:6px;">
+      <svg width="180" height="90" viewBox="0 0 180 90" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="90" cy="50" r="30" fill="#facc15"/>
+        <circle cx="80" cy="42" r="2" fill="#7a5b00"/>
+        <circle cx="100" cy="42" r="2" fill="#7a5b00"/>
+        <path d="M75 55 Q90 68 105 55" stroke="#7a5b00" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M90 20 L90 12 M70 26 L64 20 M110 26 L116 20" stroke="#facc15" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="story-card">
+      <p>Você sabia que existe uma alegria diferente de tudo, <span class="child-name">Gabriel</span>?
+      Ela não depende de brinquedos novos ou de um dia perfeito — ela vem direto do coração de
+      Deus e mora dentro de quem ama Jesus!</p>
+      <p>Essa alegria é chamada de "fruto do Espírito", porque cresce dentro da gente, como um
+      fruto numa árvore bem cuidada. Mesmo em dias difíceis, <span class="child-name">Gabriel</span>
+      pode sentir essa alegria especial, porque ela vem de Deus e ninguém pode tirar!</p>
+    </div>
+
+    <div class="verse-card">
+      "Mas o fruto do Espírito é: amor, alegria, paz, longanimidade, benignidade, bondade, fé,
+      mansidão, domínio próprio." <strong>GÁLATAS 5:22-23</strong>
+    </div>
+
+    <div class="lesson-tag" style="background:linear-gradient(135deg, rgba(132,204,22,.15), rgba(132,204,22,.04)); border-left:5px solid #4d7c0f; border-radius:10px; padding:12px 16px; font-size:13px; color:#365314; font-weight:600; line-height:1.55;">
+      🍇 Lição: <span class="child-name">Gabriel</span>, vamos aprender brincando com Jesus todos
+      os dias, sabendo que a verdadeira alegria vem sempre dEle!
+    </div>
+
+    <div class="page-number">7</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 8 — CERTIFICADO
+  ============================================================ -->
+  <section class="page certificate-page">
+    <div class="corner-frame" style="--frame-color:#eab308; inset:9mm; border:5px double #eab308;"></div>
+    <div class="corner-frame inner"></div>
+
+    <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px;">
+      <circle cx="36" cy="30" r="20" fill="#facc15"/>
+      <circle cx="36" cy="30" r="13" fill="#fffbea"/>
+      <text x="36" y="37" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="800" font-size="16" fill="#ea580c">10</text>
+      <path d="M24 46 L16 65 L36 57 L56 65 L48 46 Z" fill="#0284c7"/>
+    </svg>
+
+    <div class="cert-eyebrow">Certificado Especial</div>
+    <h2>Aluno(a) Nota 10</h2>
+    <h3 class="subtitle-cert">Escola da Alegria de Jesus • Jornada Completa</h3>
+
+    <div class="cert-granted-to">Este certificado é concedido, com muito orgulho, a</div>
+    <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+
+    <p class="cert-text">
+      por aprender brincando com Jesus — contando as bênçãos de Deus, descobrindo as cores e as
+      formas da Criação, treinando a atenção nos jogos e, principalmente, descobrindo que a
+      verdadeira alegria vem do Espírito Santo. Parabéns, <span class="child-name">Gabriel</span>,
+      você é nota 10!
+    </p>
+
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">DATA: <span id="certDate"></span></div>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">ASSINATURA DOS PAIS</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  /* ============================================================
+     1) PERSONALIZAÇÃO DO NOME DA CRIANÇA
+  ============================================================ */
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){ return null; }
+  }
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){ el.textContent = finalName; });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{ window.localStorage.setItem(STORAGE_KEY, finalName); }catch(e){ /* segue sem salvar */ }
+  }
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){ applyName(urlName); return; }
+    const savedName = getSavedName();
+    if(savedName){ applyName(savedName); return; }
+    applyName(DEFAULT_NAME);
+  }
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  /* ============================================================
+     2) ATIVIDADE: LABIRINTO DA ALEGRIA (coração até Jesus)
+  ============================================================ */
+  function buildMaze(){
+    const container = document.getElementById("mazeArea");
+    if(!container) return;
+
+    const cols = 6, rows = 8, cell = 46;
+    const marginX = 30, marginY = 30;
+
+    const path = [];
+    for(let r=0; r<rows; r++){
+      if(r % 2 === 0){
+        for(let c=0; c<cols; c++) path.push([r,c]);
+      }else{
+        for(let c=cols-1; c>=0; c--) path.push([r,c]);
+      }
+    }
+
+    const openEdges = new Set();
+    function edgeKey(a,b){ return a[0]+','+a[1]+'-'+b[0]+','+b[1]; }
+    for(let i=0; i<path.length-1; i++){
+      openEdges.add(edgeKey(path[i], path[i+1]));
+      openEdges.add(edgeKey(path[i+1], path[i]));
+    }
+
+    const startCell = path[0];
+    const endCell = path[path.length-1];
+
+    const w = cols*cell + marginX*2;
+    const h = rows*cell + marginY*2;
+
+    let svg = '<svg width="100%" height="auto" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="max-width:150mm;">';
+    svg += '<rect x="'+marginX+'" y="'+marginY+'" width="'+(cols*cell)+'" height="'+(rows*cell)+'" fill="#ffffff" rx="10"/>';
+
+    for(let r=0; r<rows; r++){
+      for(let c=0; c<cols; c++){
+        const x = marginX + c*cell;
+        const y = marginY + r*cell;
+
+        if(r === 0 || !openEdges.has(edgeKey([r,c],[r-1,c]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+y+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(c === 0 || !openEdges.has(edgeKey([r,c],[r,c-1]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(c === cols-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+(x+cell)+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(r === rows-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+x+'" y1="'+(y+cell)+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+      }
+    }
+
+    const sx = marginX + startCell[1]*cell + cell/2;
+    const sy = marginY + startCell[0]*cell + cell/2;
+    svg += '<circle cx="'+sx+'" cy="'+sy+'" r="14" fill="#fde68a"/>';
+    svg += '<text x="'+sx+'" y="'+(sy+5)+'" text-anchor="middle" font-size="16">😊</text>';
+    svg += '<text x="'+sx+'" y="'+(marginY-10)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b6152">'+"Início"+'</text>';
+
+    const ex = marginX + endCell[1]*cell + cell/2;
+    const ey = marginY + endCell[0]*cell + cell/2;
+    svg += '<circle cx="'+ex+'" cy="'+ey+'" r="14" fill="#bae6fd"/>';
+    svg += '<text x="'+ex+'" y="'+(ey+5)+'" text-anchor="middle" font-size="16">✝️</text>';
+    svg += '<text x="'+ex+'" y="'+(marginY + rows*cell + 18)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b6152">Jesus, a alegria!</text>';
+
+    svg += '</svg>';
+    container.innerHTML = svg;
+  }
+
+  /* ============================================================
+     3) INICIALIZAÇÃO
+  ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    buildMaze();
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){ applyName(input.value); });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ applyName(input.value); }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

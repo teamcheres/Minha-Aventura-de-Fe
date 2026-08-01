@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passatempos Bíblicos: Jogos de Raciocínio e Desafios da Fé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --marinho:#1B3A5C;
+    --marinho-escuro:#0F2740;
+    --ouro:#E8B923;
+    --ouro-claro:#F7DE8B;
+    --menta:#8FD9C4;
+    --menta-clara:#E4F7F1;
+    --roxo:#B79CED;
+    --roxo-claro:#EFE6FB;
+    --papel:#FBF8F1;
+    --tinta:#20293A;
+    --linha:#C9C2AC;
+    --font-display:'Outfit','Segoe UI',Arial,sans-serif;
+    --font-body:'Plus Jakarta Sans','Segoe UI',Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:var(--font-body); color:var(--tinta); background:#dfe3ea;}
+
+  /* ============ BARRA DE CONTROLE (SÓ TELA) ============ */
+  .control-bar{
+    position:sticky; top:0; z-index:999;
+    background:var(--marinho-escuro); color:#fff;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:14px; padding:14px 18px; box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  .control-bar label{font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px;}
+  .control-bar input[type="text"]{
+    font-family:var(--font-body); font-size:15px; padding:8px 12px; border-radius:10px;
+    border:none; min-width:180px;
+  }
+  .control-bar input[type="text"]:focus{outline:2px solid var(--ouro);}
+  .print-btn{
+    font-family:var(--font-display); font-weight:800; font-size:15px; letter-spacing:.02em;
+    color:var(--marinho-escuro); background:var(--ouro); border:none; padding:12px 22px;
+    border-radius:999px; cursor:pointer; box-shadow:0 4px 0 #a97e0c; transition:transform .12s ease;
+  }
+  .print-btn:hover{transform:translateY(-2px);}
+  .print-btn:active{transform:translateY(1px); box-shadow:0 2px 0 #a97e0c;}
+
+  /* ============ LAYOUT DE PÁGINAS A4 ============ */
+  @media screen{
+    body{padding:36px 0 80px;}
+    .page{
+      width:210mm; min-height:297mm; margin:0 auto 34px;
+      box-shadow:0 14px 34px rgba(0,0,0,.25); border-radius:6px; overflow:hidden;
+    }
+  }
+  .page{
+    position:relative; background:var(--papel);
+    padding:12mm 14mm 14mm; display:flex; flex-direction:column;
+  }
+
+  @page{ size:A4 portrait; margin:0; }
+  @media print{
+    body{background:#fff;}
+    .screen-only{display:none !important;}
+    .page{box-shadow:none; border-radius:0; margin:0; width:210mm; height:297mm; page-break-after:always;}
+    .page:last-child{page-break-after:auto;}
+  }
+
+  /* trilha de medalhas — elemento assinatura de navegação */
+  .trilha{display:flex; align-items:center; gap:7px; margin-bottom:7mm;}
+  .trilha .medalha{width:9mm; height:9mm; opacity:.32;}
+  .trilha .medalha.ativa{opacity:1;}
+  .trilha .rotulo-desafio{
+    margin-left:auto; font-family:var(--font-display); font-weight:800; font-size:11pt;
+    color:var(--marinho-escuro); background:var(--ouro-claro); padding:5px 14px;
+    border-radius:999px; border:2px solid var(--ouro); white-space:nowrap;
+  }
+
+  h1,h2,h3{font-family:var(--font-display); margin:0; color:var(--marinho-escuro);}
+  .page-title{font-size:21pt; font-weight:800; display:flex; align-items:center; gap:10px;}
+  .page-subtitle{font-family:var(--font-body); font-weight:600; font-size:11.5pt; color:var(--marinho); margin-top:2mm;}
+  .instrucao{
+    background:var(--menta-clara); border:2px dashed var(--menta); border-radius:14px;
+    padding:8px 14px; font-size:11pt; font-weight:600; color:var(--marinho-escuro);
+    margin:4mm 0; display:flex; align-items:center; gap:10px;
+  }
+  .instrucao svg{flex-shrink:0; width:20px; height:20px;}
+  .cname{color:#C2511E; font-weight:800;}
+
+  /* =====================================================
+     CAPA
+  ===================================================== */
+  .capa{
+    background:
+      radial-gradient(circle at 85% 8%, rgba(255,255,255,.35), transparent 45%),
+      linear-gradient(160deg, var(--marinho) 0%, var(--marinho-escuro) 100%);
+    align-items:center; text-align:center; justify-content:flex-start;
+    padding-top:16mm; color:#fff;
+  }
+  .capa .selo{
+    font-family:var(--font-body); font-weight:700; font-size:10pt; color:var(--marinho-escuro);
+    background:var(--ouro-claro); border:2px solid var(--ouro); border-radius:999px;
+    padding:5px 16px; display:inline-block; margin-bottom:8mm;
+  }
+  .capa .titulo-principal{
+    font-family:var(--font-display); font-weight:900; font-size:33pt; line-height:1.05;
+    color:#fff; max-width:150mm; letter-spacing:.5px;
+  }
+  .capa .titulo-principal span{color:var(--ouro);}
+  .capa .subtitulo{font-family:var(--font-display); font-weight:600; font-size:14pt; color:var(--menta); margin-top:6mm;}
+  .capa .faixa-nome{
+    background:var(--ouro); color:var(--marinho-escuro); font-family:var(--font-display);
+    font-weight:800; font-size:12.5pt; padding:8px 24px; border-radius:999px; margin-top:8mm;
+  }
+  .capa .cena{
+    margin-top:auto; width:100%; display:flex; align-items:flex-end; justify-content:center;
+    gap:4mm; position:relative; height:110mm;
+  }
+  .capa .flutuante{position:absolute;}
+  .capa .f1{top:4mm; left:14mm; width:20mm;}
+  .capa .f2{top:16mm; right:16mm; width:18mm;}
+  .capa .f3{top:0mm; left:76mm; width:16mm;}
+
+  /* =====================================================
+     PÁGINA 1 — CRUZADINHA
+  ===================================================== */
+  .cruzadinha-wrap{display:flex; gap:10mm; align-items:flex-start; margin-top:2mm;}
+  .grade-cruzada{
+    display:grid; grid-template-columns:repeat(8, 1fr); gap:0;
+    border:3px solid var(--marinho-escuro); border-radius:8px; overflow:hidden;
+    width:112mm; flex-shrink:0;
+  }
+  .grade-cruzada .cel{
+    aspect-ratio:1/1; position:relative; background:var(--marinho-escuro);
+  }
+  .grade-cruzada .cel.ativa{background:#fff; border:.5px solid var(--linha);}
+  .grade-cruzada .cel .num{
+    position:absolute; top:1px; left:2px; font-size:6.5pt; font-weight:800; color:var(--marinho);
+    font-family:var(--font-display);
+  }
+  .dicas-cruzada .rotulo{font-family:var(--font-display); font-weight:700; font-size:12pt; color:var(--marinho-escuro); margin-bottom:4mm;}
+  .dicas-cruzada .dica{
+    display:flex; align-items:flex-start; gap:4mm; margin-bottom:5mm;
+    background:#fff; border:2px solid var(--roxo); border-radius:12px; padding:4mm;
+  }
+  .dicas-cruzada .dica .n{
+    font-family:var(--font-display); font-weight:900; font-size:13pt; color:#fff; background:var(--marinho);
+    width:8mm; height:8mm; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .dicas-cruzada .dica svg{width:12mm; height:12mm; flex-shrink:0;}
+  .dicas-cruzada .dica p{margin:0; font-size:10.5pt; font-weight:600; line-height:1.4;}
+  .banco-palavras{
+    margin-top:6mm; background:var(--roxo-claro); border:2px dashed var(--roxo); border-radius:14px;
+    padding:5mm; text-align:center;
+  }
+  .banco-palavras .rotulo{font-family:var(--font-display); font-weight:700; font-size:10.5pt; color:var(--marinho-escuro); margin-bottom:2mm;}
+  .banco-palavras .palavras{
+    display:flex; justify-content:center; gap:5mm; flex-wrap:wrap;
+    font-family:var(--font-display); font-weight:800; font-size:11.5pt; color:var(--marinho);
+  }
+  .banco-palavras .palavras span{background:#fff; border:2px solid var(--marinho); border-radius:8px; padding:3px 10px;}
+
+  /* =====================================================
+     PÁGINA 2 — SOMBRAS
+  ===================================================== */
+  .sombras-grid{display:flex; gap:10mm; margin-top:3mm;}
+  .col-objetos, .col-sombras{flex:1; display:flex; flex-direction:column; gap:4mm;}
+  .col-titulo{font-family:var(--font-display); font-weight:700; font-size:11.5pt; color:var(--marinho-escuro); text-align:center; margin-bottom:1mm;}
+  .item-objeto{
+    display:flex; align-items:center; gap:4mm; background:#fff; border:2.5px solid var(--menta);
+    border-radius:14px; padding:3mm 4mm;
+  }
+  .item-objeto .n{
+    font-family:var(--font-display); font-weight:900; font-size:12pt; color:#fff; background:var(--marinho);
+    width:7mm; height:7mm; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .item-objeto svg{width:16mm; height:16mm;}
+  .item-sombra{
+    display:flex; align-items:center; gap:4mm; background:#fff; border:2.5px solid var(--marinho);
+    border-radius:14px; padding:3mm 4mm;
+  }
+  .item-sombra .letra{
+    font-family:var(--font-display); font-weight:900; font-size:12pt; color:var(--marinho-escuro);
+    background:var(--ouro-claro); width:7mm; height:7mm; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; border:2px solid var(--ouro);
+  }
+  .item-sombra svg{width:16mm; height:16mm;}
+  .resposta-sombras{
+    margin-top:6mm; background:var(--menta-clara); border:2px dashed var(--menta); border-radius:14px; padding:5mm 6mm;
+  }
+  .resposta-sombras .rotulo{font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--marinho-escuro); margin-bottom:3mm;}
+  .resposta-sombras .linhas{display:flex; flex-wrap:wrap; gap:5mm; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:11pt;}
+  .resposta-sombras .linhas span{display:inline-flex; align-items:center; gap:2mm;}
+  .resposta-sombras .caixa{width:9mm; height:8mm; border:2px solid var(--marinho); border-radius:6px; display:inline-block;}
+
+  /* =====================================================
+     PÁGINA 3 — CÓDIGO SECRETO
+  ===================================================== */
+  .tabela-codigo{display:grid; grid-template-columns:repeat(13, 1fr); gap:1.5mm; margin-top:4mm;}
+  .tabela-codigo .par{
+    background:#fff; border:2px solid var(--marinho); border-radius:8px; text-align:center; padding:2mm 0;
+  }
+  .tabela-codigo .par .letra{font-family:var(--font-display); font-weight:800; font-size:11pt; color:var(--marinho-escuro);}
+  .tabela-codigo .par .num{font-family:var(--font-body); font-weight:700; font-size:9pt; color:#C2511E;}
+  .mensagem-secreta{
+    margin-top:8mm; background:var(--marinho-escuro); border-radius:16px; padding:7mm 8mm;
+  }
+  .mensagem-secreta .rotulo{font-family:var(--font-display); font-weight:700; font-size:11.5pt; color:var(--ouro); margin-bottom:5mm; text-align:center;}
+  .codigo-numeros{display:flex; flex-wrap:wrap; gap:3mm; justify-content:center;}
+  .codigo-numeros .grupo{display:flex; gap:1.5mm;}
+  .codigo-numeros .bloco{
+    display:flex; flex-direction:column; align-items:center; gap:1.5mm;
+  }
+  .codigo-numeros .num-grande{
+    font-family:var(--font-display); font-weight:900; font-size:15pt; color:#fff;
+    background:var(--marinho); border:2px solid var(--ouro); border-radius:8px;
+    width:11mm; height:11mm; display:flex; align-items:center; justify-content:center;
+  }
+  .codigo-numeros .lacuna-letra{width:11mm; height:9mm; border-bottom:3px solid var(--ouro);}
+  .dica-codigo{margin-top:6mm; text-align:center; font-size:10.5pt; font-style:italic; color:var(--roxo-claro); background:none;}
+  .frase-final{
+    margin-top:8mm; text-align:center;
+  }
+  .frase-final .rotulo{font-family:var(--font-display); font-weight:700; font-size:11pt; color:var(--marinho-escuro); margin-bottom:3mm;}
+  .frase-final .linha-final{border-bottom:3px solid var(--marinho); width:150mm; height:10mm; margin:0 auto;}
+
+  /* =====================================================
+     PÁGINA 4 — LABIRINTO
+  ===================================================== */
+  .labirinto-wrap{display:flex; justify-content:center; margin-top:4mm; gap:8mm; align-items:center; flex:1;}
+  .labirinto-legenda{display:flex; flex-direction:column; gap:6mm;}
+  .legenda-item{display:flex; align-items:center; gap:4mm; background:#fff; border:2px solid var(--roxo); border-radius:12px; padding:3mm 4mm; max-width:38mm;}
+  .legenda-item svg{width:16mm; height:16mm; flex-shrink:0;}
+  .legenda-item span{font-family:var(--font-display); font-weight:700; font-size:10pt; color:var(--marinho-escuro);}
+
+  /* =====================================================
+     PÁGINA 5 — SUDOKU + CERTIFICADO
+  ===================================================== */
+  .sudoku-wrap{display:flex; gap:10mm; margin-top:3mm; align-items:flex-start;}
+  .grade-sudoku{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:0;
+    border:3px solid var(--marinho-escuro); border-radius:8px; overflow:hidden;
+    width:88mm; height:88mm; flex-shrink:0;
+  }
+  .grade-sudoku .cel-sud{
+    display:flex; align-items:center; justify-content:center; background:#fff;
+    border:.75px solid var(--linha);
+  }
+  .grade-sudoku .cel-sud.dado{background:var(--ouro-claro);}
+  .grade-sudoku .cel-sud svg{width:60%; height:60%;}
+  /* bordas grossas dos blocos 2x2 */
+  .grade-sudoku .cel-sud:nth-child(2n+1){border-left:2.5px solid var(--marinho-escuro);}
+  .grade-sudoku .cel-sud:nth-child(4n+1){border-left:3px solid var(--marinho-escuro);}
+  .grade-sudoku .cel-sud:nth-child(n+9){border-top:2.5px solid var(--marinho-escuro);}
+  .legenda-sudoku{flex:1;}
+  .legenda-sudoku .rotulo{font-family:var(--font-display); font-weight:700; font-size:11.5pt; color:var(--marinho-escuro); margin-bottom:4mm;}
+  .legenda-sudoku .simbolo-linha{display:flex; align-items:center; gap:4mm; margin-bottom:4mm; background:#fff; border:2px solid var(--menta); border-radius:12px; padding:3mm 4mm;}
+  .legenda-sudoku .simbolo-linha svg{width:12mm; height:12mm;}
+  .legenda-sudoku .simbolo-linha span{font-family:var(--font-display); font-weight:700; font-size:11pt;}
+  .sudoku-nota{margin-top:6mm; font-size:10pt; font-style:italic; color:var(--marinho);}
+
+  .pagina-certificado{
+    background:linear-gradient(160deg, var(--roxo-claro) 0%, var(--menta-clara) 100%);
+    align-items:center; justify-content:center; text-align:center;
+  }
+  .moldura-certificado{
+    border:5px solid var(--marinho); border-radius:20px; outline:2px solid var(--ouro); outline-offset:-11px;
+    padding:14mm; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .moldura-certificado .selo-topo{
+    font-family:var(--font-display); font-weight:700; font-size:11pt; letter-spacing:3px; color:var(--marinho);
+    text-transform:uppercase; margin-bottom:4mm;
+  }
+  .moldura-certificado h2{font-family:var(--font-display); font-weight:900; font-size:24pt; color:var(--marinho-escuro); line-height:1.15;}
+  .moldura-certificado .concedido{font-size:11.5pt; color:var(--marinho); margin-top:6mm; font-weight:600;}
+  .moldura-certificado .nome-cert{
+    font-family:var(--font-display); font-weight:800; font-size:23pt; color:#C2511E;
+    border-bottom:3px solid var(--ouro); padding:4mm 14mm 3mm; margin-top:4mm;
+  }
+  .moldura-certificado .texto-cert{max-width:140mm; font-size:11.5pt; line-height:1.7; color:var(--tinta); margin-top:7mm;}
+  .moldura-certificado .rodape-cert{display:flex; justify-content:space-between; width:100%; max-width:150mm; margin-top:14mm;}
+  .moldura-certificado .assinatura{text-align:center; font-size:10pt; color:var(--marinho); font-weight:600;}
+  .moldura-certificado .assinatura .linha-ass{width:50mm; border-bottom:2px solid var(--marinho); margin-bottom:2mm;}
+  .moldura-certificado .medalhas-cert{display:flex; gap:6mm; margin-top:7mm;}
+  .moldura-certificado .medalhas-cert svg{width:16mm; height:16mm;}
+
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE (não imprime) ============ -->
+<div class="control-bar screen-only">
+  <label>🧩 Nome da criança:
+    <input type="text" id="inputNome" placeholder="Ex: Gabriel" />
+  </label>
+  <button class="print-btn" id="btnImprimir">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<main id="livro">
+
+  <!-- ======================================================
+       CAPA
+  ======================================================= -->
+  <section class="page capa">
+    <svg class="flutuante f1" viewBox="0 0 100 100"><path d="M10 10 h35 v18 a9 9 0 0 1 0 18 v18 h-35 v-18 a9 9 0 0 0 0-18z" fill="#E8B923"/></svg>
+    <svg class="flutuante f2" viewBox="0 0 100 100"><circle cx="38" cy="38" r="26" fill="none" stroke="#8FD9C4" stroke-width="7"/><line x1="58" y1="58" x2="82" y2="82" stroke="#8FD9C4" stroke-width="9" stroke-linecap="round"/></svg>
+    <svg class="flutuante f3" viewBox="0 0 100 100"><polygon points="50,4 61,37 96,37 68,58 79,92 50,71 21,92 32,58 4,37 39,37" fill="#B79CED"/></svg>
+
+    <div class="selo">🧠 RACIOCÍNIO · LÓGICA · FÉ</div>
+    <h1 class="titulo-principal">PASSATEMPOS <span>BÍBLICOS</span></h1>
+    <p class="subtitulo">Desafios de Raciocínio de <span class="cname">Gabriel</span></p>
+    <div class="faixa-nome">🏅 <span class="cname">Gabriel</span>, aceite o Desafio dos Passatempos!</div>
+
+    <div class="cena">
+      <!-- Bíblia aberta -->
+      <svg viewBox="0 0 160 110" style="width:52mm;">
+        <path d="M80 14 C60 4 30 4 12 12 V90 C30 82 60 82 80 92 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/>
+        <path d="M80 14 C100 4 130 4 148 12 V90 C130 82 100 82 80 92 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/>
+        <line x1="80" y1="14" x2="80" y2="92" stroke="#1B3A5C" stroke-width="3"/>
+        <line x1="22" y1="30" x2="66" y2="26" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+        <line x1="22" y1="42" x2="66" y2="38" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+        <line x1="22" y1="54" x2="60" y2="50" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+        <line x1="94" y1="26" x2="138" y2="30" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+        <line x1="94" y1="38" x2="138" y2="42" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+        <line x1="100" y1="50" x2="138" y2="54" stroke="#1B3A5C" stroke-width="2" opacity=".5"/>
+      </svg>
+
+      <!-- Lupa -->
+      <svg viewBox="0 0 100 100" style="width:34mm;">
+        <circle cx="40" cy="40" r="28" fill="#E4F7F1" stroke="#1B3A5C" stroke-width="6"/>
+        <line x1="61" y1="61" x2="92" y2="92" stroke="#1B3A5C" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="40" cy="40" r="14" fill="none" stroke="#8FD9C4" stroke-width="3"/>
+      </svg>
+
+      <!-- Peça de quebra-cabeça -->
+      <svg viewBox="0 0 100 100" style="width:34mm;">
+        <path d="M15 15 H45 a8 8 0 0 1 0 16 a8 8 0 0 0 0 16 H85 V85 H55 a8 8 0 0 1 -16 0 a8 8 0 0 0 -16 0 H15 Z" fill="#E8B923" stroke="#1B3A5C" stroke-width="3"/>
+      </svg>
+
+      <!-- Labirinto mini -->
+      <svg viewBox="0 0 100 100" style="width:34mm;">
+        <rect x="8" y="8" width="84" height="84" fill="none" stroke="#1B3A5C" stroke-width="4"/>
+        <path d="M8 26 H60 V8 M8 50 H70 V90 H30 V60 H92" fill="none" stroke="#1B3A5C" stroke-width="4"/>
+        <path d="M20 26 V80" fill="none" stroke="#B79CED" stroke-width="4" stroke-dasharray="4 4"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PÁGINA 1 — CRUZADINHA DA FÉ
+  ======================================================= -->
+  <section class="page">
+    <div class="trilha">
+      <svg class="medalha ativa" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <div class="rotulo-desafio">DESAFIO 1 de 5</div>
+    </div>
+
+    <h2 class="page-title">✏️ Palavras Cruzadas da Fé</h2>
+    <p class="page-subtitle">Leia a dica e escreva a palavra certa nos quadradinhos, <span class="cname">Gabriel</span>!</p>
+
+    <div class="instrucao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1B3A5C" stroke-width="2"><path d="M12 20l9-9-9-9-9 9 9 9z"/></svg>
+      Cada quadrado branco recebe uma letra. As dicas têm o número do quadradinho inicial.
+    </div>
+
+    <div class="cruzadinha-wrap">
+      <div class="grade-cruzada">
+        <!-- linha0: col6=J(num1) -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"><span class="num">1</span></div><div class="cel"></div>
+        <!-- linha1: col6=E -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"></div><div class="cel"></div>
+        <!-- linha2: col5=O(num2), col6=S -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"><span class="num">2</span></div><div class="cel ativa"></div><div class="cel"></div>
+        <!-- linha3: col4=C(num3), col5=R, col6=U, col7=Z -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"><span class="num">3</span></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel ativa"></div>
+        <!-- linha4: col0=B(num4), col1=I, col2=B, col3=L, col4=I, col5=A, col6=S -->
+        <div class="cel ativa"><span class="num">4</span></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel ativa"></div><div class="cel"></div>
+        <!-- linha5: col5=C -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"></div><div class="cel"></div><div class="cel"></div>
+        <!-- linha6: col5=A -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"></div><div class="cel"></div><div class="cel"></div>
+        <!-- linha7: col5=O -->
+        <div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel"></div><div class="cel ativa"></div><div class="cel"></div><div class="cel"></div>
+      </div>
+
+      <div class="dicas-cruzada">
+        <div class="rotulo">📖 Dicas:</div>
+        <div class="dica">
+          <div class="n">4</div>
+          <svg viewBox="0 0 160 110"><path d="M80 14 C60 4 30 4 12 12 V90 C30 82 60 82 80 92 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><path d="M80 14 C100 4 130 4 148 12 V90 C130 82 100 82 80 92 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><line x1="80" y1="14" x2="80" y2="92" stroke="#1B3A5C" stroke-width="3"/></svg>
+          <p>Livro sagrado que fala de Deus e do Seu amor por nós. (6 letras, na vertical ↓)</p>
+        </div>
+        <div class="dica">
+          <div class="n">1</div>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="30" r="18" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><path d="M30 90 Q50 55 70 90 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/></svg>
+          <p>É o Filho de Deus, que nasceu em Belém. (5 letras, na vertical ↓)</p>
+        </div>
+        <div class="dica">
+          <div class="n">3</div>
+          <svg viewBox="0 0 100 100"><line x1="50" y1="10" x2="50" y2="90" stroke="#1B3A5C" stroke-width="9" stroke-linecap="round"/><line x1="25" y1="35" x2="75" y2="35" stroke="#1B3A5C" stroke-width="9" stroke-linecap="round"/></svg>
+          <p>Lugar onde Jesus morreu por nós, cheio de amor. (4 letras, na horizontal →)</p>
+        </div>
+        <div class="dica">
+          <div class="n">2</div>
+          <svg viewBox="0 0 100 100"><g fill="#1B3A5C"><ellipse cx="30" cy="55" rx="20" ry="8" transform="rotate(-20 30 55)"/><ellipse cx="55" cy="45" rx="20" ry="8" transform="rotate(-20 55 45)"/><circle cx="72" cy="30" r="10"/></g></svg>
+          <p>Falamos com Deus através dela, de coração aberto. (6 letras, na vertical ↓)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="banco-palavras">
+      <div class="rotulo">🔤 Banco de palavras (sem acentos na grade)</div>
+      <div class="palavras"><span>BIBLIA</span><span>JESUS</span><span>CRUZ</span><span>ORACAO</span></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PÁGINA 2 — JOGO DAS SOMBRAS
+  ======================================================= -->
+  <section class="page">
+    <div class="trilha">
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha ativa" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <div class="rotulo-desafio">DESAFIO 2 de 5</div>
+    </div>
+
+    <h2 class="page-title">🔦 Jogo das Sombras dos Objetos da Fé</h2>
+    <p class="page-subtitle">Ligue cada objeto à sua sombra correta, <span class="cname">Gabriel</span>!</p>
+
+    <div class="instrucao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1B3A5C" stroke-width="2"><path d="M12 20l9-9-9-9-9 9 9 9z"/></svg>
+      Observe bem o formato de cada objeto antes de ligar à sombra certa.
+    </div>
+
+    <div class="sombras-grid">
+      <div class="col-objetos">
+        <div class="col-titulo">OBJETOS</div>
+        <div class="item-objeto"><div class="n">1</div>
+          <svg viewBox="0 0 100 100"><path d="M25 15 Q60 15 60 55 Q60 85 30 85 L30 15 Z" fill="none" stroke="#E8B923" stroke-width="5"/><line x1="30" y1="20" x2="55" y2="24" stroke="#E8B923" stroke-width="3"/><line x1="30" y1="35" x2="52" y2="38" stroke="#E8B923" stroke-width="3"/><line x1="30" y1="50" x2="48" y2="52" stroke="#E8B923" stroke-width="3"/><line x1="30" y1="65" x2="42" y2="66" stroke="#E8B923" stroke-width="3"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Harpa de Davi</span>
+        </div>
+        <div class="item-objeto"><div class="n">2</div>
+          <svg viewBox="0 0 100 70"><path d="M10 45 h80 v15 h-80z" fill="#8B5A2B"/><path d="M10 45 L50 15 L90 45 Z" fill="#C99A5B"/><rect x="42" y="25" width="10" height="12" fill="#3A2E1F"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Arca de Noé</span>
+        </div>
+        <div class="item-objeto"><div class="n">3</div>
+          <svg viewBox="0 0 100 70"><path d="M10 35 Q40 5 80 35 Q40 65 10 35Z" fill="#6EC6E0"/><path d="M80 35 L96 22 L96 48 Z" fill="#6EC6E0"/><circle cx="26" cy="30" r="3" fill="#1B3A5C"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Peixinho</span>
+        </div>
+        <div class="item-objeto"><div class="n">4</div>
+          <svg viewBox="0 0 100 100"><polygon points="50,10 61,38 92,38 67,57 76,88 50,70 24,88 33,57 8,38 39,38" fill="#E8B923"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Estrela de Belém</span>
+        </div>
+        <div class="item-objeto"><div class="n">5</div>
+          <svg viewBox="0 0 100 90"><path d="M50 12 C30 2 10 2 5 10 V80 C10 74 30 74 50 84 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><path d="M50 12 C70 2 90 2 95 10 V80 C90 74 70 74 50 84 Z" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Bíblia</span>
+        </div>
+        <div class="item-objeto"><div class="n">6</div>
+          <svg viewBox="0 0 100 70"><ellipse cx="50" cy="42" rx="42" ry="24" fill="#C99A5B"/><path d="M20 30 Q50 18 80 30" stroke="#8B5A2B" stroke-width="3" fill="none"/><path d="M50 20 L50 66" stroke="#8B5A2B" stroke-width="2"/></svg>
+          <span style="font-size:9pt; font-weight:700;">Pão</span>
+        </div>
+      </div>
+
+      <div class="col-sombras">
+        <div class="col-titulo">SOMBRAS</div>
+        <div class="item-sombra"><div class="letra">C</div>
+          <svg viewBox="0 0 100 100"><polygon points="50,10 61,38 92,38 67,57 76,88 50,70 24,88 33,57 8,38 39,38" fill="#1B3A5C"/></svg>
+        </div>
+        <div class="item-sombra"><div class="letra">A</div>
+          <svg viewBox="0 0 100 100"><path d="M25 15 Q60 15 60 55 Q60 85 30 85 L30 15 Z" fill="#1B3A5C"/></svg>
+        </div>
+        <div class="item-sombra"><div class="letra">F</div>
+          <svg viewBox="0 0 100 90"><path d="M50 12 C30 2 10 2 5 10 V80 C10 74 30 74 50 84 Z" fill="#1B3A5C"/><path d="M50 12 C70 2 90 2 95 10 V80 C90 74 70 74 50 84 Z" fill="#1B3A5C"/></svg>
+        </div>
+        <div class="item-sombra"><div class="letra">B</div>
+          <svg viewBox="0 0 100 70"><path d="M10 45 h80 v15 h-80z" fill="#1B3A5C"/><path d="M10 45 L50 15 L90 45 Z" fill="#1B3A5C"/></svg>
+        </div>
+        <div class="item-sombra"><div class="letra">E</div>
+          <svg viewBox="0 0 100 70"><ellipse cx="50" cy="42" rx="42" ry="24" fill="#1B3A5C"/></svg>
+        </div>
+        <div class="item-sombra"><div class="letra">D</div>
+          <svg viewBox="0 0 100 70"><path d="M10 35 Q40 5 80 35 Q40 65 10 35Z" fill="#1B3A5C"/><path d="M80 35 L96 22 L96 48 Z" fill="#1B3A5C"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="resposta-sombras">
+      <div class="rotulo">✏️ Escreva a letra da sombra certa ao lado de cada número:</div>
+      <div class="linhas">
+        <span>1 <div class="caixa"></div></span>
+        <span>2 <div class="caixa"></div></span>
+        <span>3 <div class="caixa"></div></span>
+        <span>4 <div class="caixa"></div></span>
+        <span>5 <div class="caixa"></div></span>
+        <span>6 <div class="caixa"></div></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PÁGINA 3 — CÓDIGO SECRETO
+  ======================================================= -->
+  <section class="page">
+    <div class="trilha">
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha ativa" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <div class="rotulo-desafio">DESAFIO 3 de 5</div>
+    </div>
+
+    <h2 class="page-title">🔐 O Código Secreto da Bíblia</h2>
+    <p class="page-subtitle">Use a tabela para decifrar a mensagem secreta, <span class="cname">Gabriel</span>!</p>
+
+    <div class="instrucao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1B3A5C" stroke-width="2"><path d="M12 20l9-9-9-9-9 9 9 9z"/></svg>
+      Cada letra do alfabeto vira um número. Descubra qual letra é cada número abaixo.
+    </div>
+
+    <div class="tabela-codigo">
+      <div class="par"><div class="letra">A</div><div class="num">1</div></div>
+      <div class="par"><div class="letra">B</div><div class="num">2</div></div>
+      <div class="par"><div class="letra">C</div><div class="num">3</div></div>
+      <div class="par"><div class="letra">D</div><div class="num">4</div></div>
+      <div class="par"><div class="letra">E</div><div class="num">5</div></div>
+      <div class="par"><div class="letra">F</div><div class="num">6</div></div>
+      <div class="par"><div class="letra">G</div><div class="num">7</div></div>
+      <div class="par"><div class="letra">H</div><div class="num">8</div></div>
+      <div class="par"><div class="letra">I</div><div class="num">9</div></div>
+      <div class="par"><div class="letra">J</div><div class="num">10</div></div>
+      <div class="par"><div class="letra">K</div><div class="num">11</div></div>
+      <div class="par"><div class="letra">L</div><div class="num">12</div></div>
+      <div class="par"><div class="letra">M</div><div class="num">13</div></div>
+      <div class="par"><div class="letra">N</div><div class="num">14</div></div>
+      <div class="par"><div class="letra">O</div><div class="num">15</div></div>
+      <div class="par"><div class="letra">P</div><div class="num">16</div></div>
+      <div class="par"><div class="letra">Q</div><div class="num">17</div></div>
+      <div class="par"><div class="letra">R</div><div class="num">18</div></div>
+      <div class="par"><div class="letra">S</div><div class="num">19</div></div>
+      <div class="par"><div class="letra">T</div><div class="num">20</div></div>
+      <div class="par"><div class="letra">U</div><div class="num">21</div></div>
+      <div class="par"><div class="letra">V</div><div class="num">22</div></div>
+      <div class="par"><div class="letra">X</div><div class="num">24</div></div>
+      <div class="par"><div class="letra">Z</div><div class="num">26</div></div>
+    </div>
+
+    <div class="mensagem-secreta">
+      <div class="rotulo">💌 Mensagem secreta — escreva a letra embaixo de cada número:</div>
+      <div class="codigo-numeros">
+        <div class="grupo">
+          <div class="bloco"><div class="num-grande">10</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">5</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">19</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">21</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">19</div><div class="lacuna-letra"></div></div>
+        </div>
+        <div class="grupo">
+          <div class="bloco"><div class="num-grande">1</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">13</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">1</div><div class="lacuna-letra"></div></div>
+        </div>
+        <div class="grupo">
+          <div class="bloco"><div class="num-grande">22</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">15</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">3</div><div class="lacuna-letra"></div></div>
+          <div class="bloco"><div class="num-grande">5</div><div class="lacuna-letra"></div></div>
+        </div>
+      </div>
+      <p class="dica-codigo">💡 Dica: são 3 palavrinhas de amor. A última letra do código é o Ê de "VOCÊ" — pense no som do E!</p>
+    </div>
+
+    <div class="frase-final">
+      <div class="rotulo">✨ Agora escreva a frase completa que você descobriu:</div>
+      <div class="linha-final"></div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PÁGINA 4 — LABIRINTO DO BOM SAMARITANO
+  ======================================================= -->
+  <section class="page">
+    <div class="trilha">
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha ativa" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <div class="rotulo-desafio">DESAFIO 4 de 5</div>
+    </div>
+
+    <h2 class="page-title">🧭 O Labirinto do Bom Samaritano</h2>
+    <p class="page-subtitle">Ajude o Bom Samaritano a chegar até o homem ferido, <span class="cname">Gabriel</span>!</p>
+
+    <div class="instrucao">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1B3A5C" stroke-width="2"><path d="M12 20l9-9-9-9-9 9 9 9z"/></svg>
+      Trace o caminho com o lápis, do INÍCIO até a CHEGADA, sem cruzar as paredes.
+    </div>
+
+    <div class="labirinto-wrap">
+      <div class="labirinto-legenda">
+        <div class="legenda-item">
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="26" r="14" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><path d="M28 92 Q50 55 72 92 Z" fill="#8FD9C4" stroke="#1B3A5C" stroke-width="3"/><path d="M35 70 L20 85" stroke="#1B3A5C" stroke-width="4" stroke-linecap="round"/></svg>
+          <span>INÍCIO: Bom Samaritano</span>
+        </div>
+        <div class="legenda-item">
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="66" r="12" fill="#F7DE8B" stroke="#1B3A5C" stroke-width="3"/><rect x="25" y="78" width="50" height="16" rx="6" fill="#B79CED" stroke="#1B3A5C" stroke-width="3"/></svg>
+          <span>CHEGADA: Homem ferido</span>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 152 160" style="width:110mm; background:#fff; border-radius:12px; border:2px solid #C9C2AC;">
+        <!-- guias tracejadas de colunas (decorativo, não é parede) -->
+        <g stroke="#E4F7F1" stroke-width="1" stroke-dasharray="2 3">
+          <line x1="32" y1="14" x2="32" y2="146"/>
+          <line x1="54" y1="14" x2="54" y2="146"/>
+          <line x1="76" y1="14" x2="76" y2="146"/>
+          <line x1="98" y1="14" x2="98" y2="146"/>
+          <line x1="120" y1="14" x2="120" y2="146"/>
+        </g>
+        <!-- paredes do labirinto -->
+        <g stroke="#1B3A5C" stroke-width="4" stroke-linecap="square" fill="none">
+          <line x1="10" y1="14" x2="142" y2="14"/>
+          <line x1="10" y1="146" x2="142" y2="146"/>
+          <line x1="142" y1="14" x2="142" y2="146"/>
+          <line x1="10" y1="36" x2="10" y2="124"/>
+          <line x1="10" y1="36" x2="120" y2="36"/>
+          <line x1="32" y1="58" x2="142" y2="58"/>
+          <line x1="10" y1="80" x2="120" y2="80"/>
+          <line x1="32" y1="102" x2="142" y2="102"/>
+          <line x1="10" y1="124" x2="120" y2="124"/>
+        </g>
+        <text x="2" y="26" font-family="Outfit" font-weight="800" font-size="7" fill="#C2511E">INÍCIO</text>
+        <text x="0" y="140" font-family="Outfit" font-weight="800" font-size="6.3" fill="#C2511E">CHEGADA</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       PÁGINA 5 — SUDOKU + CERTIFICADO
+  ======================================================= -->
+  <section class="page">
+    <div class="trilha">
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <svg class="medalha ativa" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      <div class="rotulo-desafio">DESAFIO 5 de 5</div>
+    </div>
+
+    <h2 class="page-title">🎯 Sudoku Infantil Bíblico (4×4)</h2>
+    <p class="page-subtitle">Complete a grade sem repetir símbolos na linha, coluna ou quadrado, <span class="cname">Gabriel</span>!</p>
+
+    <div class="sudoku-wrap">
+      <div class="grade-sudoku">
+        <!-- linha1: 1 . 3 . -->
+        <div class="cel-sud dado"><svg viewBox="0 0 100 100"><line x1="50" y1="10" x2="50" y2="90" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/><line x1="20" y1="38" x2="80" y2="38" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/></svg></div>
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 70"><path d="M10 35 Q40 5 80 35 Q40 65 10 35Z" fill="#8FD9C4"/><path d="M80 35 L96 22 L96 48 Z" fill="#8FD9C4"/></svg></div>
+        <div class="cel-sud"></div>
+        <!-- linha2: . 4 . 2 -->
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 90"><path d="M50 85 C10 55 10 20 35 15 C48 12 50 25 50 30 C50 25 52 12 65 15 C90 20 90 55 50 85Z" fill="#C2511E"/></svg></div>
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 100"><polygon points="50,10 61,38 92,38 67,57 76,88 50,70 24,88 33,57 8,38 39,38" fill="#E8B923"/></svg></div>
+        <!-- linha3: 2 . 4 . -->
+        <div class="cel-sud dado"><svg viewBox="0 0 100 100"><polygon points="50,10 61,38 92,38 67,57 76,88 50,70 24,88 33,57 8,38 39,38" fill="#E8B923"/></svg></div>
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 90"><path d="M50 85 C10 55 10 20 35 15 C48 12 50 25 50 30 C50 25 52 12 65 15 C90 20 90 55 50 85Z" fill="#C2511E"/></svg></div>
+        <div class="cel-sud"></div>
+        <!-- linha4: . 3 . 1 -->
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 70"><path d="M10 35 Q40 5 80 35 Q40 65 10 35Z" fill="#8FD9C4"/><path d="M80 35 L96 22 L96 48 Z" fill="#8FD9C4"/></svg></div>
+        <div class="cel-sud"></div>
+        <div class="cel-sud dado"><svg viewBox="0 0 100 100"><line x1="50" y1="10" x2="50" y2="90" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/><line x1="20" y1="38" x2="80" y2="38" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/></svg></div>
+      </div>
+
+      <div class="legenda-sudoku">
+        <div class="rotulo">🔣 Símbolos do jogo:</div>
+        <div class="simbolo-linha"><svg viewBox="0 0 100 100"><line x1="50" y1="10" x2="50" y2="90" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/><line x1="20" y1="38" x2="80" y2="38" stroke="#1B3A5C" stroke-width="12" stroke-linecap="round"/></svg><span>Cruz</span></div>
+        <div class="simbolo-linha"><svg viewBox="0 0 100 100"><polygon points="50,10 61,38 92,38 67,57 76,88 50,70 24,88 33,57 8,38 39,38" fill="#E8B923"/></svg><span>Estrela</span></div>
+        <div class="simbolo-linha"><svg viewBox="0 0 100 70"><path d="M10 35 Q40 5 80 35 Q40 65 10 35Z" fill="#8FD9C4"/><path d="M80 35 L96 22 L96 48 Z" fill="#8FD9C4"/></svg><span>Peixe</span></div>
+        <div class="simbolo-linha"><svg viewBox="0 0 100 90"><path d="M50 85 C10 55 10 20 35 15 C48 12 50 25 50 30 C50 25 52 12 65 15 C90 20 90 55 50 85Z" fill="#C2511E"/></svg><span>Coração</span></div>
+        <p class="sudoku-nota">💡 Dica: cada símbolo aparece uma única vez em cada linha, em cada coluna e em cada quadrado 2×2.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       CERTIFICADO
+  ======================================================= -->
+  <section class="page pagina-certificado">
+    <div class="moldura-certificado">
+      <div class="selo-topo">🏆 Passatempos Bíblicos</div>
+      <h2>Certificado Mestre dos<br>Passatempos Bíblicos</h2>
+      <p class="concedido">Este certificado é concedido com orgulho a:</p>
+      <div class="nome-cert cname">Gabriel</div>
+      <p class="texto-cert">Por completar com dedicação todos os desafios de raciocínio deste livro — cruzadinha, sombras, código secreto, labirinto e sudoku — exercitando a mente enquanto fixava as histórias da fé.</p>
+
+      <div class="medalhas-cert">
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,10 17,15 18,22 12,18 6,22 7,15 2,10 9,9" fill="#E8B923"/></svg>
+      </div>
+
+      <div class="rodape-cert">
+        <div class="assinatura"><div class="linha-ass"></div>Papai / Mamãe</div>
+        <div class="assinatura"><div class="linha-ass"></div>Professor(a)</div>
+        <div class="assinatura"><div class="linha-ass"></div>Data</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  function getNomeInicial(){
+    try{
+      var params = new URLSearchParams(window.location.search);
+      var doUrl = params.get('nome');
+      if(doUrl && doUrl.trim() !== '') return doUrl.trim();
+    }catch(e){}
+    try{
+      var salvo = localStorage.getItem('childName');
+      if(salvo && salvo.trim() !== '') return salvo.trim();
+    }catch(e){}
+    return 'Gabriel';
+  }
+
+  function aplicarNome(nome){
+    if(!nome || nome.trim() === '') nome = 'Gabriel';
+    var els = document.querySelectorAll('.cname');
+    els.forEach(function(el){ el.textContent = nome; });
+  }
+
+  function salvarNome(nome){
+    try{ localStorage.setItem('childName', nome); }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var nomeAtual = getNomeInicial();
+    aplicarNome(nomeAtual);
+
+    var input = document.getElementById('inputNome');
+    if(input){
+      input.value = nomeAtual;
+      input.addEventListener('input', function(){
+        var novo = input.value;
+        aplicarNome(novo);
+        salvarNome(novo);
+      });
+    }
+
+    var btn = document.getElementById('btnImprimir');
+    if(btn){
+      btn.addEventListener('click', function(){
+        window.print();
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

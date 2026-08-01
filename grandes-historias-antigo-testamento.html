@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grandes Histórias do Antigo Testamento</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --earth:#b45309;
+  --earth-dark:#92400e;
+  --green:#22c55e;
+  --green-dark:#15803d;
+  --blue:#0ea5e9;
+  --blue-dark:#0369a1;
+  --sun:#facc15;
+  --sun-dark:#eab308;
+  --bg:#fbf8f2;
+  --ink:#332a20;
+  --ink-soft:#6b5f4f;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans','Outfit','Segoe UI',Arial,sans-serif;
+  background:#e4e1d8;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{ font-family:'Outfit','Plus Jakarta Sans',sans-serif; }
+
+/* ============ BARRA DE CONTROLE ============ */
+.control-bar{
+  position:sticky; top:0; z-index:999;
+  background:linear-gradient(135deg, var(--blue-dark), var(--green-dark));
+  color:#fff; padding:14px 20px;
+  display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.16); padding:6px 10px 6px 14px; border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none; outline:none; border-radius:20px;
+  padding:7px 12px; font-family:inherit; font-size:14px; width:150px;
+}
+.control-bar button{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  border-radius:24px; padding:9px 16px; font-size:14px; transition:transform .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{ background:var(--sun); color:#5c4a00; }
+.btn-print{
+  background:#ffffff; color:var(--blue-dark); font-size:15px;
+  padding:11px 22px; box-shadow:0 3px 10px rgba(0,0,0,.2); font-weight:800;
+}
+
+/* ============ CONTAINER DE PÁGINAS ============ */
+.book{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:30px 10px 60px; }
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+.corner-frame{
+  position:absolute; inset:9mm;
+  border:3px solid var(--frame-color, var(--earth));
+  border-radius:20px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:12.5mm;
+  border:1.5px dashed rgba(14,165,233,.35);
+  border-radius:16px;
+}
+
+.page-number{
+  position:absolute; bottom:7mm; right:14mm;
+  font-size:11px; color:var(--ink-soft); font-weight:600; letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block; color:#fff; padding:6px 22px; border-radius:30px;
+  font-weight:700; font-size:12.5px; letter-spacing:1.3px; text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+.child-name{ color:var(--blue-dark); font-weight:800; white-space:nowrap; }
+
+.verse-card{
+  background:var(--card); border-left:5px solid var(--sun); border-radius:12px;
+  padding:14px 18px; box-shadow:0 4px 14px rgba(0,0,0,.08);
+  font-style:italic; color:var(--ink-soft); font-size:13.5px; line-height:1.6;
+}
+.verse-card strong{ display:block; font-style:normal; color:var(--sun-dark); margin-top:6px; font-size:12px; letter-spacing:.5px; }
+
+.story-card{
+  background:var(--card); border-radius:18px; padding:18px 22px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08); border:1px solid rgba(180,83,9,.12);
+}
+.story-card p{ font-size:13.8px; line-height:1.65; color:var(--ink); margin-bottom:8px; }
+.story-card p:last-child{ margin-bottom:0; }
+
+.activity-box{
+  border:2.5px dashed var(--earth); border-radius:18px;
+  background:#fff; padding:14px 16px;
+}
+.activity-title{
+  font-size:12.5px; font-weight:800; color:var(--earth-dark);
+  text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:8px;
+}
+
+.lesson-tag{
+  background:linear-gradient(135deg, rgba(34,197,94,.12), rgba(34,197,94,.04));
+  border-left:5px solid var(--green); border-radius:10px; padding:10px 16px;
+  font-size:13px; color:#14532d; font-weight:600; line-height:1.55;
+}
+
+/* ============================================================
+   CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(250,204,21,.28), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(14,165,233,.22), transparent 45%),
+    radial-gradient(circle at 80% 88%, rgba(34,197,94,.22), transparent 50%),
+    linear-gradient(180deg, #fff9ec 0%, #fbf8f2 55%, #eef8ff 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18mm;
+}
+.cover .frame-outer{ position:absolute; inset:9mm; border:4px solid var(--sun-dark); border-radius:22px; }
+.cover .frame-inner{ position:absolute; inset:13mm; border:1.5px solid rgba(14,165,233,.35); border-radius:18px; }
+.cover .eyebrow{
+  font-size:13px; letter-spacing:4px; color:var(--blue-dark); font-weight:700;
+  margin-bottom:16px; text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:36px; font-weight:800; color:var(--earth-dark); line-height:1.18;
+  text-shadow:0 2px 0 rgba(255,255,255,.6); margin-bottom:12px;
+}
+.cover .gold-underline{
+  width:120px; height:5px; background:linear-gradient(90deg, var(--sun), var(--sun-dark));
+  border-radius:6px; margin:6px auto 20px;
+}
+.cover .subtitle{
+  font-size:18px; color:var(--ink-soft); font-weight:600; max-width:135mm;
+  line-height:1.5; margin-bottom:26px;
+}
+.cover-illustration{ margin-bottom:20px; }
+.cover .footer-tag{
+  position:absolute; bottom:16mm; font-size:12px; color:var(--ink-soft);
+  letter-spacing:2px; font-weight:600; text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINAS DE HISTÓRIA
+============================================================ */
+.content-page{ padding:14mm 17mm 12mm; display:flex; flex-direction:column; gap:10px; }
+.content-header{ text-align:center; margin-bottom:2px; }
+.content-header .ribbon-title{ margin-bottom:8px; }
+.content-header h2{ font-size:21px; color:var(--ink); font-weight:800; line-height:1.25; margin-top:6px;}
+.content-illustration{ display:flex; justify-content:center; margin:2px 0 4px; }
+
+/* atividade: relacionar colunas */
+.match-columns{ display:flex; justify-content:space-between; gap:20px; padding:6px 20px; }
+.match-col{ display:flex; flex-direction:column; gap:16px; }
+.match-item{
+  display:flex; align-items:center; gap:8px; background:#fff; border-radius:12px;
+  padding:8px 14px; box-shadow:0 3px 10px rgba(0,0,0,.07); font-size:13px; font-weight:700; color:var(--ink);
+}
+.match-item .dot{ width:12px; height:12px; border-radius:50%; background:var(--dot-color,#0ea5e9); flex-shrink:0; }
+
+/* animais em pares */
+.animal-grid{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:6px 10px;
+}
+.animal-cell{
+  background:#fff; border-radius:14px; padding:10px; text-align:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.07); font-size:26px; border:2px dashed #d8cdb8;
+}
+
+/* arco-íris para completar */
+.rainbow-wrap{ display:flex; justify-content:center; }
+
+/* pedrinhas da fé */
+.stones-row{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; padding:6px 10px; }
+.stone{
+  width:88px; text-align:center;
+}
+.stone-label{ font-size:11.5px; font-weight:800; color:var(--ink); margin-top:6px; }
+
+/* resumo dos heróis */
+.heroes-grid{ display:flex; flex-direction:column; gap:10px; }
+.hero-card{
+  display:flex; gap:12px; align-items:center; background:#fff; border-radius:14px;
+  padding:10px 16px; box-shadow:0 3px 10px rgba(0,0,0,.07); border-left:5px solid var(--hero-color,#0ea5e9);
+}
+.hero-card .hero-icon{ font-size:26px; flex-shrink:0; }
+.hero-card .hero-text{ font-size:12.8px; line-height:1.5; color:var(--ink); }
+.hero-card .hero-text strong{ color:var(--ink); }
+
+/* certificado */
+.certificate-page{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20mm; text-align:center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(250,204,21,.20), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(14,165,233,.18), transparent 45%),
+    #fffdf7;
+}
+.cert-eyebrow{
+  font-size:13px; letter-spacing:3px; color:var(--sun-dark); font-weight:800;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.certificate-page h2{ font-size:27px; color:var(--earth-dark); font-weight:800; margin-bottom:6px; }
+.certificate-page h3.subtitle-cert{ font-size:14px; color:var(--ink-soft); font-weight:600; margin-bottom:22px; }
+.cert-granted-to{ font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
+.cert-name{
+  font-size:32px; font-weight:800; color:var(--blue-dark);
+  margin-bottom:18px; font-family:'Outfit',sans-serif;
+}
+.cert-text{ font-size:13.5px; color:var(--ink); max-width:135mm; line-height:1.7; margin-bottom:22px; }
+.cert-signatures{ display:flex; gap:60px; margin-top:6px; }
+.cert-sign-block{ text-align:center; }
+.cert-sign-line{ width:150px; border-bottom:1.5px solid var(--ink-soft); margin-bottom:6px; height:26px; }
+.cert-sign-label{ font-size:11px; color:var(--ink-soft); letter-spacing:.5px; }
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{ size:A4 portrait; margin:0; }
+  html,body{ width:210mm; height:297mm; background:#fff; }
+  .control-bar{ display:none !important; }
+  .book{ padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always; break-after:page;
+    margin:0; width:210mm; height:297mm;
+  }
+  .page:last-child{ page-break-after:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<div class="book" id="bookContainer">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <div class="eyebrow">Livro de Histórias e Atividades</div>
+
+    <div class="cover-illustration">
+      <svg width="260" height="150" viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- arco-íris -->
+        <path d="M20 110 A110 110 0 0 1 240 110" fill="none" stroke="#ef4444" stroke-width="6"/>
+        <path d="M32 110 A98 98 0 0 1 228 110" fill="none" stroke="#f97316" stroke-width="6"/>
+        <path d="M44 110 A86 86 0 0 1 216 110" fill="none" stroke="#facc15" stroke-width="6"/>
+        <path d="M56 110 A74 74 0 0 1 204 110" fill="none" stroke="#22c55e" stroke-width="6"/>
+        <path d="M68 110 A62 62 0 0 1 192 110" fill="none" stroke="#0ea5e9" stroke-width="6"/>
+        <!-- ondas -->
+        <path d="M0 128 Q65 116 130 128 T260 128 L260 150 L0 150 Z" fill="#0ea5e9" opacity="0.5"/>
+        <!-- arca de Noé -->
+        <path d="M95 108 L165 108 L155 128 L105 128 Z" fill="#b45309"/>
+        <path d="M110 88 Q130 72 150 88 L150 108 L110 108 Z" fill="#92400e"/>
+        <rect x="122" y="94" width="16" height="12" fill="#fde68a"/>
+        <!-- leão mansinho -->
+        <circle cx="45" cy="128" r="12" fill="#f59e0b"/>
+        <circle cx="45" cy="128" r="7" fill="#fcd34d"/>
+        <circle cx="41" cy="126" r="1.3" fill="#3a2e20"/>
+        <circle cx="49" cy="126" r="1.3" fill="#3a2e20"/>
+        <!-- pedrinha de Davi -->
+        <circle cx="220" cy="132" r="7" fill="#a8a29e"/>
+        <circle cx="234" cy="140" r="5" fill="#a8a29e"/>
+      </svg>
+    </div>
+
+    <h1 class="main-title">GRANDES HISTÓRIAS<br>DO ANTIGO TESTAMENTO</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">Aventuras de Fé de <span class="child-name">Gabriel</span></p>
+
+    <div class="footer-tag">Edição Especial • Feito com Amor para Você</div>
+  </section>
+
+  <!-- ============================================================
+       HISTÓRIA 1 — A CRIAÇÃO DO MUNDO
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0ea5e9;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0ea5e9;">História 1 • Gênesis 1</span>
+      <h2>A Criação do Mundo</h2>
+    </div>
+
+    <div class="content-illustration">
+      <svg width="220" height="80" viewBox="0 0 220 80" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="45" cy="35" r="22" fill="#facc15"/>
+        <path d="M0 65 Q55 45 110 65 T220 65 L220 80 L0 80 Z" fill="#22c55e" opacity="0.45"/>
+        <circle cx="170" cy="22" r="10" fill="#fde68a"/>
+        <circle cx="190" cy="40" r="4" fill="#fef9c3"/>
+        <circle cx="205" cy="18" r="3" fill="#fef9c3"/>
+      </svg>
+    </div>
+
+    <div class="story-card">
+      <p>No começo de tudo, não havia nada — só um grande espaço vazio e escuro. Mas Deus tinha um
+      plano maravilhoso! Com Sua voz poderosa e cheia de amor, Ele começou a criar o mundo,
+      dia após dia, com muito capricho.</p>
+      <p>No <strong>1º dia</strong>, Deus criou a luz. No <strong>2º dia</strong>, o céu. No
+      <strong>3º dia</strong>, a terra, o mar e as plantinhas. No <strong>4º dia</strong>, o sol, a
+      lua e as estrelas. No <strong>5º dia</strong>, os peixes e os passarinhos. No
+      <strong>6º dia</strong>, os animais da terra e, por fim, o ser humano — feito à imagem de
+      Deus! No <strong>7º dia</strong>, Deus descansou e abençoou aquele dia especial.</p>
+      <p>Assim como Deus cuidou de cada detalhezinho do mundo com tanto amor, Ele também cuida de
+      cada detalhezinho de <span class="child-name">Gabriel</span>, todos os dias!</p>
+    </div>
+
+    <div class="verse-card">
+      "No princípio, criou Deus os céus e a terra." <strong>GÊNESIS 1:1</strong>
+    </div>
+
+    <div class="lesson-tag">
+      🌎 Lição: Assim como Deus criou tudo com cuidado e amor, Ele também cuidou de cada detalhe
+      ao criar <span class="child-name">Gabriel</span>!
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🔗 Atividade: Ligue cada dia ao que Deus criou</div>
+      <div class="match-columns">
+        <div class="match-col">
+          <div class="match-item"><span class="dot" style="--dot-color:#0ea5e9;"></span>Dia 1</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#facc15;"></span>Dia 4</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#22c55e;"></span>Dia 5</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#b45309;"></span>Dia 6</div>
+        </div>
+        <div class="match-col">
+          <div class="match-item"><span class="dot" style="--dot-color:#0ea5e9;"></span>💡 Luz</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#facc15;"></span>✨ Estrelas</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#22c55e;"></span>🐟 Animais</div>
+          <div class="match-item"><span class="dot" style="--dot-color:#b45309;"></span>🧑 Homem</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-number">2</div>
+  </section>
+
+  <!-- ============================================================
+       HISTÓRIA 2 — A ARCA DE NOÉ
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#22c55e;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#22c55e;">História 2 • Gênesis 6-9</span>
+      <h2>A Arca de Noé e o Arco-Íris da Promessa</h2>
+    </div>
+
+    <div class="story-card">
+      <p>Noé era um homem que amava e obedecia a Deus. Quando Deus disse que uma grande chuva viria,
+      Noé confiou e construiu uma arca enorme, mesmo sem entender tudo — porque confiava em Deus!</p>
+      <p>Deus mandou que Noé levasse para dentro da arca um casal de cada bicho: elefantes,
+      girafas, leões, coelhinhos... dois a dois! Depois de muitos dias de chuva, a água baixou e
+      todos saíram em segurança. Deus então pintou no céu um lindo arco-íris, como sinal de Sua
+      promessa: nunca mais destruiria a terra com um dilúvio.</p>
+      <p>Assim como Noé confiou e obedeceu, <span class="child-name">Gabriel</span> também pode
+      confiar em Deus, mesmo quando não entende tudo!</p>
+    </div>
+
+    <div class="verse-card">
+      "Porei o meu arco nas nuvens, e ele será por sinal de aliança." <strong>GÊNESIS 9:13</strong>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🐘 Atividade: Encontre os pares de animais da arca</div>
+      <div class="animal-grid">
+        <div class="animal-cell">🐘</div><div class="animal-cell">🦒</div>
+        <div class="animal-cell">🦁</div><div class="animal-cell">🐰</div>
+        <div class="animal-cell">🐰</div><div class="animal-cell">🦁</div>
+        <div class="animal-cell">🦒</div><div class="animal-cell">🐘</div>
+        <div class="animal-cell">🐧</div><div class="animal-cell">🐫</div>
+        <div class="animal-cell">🐫</div><div class="animal-cell">🐧</div>
+      </div>
+      <div style="text-align:center; font-size:11.5px; color:#8b7c5f; margin:6px 0 10px;">
+        Circule com o lápis os dois animais iguais em cada dupla! 🖍️
+      </div>
+
+      <div class="activity-title">🌈 Complete o Arco-Íris da Promessa de <span class="child-name">Gabriel</span></div>
+      <div class="rainbow-wrap">
+        <svg width="220" height="120" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 110 A100 100 0 0 1 210 110" fill="none" stroke="#ef4444" stroke-width="9"/>
+          <path d="M24 110 A86 86 0 0 1 196 110" fill="none" stroke="#e5e7eb" stroke-width="9" stroke-dasharray="4,4"/>
+          <path d="M38 110 A72 72 0 0 1 182 110" fill="none" stroke="#22c55e" stroke-width="9"/>
+          <path d="M52 110 A58 58 0 0 1 168 110" fill="none" stroke="#e5e7eb" stroke-width="9" stroke-dasharray="4,4"/>
+          <path d="M66 110 A44 44 0 0 1 154 110" fill="none" stroke="#0ea5e9" stroke-width="9"/>
+          <path d="M0 112 Q55 100 110 112 T220 112 L220 120 L0 120 Z" fill="#bae6fd"/>
+        </svg>
+      </div>
+      <div style="text-align:center; font-size:11.5px; color:#8b7c5f;">
+        Pinte os espaços pontilhados de amarelo e laranja para completar o arco-íris! 🎨
+      </div>
+    </div>
+
+    <div class="page-number">3</div>
+  </section>
+
+  <!-- ============================================================
+       HISTÓRIA 3 — DAVI E O GIGANTE GOLIAS
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#b45309;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#b45309;">História 3 • 1 Samuel 17</span>
+      <h2>Davi e o Gigante Golias</h2>
+    </div>
+
+    <div class="content-illustration">
+      <svg width="200" height="90" viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- golias -->
+        <rect x="130" y="10" width="30" height="55" rx="8" fill="#9ca3af"/>
+        <circle cx="145" cy="8" r="12" fill="#d6c4a8"/>
+        <!-- davi -->
+        <circle cx="45" cy="55" r="10" fill="#f2c19d"/>
+        <path d="M35 65 Q45 58 55 65 L53 88 L37 88 Z" fill="#0ea5e9"/>
+        <circle cx="70" cy="40" r="4" fill="#78716c"/>
+        <path d="M45 60 L70 40" stroke="#78716c" stroke-width="1.5"/>
+      </svg>
+    </div>
+
+    <div class="story-card">
+      <p>Davi era só um menino pastorzinho, mas tinha um coração cheio de coragem e fé em Deus!
+      Um dia, o gigante Golias, um guerreiro enorme e assustador, desafiava o exército de Israel,
+      e todos estavam com muito medo.</p>
+      <p>Mas Davi disse: "Eu vou lutar, porque o Senhor está comigo!" Com apenas uma estilingue e
+      cinco pedrinhas, Davi confiou em Deus e derrubou o gigante Golias!</p>
+      <p>O mesmo Deus que ajudou Davi a vencer o gigante ajuda <span class="child-name">Gabriel</span>
+      a vencer qualquer medinho — do escuro, de coisas novas ou de dias difíceis!</p>
+    </div>
+
+    <div class="verse-card">
+      "O Senhor, que me livrou das garras do leão e do urso, também me livrará das mãos deste
+      filisteu." <strong>1 SAMUEL 17:37</strong>
+    </div>
+
+    <div class="lesson-tag">
+      🦁 Lição: Assim como Davi foi corajoso, <span class="child-name">Gabriel</span> também pode
+      ser — porque o mesmo Deus está com você!
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🪨 Jogo das 5 Pedrinhas da Fé de <span class="child-name">Gabriel</span></div>
+      <div class="stones-row">
+        <div class="stone">
+          <svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="35" cy="35" rx="28" ry="22" fill="#e0b48c"/>
+            <text x="35" y="41" text-anchor="middle" font-size="20">💪</text>
+          </svg>
+          <div class="stone-label">Coragem</div>
+        </div>
+        <div class="stone">
+          <svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="35" cy="35" rx="28" ry="22" fill="#c9a878"/>
+            <text x="35" y="41" text-anchor="middle" font-size="20">🙏</text>
+          </svg>
+          <div class="stone-label">Oração</div>
+        </div>
+        <div class="stone">
+          <svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="35" cy="35" rx="28" ry="22" fill="#d8bd93"/>
+            <text x="35" y="41" text-anchor="middle" font-size="20">📖</text>
+          </svg>
+          <div class="stone-label">Palavra</div>
+        </div>
+        <div class="stone">
+          <svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="35" cy="35" rx="28" ry="22" fill="#bfa27a"/>
+            <text x="35" y="41" text-anchor="middle" font-size="20">🤝</text>
+          </svg>
+          <div class="stone-label">Confiança</div>
+        </div>
+        <div class="stone">
+          <svg width="70" height="60" viewBox="0 0 70 60" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="35" cy="35" rx="28" ry="22" fill="#e6c9a3"/>
+            <text x="35" y="41" text-anchor="middle" font-size="20">❤️</text>
+          </svg>
+          <div class="stone-label">Amor</div>
+        </div>
+      </div>
+      <div style="text-align:center; font-size:11.5px; color:#8b7c5f; margin-top:8px;">
+        Pinte a pedrinha da fé que <span class="child-name">Gabriel</span> mais precisa usar hoje! 🖍️
+      </div>
+    </div>
+
+    <div class="page-number">4</div>
+  </section>
+
+  <!-- ============================================================
+       HISTÓRIA 4 — DANIEL NA COVA DOS LEÕES
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#eab308;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#eab308;">História 4 • Daniel 6</span>
+      <h2>Daniel na Cova dos Leões</h2>
+    </div>
+
+    <div class="story-card">
+      <p>Daniel amava muito a Deus e orava todos os dias, três vezes ao dia, com a janela aberta,
+      sem medo de mostrar sua fé. Um rei mau fez uma lei proibindo orar a Deus, mas Daniel
+      continuou orando, porque confiava mais em Deus do que em qualquer lei injusta.</p>
+      <p>Por causa disso, Daniel foi jogado numa cova cheia de leões famintos! Mas Deus enviou um
+      anjo que fechou a boca dos leões, e Daniel saiu completamente ileso na manhã seguinte.</p>
+      <p>Assim como Deus protegeu Daniel porque ele confiava e orava, Deus também protege
+      <span class="child-name">Gabriel</span> quando ele ora e confia, todos os dias!</p>
+    </div>
+
+    <div class="verse-card">
+      "O meu Deus enviou o seu anjo, e fechou a boca dos leões." <strong>DANIEL 6:22</strong>
+    </div>
+
+    <div class="lesson-tag">
+      🦁 Lição: Orar a Deus todos os dias enche o coração de <span class="child-name">Gabriel</span>
+      de paz e proteção!
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">🧭 Labirinto da Oração — Ajude o anjo a proteger Daniel</div>
+      <div id="mazeArea" style="display:flex; align-items:center; justify-content:center;"></div>
+    </div>
+
+    <div class="page-number">5</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA FINAL — RESUMO DOS HERÓIS DA FÉ
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0ea5e9; justify-content:center;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0ea5e9;">Resumo da Jornada</span>
+      <h2>Os Heróis da Fé que <span class="child-name">Gabriel</span> conheceu</h2>
+    </div>
+
+    <div class="heroes-grid">
+      <div class="hero-card" style="--hero-color:#0ea5e9;">
+        <div class="hero-icon">🌎</div>
+        <div class="hero-text"><strong>Deus, o Criador</strong> — mostrou a <span class="child-name">Gabriel</span> que cada detalhe do mundo, e da sua própria vida, foi feito com cuidado e amor.</div>
+      </div>
+      <div class="hero-card" style="--hero-color:#22c55e;">
+        <div class="hero-icon">🐘</div>
+        <div class="hero-text"><strong>Noé</strong> — ensinou <span class="child-name">Gabriel</span> a confiar e obedecer a Deus, mesmo sem entender tudo.</div>
+      </div>
+      <div class="hero-card" style="--hero-color:#b45309;">
+        <div class="hero-icon">🪨</div>
+        <div class="hero-text"><strong>Davi</strong> — mostrou a <span class="child-name">Gabriel</span> que, com Deus, dá para vencer qualquer gigante ou medinho.</div>
+      </div>
+      <div class="hero-card" style="--hero-color:#eab308;">
+        <div class="hero-icon">🦁</div>
+        <div class="hero-text"><strong>Daniel</strong> — ensinou <span class="child-name">Gabriel</span> a orar todos os dias e confiar na proteção de Deus.</div>
+      </div>
+    </div>
+
+    <div class="verse-card" style="margin-top:14px;">
+      "Sede fortes e corajosos... porque o Senhor, teu Deus, é contigo por onde quer que andares."
+      <strong>JOSUÉ 1:9</strong>
+    </div>
+
+    <div class="page-number">6</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA CERTIFICADO
+  ============================================================ -->
+  <section class="page certificate-page">
+    <div class="corner-frame" style="--frame-color:#eab308; inset:9mm; border:5px double #eab308;"></div>
+    <div class="corner-frame inner"></div>
+
+    <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px;">
+      <circle cx="36" cy="30" r="20" fill="#facc15"/>
+      <circle cx="36" cy="30" r="13" fill="#fff7e0"/>
+      <path d="M36 19 l3.5 8 8.5 1 -6.5 5.5 2.3 8.5 -7.8-4.7 -7.8 4.7 2.3-8.5 -6.5-5.5 8.5-1z" fill="#eab308"/>
+      <path d="M24 46 L16 65 L36 57 L56 65 L48 46 Z" fill="#0ea5e9"/>
+    </svg>
+
+    <div class="cert-eyebrow">Certificado Especial</div>
+    <h2>Explorador do Antigo Testamento</h2>
+    <h3 class="subtitle-cert">Grandes Histórias do Antigo Testamento • Jornada Completa</h3>
+
+    <div class="cert-granted-to">Este certificado é concedido, com muito orgulho, a</div>
+    <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+
+    <p class="cert-text">
+      por explorar com coragem e alegria as Grandes Histórias do Antigo Testamento — da Criação do
+      Mundo à Arca de Noé, de Davi e Golias até Daniel na Cova dos Leões — aprendendo que Deus
+      cuida, protege e caminha ao lado de <span class="child-name">Gabriel</span> em cada aventura da fé.
+    </p>
+
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">DATA: <span id="certDate"></span></div>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">ASSINATURA DOS PAIS</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  /* ============================================================
+     1) PERSONALIZAÇÃO DO NOME DA CRIANÇA
+  ============================================================ */
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){ return null; }
+  }
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){ el.textContent = finalName; });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{ window.localStorage.setItem(STORAGE_KEY, finalName); }catch(e){ /* segue sem salvar */ }
+  }
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){ applyName(urlName); return; }
+    const savedName = getSavedName();
+    if(savedName){ applyName(savedName); return; }
+    applyName(DEFAULT_NAME);
+  }
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  /* ============================================================
+     2) ATIVIDADE: LABIRINTO DA ORAÇÃO (anjo até Daniel)
+  ============================================================ */
+  function buildMaze(){
+    const container = document.getElementById("mazeArea");
+    if(!container) return;
+
+    const cols = 6, rows = 7, cell = 46;
+    const marginX = 30, marginY = 30;
+
+    // caminho em serpentina cobrindo todas as células (garante solução única)
+    const path = [];
+    for(let r=0; r<rows; r++){
+      if(r % 2 === 0){
+        for(let c=0; c<cols; c++) path.push([r,c]);
+      }else{
+        for(let c=cols-1; c>=0; c--) path.push([r,c]);
+      }
+    }
+
+    const openEdges = new Set();
+    function edgeKey(a,b){ return a[0]+','+a[1]+'-'+b[0]+','+b[1]; }
+    for(let i=0; i<path.length-1; i++){
+      openEdges.add(edgeKey(path[i], path[i+1]));
+      openEdges.add(edgeKey(path[i+1], path[i]));
+    }
+
+    const startCell = path[0];
+    const endCell = path[path.length-1];
+
+    const w = cols*cell + marginX*2;
+    const h = rows*cell + marginY*2;
+
+    let svg = '<svg width="100%" height="auto" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="max-width:150mm;">';
+    svg += '<rect x="'+marginX+'" y="'+marginY+'" width="'+(cols*cell)+'" height="'+(rows*cell)+'" fill="#ffffff" rx="10"/>';
+
+    for(let r=0; r<rows; r++){
+      for(let c=0; c<cols; c++){
+        const x = marginX + c*cell;
+        const y = marginY + r*cell;
+
+        if(r === 0 || !openEdges.has(edgeKey([r,c],[r-1,c]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+y+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(c === 0 || !openEdges.has(edgeKey([r,c],[r,c-1]))){
+          svg += '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(c === cols-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+(x+cell)+'" y1="'+y+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+        if(r === rows-1 && !(endCell[0]===r && endCell[1]===c)){
+          svg += '<line x1="'+x+'" y1="'+(y+cell)+'" x2="'+(x+cell)+'" y2="'+(y+cell)+'" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>';
+        }
+      }
+    }
+
+    const sx = marginX + startCell[1]*cell + cell/2;
+    const sy = marginY + startCell[0]*cell + cell/2;
+    svg += '<circle cx="'+sx+'" cy="'+sy+'" r="14" fill="#bae6fd"/>';
+    svg += '<text x="'+sx+'" y="'+(sy+5)+'" text-anchor="middle" font-size="16">👼</text>';
+    svg += '<text x="'+sx+'" y="'+(marginY-10)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b5c4f">Anjo de Deus</text>';
+
+    const ex = marginX + endCell[1]*cell + cell/2;
+    const ey = marginY + endCell[0]*cell + cell/2;
+    svg += '<circle cx="'+ex+'" cy="'+ey+'" r="14" fill="#fde68a"/>';
+    svg += '<text x="'+ex+'" y="'+(ey+5)+'" text-anchor="middle" font-size="16">🦁</text>';
+    svg += '<text x="'+ex+'" y="'+(marginY + rows*cell + 18)+'" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" fill="#6b5c4f">Daniel na cova dos leões</text>';
+
+    svg += '</svg>';
+    container.innerHTML = svg;
+  }
+
+  /* ============================================================
+     3) INICIALIZAÇÃO
+  ============================================================ */
+  document.addEventListener("DOMContentLoaded", function(){
+    buildMaze();
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){ applyName(input.value); });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ applyName(input.value); }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

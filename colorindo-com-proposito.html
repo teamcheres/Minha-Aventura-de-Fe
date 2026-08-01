@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorindo com Propósito: Arte e Princípios Bíblicos para Crianças</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241C12;
+    --coral:#EA5A44;
+    --sun:#F7B733;
+    --sky:#3E9BD6;
+    --grass:#4FA65B;
+    --violet:#8C6FC9;
+    --pink:#EF7FA8;
+    --paper:#FFFDF7;
+    --paper-shade:#FBF3E0;
+    --line-frame:#D8CBA8;
+    --soft-gray:#6B5F4D;
+    --font-display:'Outfit','Segoe UI', system-ui, sans-serif;
+    --font-body:'Plus Jakarta Sans','Segoe UI', system-ui, sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; background:#4b4a52;
+    font-family:var(--font-body); color:var(--ink);
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  svg{ display:block; }
+
+  /* ============ TOOLBAR ============ */
+  .toolbar{
+    position:sticky; top:0; z-index:999;
+    background:linear-gradient(180deg,#2E2A3A,#463C58);
+    color:#fff; padding:14px 18px;
+    display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.4); font-family:var(--font-display);
+  }
+  .toolbar .brand{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; color:var(--sun); margin-right:auto; }
+  .toolbar .brand svg{ width:24px; height:24px; }
+  .toolbar label{ font-size:13px; font-weight:600; color:#e9e3f5; }
+  .toolbar input[type="text"]{
+    font-family:var(--font-body); font-weight:600; padding:8px 12px; border-radius:8px;
+    border:2px solid var(--violet); background:#fff; color:var(--ink); font-size:14px; width:170px;
+  }
+  .print-btn{
+    font-family:var(--font-display); font-weight:800; font-size:14px;
+    background:linear-gradient(180deg, var(--coral), #C9402C); color:#fff; border:none; border-radius:10px;
+    padding:11px 20px; cursor:pointer; letter-spacing:.02em;
+    box-shadow:0 4px 0 #9c2f1f, 0 6px 10px rgba(0,0,0,.35);
+  }
+  .print-btn:active{ transform:translateY(2px); box-shadow:0 2px 0 #9c2f1f; }
+
+  .stage{ padding:34px 12px 60px; display:flex; flex-direction:column; align-items:center; }
+
+  /* ============ PÁGINA A4 ============ */
+  .page{
+    position:relative; width:210mm; min-height:297mm;
+    background:var(--paper); margin:0 0 34px 0;
+    box-shadow:0 18px 45px rgba(0,0,0,.4); overflow:hidden;
+    page-break-after:always; break-after:page;
+  }
+  .page:last-of-type{ page-break-after:auto; margin-bottom:0; }
+
+  .frame{
+    position:absolute; inset:9mm; border:3px solid var(--ink); border-radius:18px;
+  }
+  .frame::before{
+    content:""; position:absolute; inset:6px; border:1.5px dashed var(--line-frame); border-radius:14px;
+  }
+  .blob{ position:absolute; width:30px; height:30px; }
+  .blob.tl{ top:5mm; left:5mm; }
+  .blob.tr{ top:5mm; right:5mm; transform:scaleX(-1); }
+  .blob.bl{ bottom:5mm; left:5mm; transform:scaleY(-1); }
+  .blob.br{ bottom:5mm; right:5mm; transform:scale(-1,-1); }
+
+  .page-inner{ position:absolute; inset:15mm; display:flex; flex-direction:column; }
+
+  .page-tag{
+    position:absolute; top:10.5mm; right:13mm; font-family:var(--font-display); font-weight:700; font-size:10.5px;
+    color:#fff; background:var(--violet); padding:3px 11px; border-radius:20px; letter-spacing:.06em;
+  }
+
+  .eyebrow{
+    font-family:var(--font-display); font-weight:700; font-size:12px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--violet); display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow svg{ width:16px; height:16px; }
+  .page-title{ font-family:var(--font-display); font-weight:900; font-size:27px; color:var(--ink); margin:3px 0 1px; line-height:1.05; }
+  .page-ref{ font-family:var(--font-body); font-style:italic; font-weight:600; color:var(--soft-gray); font-size:13px; margin-bottom:8px; }
+
+  .art-frame{
+    flex:1; display:flex; align-items:center; justify-content:center;
+    background:var(--paper-shade); border:2px solid var(--line-frame); border-radius:16px;
+    padding:8px; break-inside:avoid;
+  }
+  .art-frame svg{ width:100%; height:100%; max-height:100%; }
+
+  .caption-row{ margin-top:8px; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+  .caption-main{
+    font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--ink);
+    background:#fff; border:1.5px dashed var(--line-frame); border-radius:10px; padding:8px 14px; flex:1;
+  }
+  .caption-main .child-name-slot{ color:var(--coral); }
+  .signature-note{
+    font-family:var(--font-body); font-style:italic; font-size:10.5px; color:var(--soft-gray);
+    white-space:nowrap;
+  }
+  .signature-note .child-name-slot{ font-weight:700; color:var(--violet); }
+
+  .legend-row{ display:flex; justify-content:center; gap:22px; margin-top:8px; flex-wrap:wrap; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font-size:11.5px; font-weight:700; color:var(--ink); }
+  .legend-dot{ width:18px; height:18px; border-radius:50%; border:2px solid var(--ink); flex-shrink:0; }
+
+  /* ============ TEXTO OCO PARA PINTAR ============ */
+  .hollow-wrap{ display:flex; justify-content:center; margin:6px 0 4px; }
+  .hollow-wrap svg text{
+    font-family:var(--font-display); font-weight:900; fill:var(--paper);
+    stroke:var(--ink); stroke-width:2.6; paint-order:stroke fill; text-anchor:middle;
+  }
+
+  /* ============ CAPA ============ */
+  .cover{ background:linear-gradient(180deg, #FFF8E8, #FDEFD2); }
+  .cover .page-inner{ align-items:center; text-align:center; justify-content:space-between; }
+  .cover-kicker{ font-family:var(--font-display); font-weight:700; letter-spacing:.35em; font-size:13px; color:var(--violet); text-transform:uppercase; margin-top:8mm; }
+  .cover-title{
+    font-family:var(--font-display); font-weight:900; font-size:50px; color:var(--ink); line-height:.98; margin:10px 0 4px;
+  }
+  .cover-title .accent{ color:var(--coral); }
+  .cover-sub{ font-family:var(--font-display); font-weight:700; font-size:19px; color:var(--violet); margin-bottom:10px; }
+  .cover-sub .child-name-slot{ text-decoration:underline wavy var(--coral); text-underline-offset:5px; }
+  .cover-desc{ font-size:13.5px; max-width:340px; color:var(--soft-gray); margin:0 auto 6px; }
+  .cover-art{ width:100%; max-width:420px; margin:6px auto; }
+  .cover-bottom{
+    width:100%; background:var(--ink); color:#fff; border-radius:16px; padding:12px 18px; font-size:12px;
+    display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:2mm;
+  }
+  .cover-bottom svg{ width:20px; height:20px; color:var(--sun); flex-shrink:0; }
+
+  /* ============ CERTIFICADO ============ */
+  .cert .page-inner{ align-items:center; text-align:center; justify-content:center; gap:6px; }
+  .cert-crest{ width:84px; height:84px; margin-bottom:2px; }
+  .cert-kicker{ font-family:var(--font-display); letter-spacing:.3em; font-size:12px; font-weight:700; color:var(--violet); text-transform:uppercase; }
+  .cert-title{ font-family:var(--font-display); font-weight:900; font-size:31px; color:var(--ink); margin:6px 0; }
+  .cert-body{ font-size:14px; max-width:400px; line-height:1.7; color:var(--ink); }
+  .cert-name{
+    font-family:var(--font-display); font-weight:800; font-size:25px; color:var(--coral);
+    border-bottom:3px solid var(--sun); padding:4px 18px; margin:8px 0;
+  }
+  .cert-badges{ display:flex; gap:26px; margin:16px 0; }
+  .cert-badges .badge{ display:flex; flex-direction:column; align-items:center; gap:6px; width:82px; }
+  .cert-badges svg{ width:42px; height:42px; }
+  .cert-badges span{ font-size:10px; font-weight:700; color:var(--soft-gray); }
+  .cert-sign-row{ display:flex; justify-content:space-between; width:100%; max-width:420px; margin-top:20px; }
+  .cert-sign{ text-align:center; font-size:11px; color:var(--soft-gray); }
+  .cert-sign .line{ width:150px; border-bottom:1.5px solid var(--ink); margin-bottom:4px; height:22px; display:flex; align-items:flex-end; justify-content:center; font-family:var(--font-display); font-weight:700; color:var(--ink); }
+  .cert-stamp-final{ position:absolute; bottom:24mm; right:18mm; width:100px; height:100px; transform:rotate(9deg); }
+
+  /* ============ RESPONSIVO TELA ============ */
+  @media (max-width: 900px){ .page{ transform:scale(.78); transform-origin:top center; margin-bottom:-60mm; } }
+  @media (max-width: 620px){ .page{ transform:scale(.5); margin-bottom:-145mm; } .toolbar{ font-size:12px; } }
+
+  /* ============ IMPRESSÃO ============ */
+  @media print{
+    @page{ size:A4 portrait; margin:0; }
+    html,body{ background:#fff; }
+    .toolbar{ display:none !important; }
+    .stage{ padding:0; }
+    .page{ box-shadow:none; margin:0; transform:none !important; width:210mm; min-height:297mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <div class="brand">
+    <svg viewBox="0 0 100 100"><path d="M50 8 C20 8 6 30 6 50 C6 74 26 92 50 92 C58 92 62 86 58 80 C55 75 58 70 64 70 L74 70 C88 70 94 58 94 46 C94 24 76 8 50 8 Z" fill="none" stroke="var(--sun)" stroke-width="6"/><circle cx="30" cy="38" r="6" fill="var(--coral)"/><circle cx="50" cy="28" r="6" fill="var(--sky)"/><circle cx="70" cy="38" r="6" fill="var(--grass)"/><circle cx="34" cy="60" r="6" fill="var(--violet)"/></svg>
+    Colorindo com Propósito
+  </div>
+  <label for="nomeInput">Nome do artista:</label>
+  <input type="text" id="nomeInput" placeholder="Gabriel">
+  <button class="print-btn" onclick="window.print()">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<div class="stage">
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 1 · CAPA -->
+  <!-- ======================================================= -->
+  <section class="page cover">
+    <div class="frame"></div>
+
+    <div class="page-inner">
+      <div class="cover-kicker">Livro de Arte e Fé</div>
+
+      <h1 class="cover-title">COLORINDO COM<br><span class="accent">PROPÓSITO</span></h1>
+      <div class="cover-sub">O Livro de Arte e Fé de <span class="child-name-slot">Gabriel</span></div>
+      <p class="cover-desc">Seis páginas para pintar, relaxar e guardar verdades da Palavra de Deus no coração — pincel na mão e criatividade solta!</p>
+
+      <svg class="cover-art" viewBox="0 0 400 230">
+        <!-- arco-íris -->
+        <path d="M40 190 A160 160 0 0 1 360 190" fill="none" stroke="var(--coral)" stroke-width="12"/>
+        <path d="M55 190 A145 145 0 0 1 345 190" fill="none" stroke="var(--sun)" stroke-width="12"/>
+        <path d="M70 190 A130 130 0 0 1 330 190" fill="none" stroke="var(--grass)" stroke-width="12"/>
+        <path d="M85 190 A115 115 0 0 1 315 190" fill="none" stroke="var(--sky)" stroke-width="12"/>
+        <path d="M100 190 A100 100 0 0 1 300 190" fill="none" stroke="var(--violet)" stroke-width="12"/>
+        <!-- nuvens -->
+        <g fill="#fff" stroke="var(--ink)" stroke-width="2">
+          <ellipse cx="55" cy="192" rx="30" ry="16"/>
+          <ellipse cx="345" cy="192" rx="30" ry="16"/>
+        </g>
+        <!-- paleta de cores -->
+        <g transform="translate(150,55)">
+          <path d="M40 4 C10 4 -8 26 -8 46 C-8 66 8 80 28 80 C36 80 40 74 36 68 C33 63 36 58 42 58 L54 58 C70 58 78 46 78 34 C78 16 62 4 40 4 Z" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+          <circle cx="14" cy="30" r="7" fill="var(--coral)"/>
+          <circle cx="36" cy="18" r="7" fill="var(--sun)"/>
+          <circle cx="58" cy="30" r="7" fill="var(--sky)"/>
+          <circle cx="20" cy="54" r="7" fill="var(--grass)"/>
+          <circle cx="52" cy="56" r="7" fill="var(--violet)"/>
+          <!-- pincel -->
+          <g transform="translate(78,-6) rotate(28)">
+            <rect x="-5" y="0" width="10" height="46" rx="4" fill="var(--sky)" stroke="var(--ink)" stroke-width="2"/>
+            <rect x="-6" y="40" width="12" height="14" rx="3" fill="#B0B0B0" stroke="var(--ink)" stroke-width="2"/>
+            <path d="M-6 52 L-8 66 L0 60 L8 66 L6 52 Z" fill="var(--coral)" stroke="var(--ink)" stroke-width="2"/>
+          </g>
+          <!-- estrelas soltando do pincel -->
+          <g fill="var(--sun)">
+            <polygon points="118,10 121,17 129,17 122,22 125,29 118,25 111,29 114,22 107,17 115,17" />
+            <polygon points="140,34 142,39 148,39 143,42 145,47 140,44 135,47 137,42 132,39 138,39" />
+            <polygon points="112,50 114,55 120,55 115,58 117,63 112,60 107,63 109,58 104,55 110,55" />
+          </g>
+        </g>
+        <!-- coracao -->
+        <path d="M200 210 C185 195 165 195 165 178 C165 166 178 160 190 168 C195 171 198 176 200 180 C202 176 205 171 210 168 C222 160 235 166 235 178 C235 195 215 195 200 210 Z" fill="var(--pink)" stroke="var(--ink)" stroke-width="2.5"/>
+      </svg>
+
+      <div class="cover-bottom">
+        <svg viewBox="0 0 100 100"><use href="#never"/><path d="M50 8 L58 34 L86 34 L62 50 L70 78 L50 60 L30 78 L38 50 L14 34 L42 34 Z" fill="var(--sun)"/></svg>
+        Criatividade, calma e fé — seis páginas para colorir e guardar verdades da Bíblia no coração.
+      </div>
+    </div>
+
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/><circle cx="12" cy="34" r="5" fill="var(--sky)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--grass)"/><circle cx="34" cy="10" r="6" fill="var(--violet)"/><circle cx="12" cy="34" r="5" fill="var(--pink)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--coral)"/><circle cx="12" cy="34" r="5" fill="var(--sun)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--violet)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/><circle cx="12" cy="34" r="5" fill="var(--pink)"/></svg>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 2 · JESUS AMA AS CRIANÇAS — Marcos 10:14 -->
+  <!-- ======================================================= -->
+  <section class="page">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--violet)"/><circle cx="34" cy="10" r="6" fill="var(--pink)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--coral)"/></svg>
+    <div class="page-tag">PÁGINA 1</div>
+
+    <div class="page-inner">
+      <div class="eyebrow"><svg viewBox="0 0 100 100" fill="var(--violet)"><path d="M200 210z"/><path d="M50 8 C20 8 6 30 6 50 C6 74 26 92 50 92 C74 92 94 74 94 50 C94 30 80 8 50 8 Z" fill="none" stroke="var(--violet)" stroke-width="6"/></svg> Marcos 10:14</div>
+      <h2 class="page-title">Jesus Ama as Crianças</h2>
+      <div class="page-ref">"Deixai vir a mim as criancinhas, e não as impeçais." — Marcos 10:14</div>
+
+      <div class="hollow-wrap">
+        <svg viewBox="0 0 400 70" style="width:100%; max-width:420px;">
+          <text x="200" y="30" font-size="27">Deixai vir a mim</text>
+          <text x="200" y="62" font-size="27">as criancinhas</text>
+        </svg>
+      </div>
+
+      <div class="art-frame">
+        <svg viewBox="0 0 400 470">
+          <!-- sol -->
+          <circle cx="55" cy="55" r="24" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <g stroke="var(--ink)" stroke-width="3" stroke-linecap="round">
+            <line x1="55" y1="12" x2="55" y2="24"/><line x1="55" y1="86" x2="55" y2="98"/>
+            <line x1="12" y1="55" x2="24" y2="55"/><line x1="86" y1="55" x2="98" y2="55"/>
+            <line x1="24" y1="24" x2="32" y2="32"/><line x1="78" y1="78" x2="86" y2="86"/>
+            <line x1="86" y1="24" x2="78" y2="32"/><line x1="24" y1="86" x2="32" y2="78"/>
+          </g>
+          <!-- chao -->
+          <line x1="20" y1="430" x2="380" y2="430" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- figura central: Jesus de bracos abertos -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <circle cx="200" cy="120" r="36"/>
+            <path d="M164 108 Q170 78 200 82 Q230 78 236 108" />
+            <circle cx="188" cy="118" r="3" fill="var(--ink)" stroke="none"/>
+            <circle cx="212" cy="118" r="3" fill="var(--ink)" stroke="none"/>
+            <path d="M186 132 Q200 144 214 132"/>
+            <path d="M160 156 L240 156 L272 420 L128 420 Z"/>
+            <line x1="160" y1="230" x2="240" y2="230"/>
+            <path d="M160 160 Q90 150 62 205 Q88 226 128 205 Q148 190 160 190 Z"/>
+            <path d="M240 160 Q310 150 338 205 Q312 226 272 205 Q252 190 240 190 Z"/>
+            <ellipse cx="172" cy="416" rx="18" ry="7"/>
+            <ellipse cx="228" cy="416" rx="18" ry="7"/>
+          </g>
+
+          <!-- crianca esquerda -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <circle cx="88" cy="300" r="24"/>
+            <circle cx="80" cy="296" r="2.6" fill="var(--ink)" stroke="none"/>
+            <circle cx="96" cy="296" r="2.6" fill="var(--ink)" stroke="none"/>
+            <path d="M80 306 Q88 314 96 306"/>
+            <path d="M64 322 Q70 306 88 306 Q106 306 112 322 L120 418 L56 418 Z"/>
+            <path d="M110 328 Q140 312 152 290"/>
+            <path d="M64 330 Q52 350 56 375"/>
+          </g>
+
+          <!-- crianca direita -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <circle cx="316" cy="292" r="26"/>
+            <circle cx="308" cy="288" r="2.6" fill="var(--ink)" stroke="none"/>
+            <circle cx="324" cy="288" r="2.6" fill="var(--ink)" stroke="none"/>
+            <path d="M308 298 Q316 306 324 298"/>
+            <path d="M290 320 Q298 300 316 300 Q334 300 342 320 L350 418 L282 418 Z"/>
+            <path d="M292 326 Q262 306 250 284"/>
+            <path d="M340 328 Q354 348 350 375"/>
+          </g>
+
+          <!-- crianca central pequena -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <circle cx="200" cy="345" r="21"/>
+            <circle cx="193" cy="341" r="2.4" fill="var(--ink)" stroke="none"/>
+            <circle cx="207" cy="341" r="2.4" fill="var(--ink)" stroke="none"/>
+            <path d="M193 350 Q200 357 207 350"/>
+            <path d="M180 364 Q186 350 200 350 Q214 350 220 364 L226 418 L174 418 Z"/>
+          </g>
+
+          <!-- borboletas soltas -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.5">
+            <path d="M330 90 Q315 70 305 90 Q315 100 330 90 Z"/>
+            <path d="M330 90 Q345 70 355 90 Q345 100 330 90 Z"/>
+            <line x1="330" y1="80" x2="330" y2="100"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="caption-row">
+        <div class="caption-main">Jesus abre os braços e recebe cada criança com amor — inclusive <span class="child-name-slot">Gabriel</span>!</div>
+        <div class="signature-note">Arte criada com carinho por<br><span class="child-name-slot">Gabriel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 3 · A BELEZA DA CRIAÇÃO — Gênesis 1 -->
+  <!-- ======================================================= -->
+  <section class="page">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--grass)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--sky)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--violet)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--pink)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <div class="page-tag">PÁGINA 2</div>
+
+    <div class="page-inner">
+      <div class="eyebrow">🌻 Gênesis 1</div>
+      <h2 class="page-title">A Beleza da Criação de Deus</h2>
+      <div class="page-ref">"E viu Deus tudo quanto tinha feito, e eis que era muito bom." — Gênesis 1:31</div>
+
+      <div class="art-frame">
+        <svg viewBox="0 0 400 430">
+          <!-- sol radiante -->
+          <circle cx="320" cy="70" r="34" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <g stroke="var(--ink)" stroke-width="3" stroke-linecap="round">
+            <line x1="320" y1="18" x2="320" y2="32"/><line x1="320" y1="108" x2="320" y2="122"/>
+            <line x1="268" y1="70" x2="282" y2="70"/><line x1="358" y1="70" x2="372" y2="70"/>
+            <line x1="284" y1="34" x2="294" y2="44"/><line x1="346" y1="96" x2="356" y2="106"/>
+            <line x1="356" y1="34" x2="346" y2="44"/><line x1="294" y1="96" x2="284" y2="106"/>
+          </g>
+
+          <!-- nuvens -->
+          <path d="M40 60 Q28 60 28 48 Q28 36 42 36 Q46 24 62 26 Q76 18 86 30 Q100 27 102 40 Q112 42 110 52 Q110 60 100 60 Z" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+
+          <!-- passarinho voando -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.5">
+            <path d="M150 55 Q165 35 180 55 Q165 45 150 55 Z"/>
+            <path d="M180 55 Q195 35 210 55 Q195 45 180 55 Z"/>
+          </g>
+
+          <!-- linha do horizonte / monte -->
+          <path d="M0 330 Q90 280 190 320 Q280 350 400 300 L400 430 L0 430 Z" fill="none" stroke="var(--ink)" stroke-width="3"/>
+
+          <!-- borboleta 1 -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.5">
+            <line x1="95" y1="150" x2="95" y2="190"/>
+            <path d="M95 155 Q70 130 60 155 Q75 172 95 162 Z"/>
+            <path d="M95 155 Q120 130 130 155 Q115 172 95 162 Z"/>
+            <path d="M95 168 Q78 178 72 195 Q88 195 95 178 Z"/>
+            <path d="M95 168 Q112 178 118 195 Q102 195 95 178 Z"/>
+            <path d="M90 148 Q84 138 78 136"/><path d="M100 148 Q106 138 112 136"/>
+          </g>
+
+          <!-- borboleta 2 -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.5" transform="translate(240,90) scale(.8)">
+            <line x1="95" y1="150" x2="95" y2="190"/>
+            <path d="M95 155 Q70 130 60 155 Q75 172 95 162 Z"/>
+            <path d="M95 155 Q120 130 130 155 Q115 172 95 162 Z"/>
+            <path d="M95 168 Q78 178 72 195 Q88 195 95 178 Z"/>
+            <path d="M95 168 Q112 178 118 195 Q102 195 95 178 Z"/>
+          </g>
+
+          <!-- flores -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3">
+            <g transform="translate(70,330)">
+              <line x1="0" y1="0" x2="0" y2="60"/>
+              <path d="M0 40 Q-20 34 -24 50 Q-8 54 0 44"/>
+              <circle cx="0" cy="-10" r="10"/>
+              <g>
+                <ellipse cx="0" cy="-32" rx="7" ry="15"/>
+                <ellipse cx="19" cy="-19" rx="7" ry="15" transform="rotate(60 19 -19)"/>
+                <ellipse cx="19" cy="1" rx="7" ry="15" transform="rotate(120 19 1)"/>
+                <ellipse cx="0" cy="12" rx="7" ry="15" transform="rotate(180 0 12)"/>
+                <ellipse cx="-19" cy="1" rx="7" ry="15" transform="rotate(240 -19 1)"/>
+                <ellipse cx="-19" cy="-19" rx="7" ry="15" transform="rotate(300 -19 -19)"/>
+              </g>
+            </g>
+            <g transform="translate(180,355)">
+              <line x1="0" y1="0" x2="0" y2="50"/>
+              <circle cx="0" cy="-10" r="9"/>
+              <g>
+                <ellipse cx="0" cy="-30" rx="6" ry="13"/>
+                <ellipse cx="17" cy="-18" rx="6" ry="13" transform="rotate(60 17 -18)"/>
+                <ellipse cx="17" cy="2" rx="6" ry="13" transform="rotate(120 17 2)"/>
+                <ellipse cx="0" cy="10" rx="6" ry="13" transform="rotate(180 0 10)"/>
+                <ellipse cx="-17" cy="2" rx="6" ry="13" transform="rotate(240 -17 2)"/>
+                <ellipse cx="-17" cy="-18" rx="6" ry="13" transform="rotate(300 -17 -18)"/>
+              </g>
+            </g>
+            <g transform="translate(300,340)">
+              <line x1="0" y1="0" x2="0" y2="55"/>
+              <path d="M0 35 Q18 30 22 44 Q6 48 0 40"/>
+              <circle cx="0" cy="-8" r="9"/>
+              <g>
+                <ellipse cx="0" cy="-28" rx="6" ry="13"/>
+                <ellipse cx="16" cy="-16" rx="6" ry="13" transform="rotate(60 16 -16)"/>
+                <ellipse cx="16" cy="4" rx="6" ry="13" transform="rotate(120 16 4)"/>
+                <ellipse cx="0" cy="12" rx="6" ry="13" transform="rotate(180 0 12)"/>
+                <ellipse cx="-16" cy="4" rx="6" ry="13" transform="rotate(240 -16 4)"/>
+                <ellipse cx="-16" cy="-16" rx="6" ry="13" transform="rotate(300 -16 -16)"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- passarinho no galho -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.5">
+            <line x1="330" y1="360" x2="380" y2="345"/>
+            <ellipse cx="350" cy="385" rx="26" ry="17"/>
+            <circle cx="378" cy="372" r="12"/>
+            <circle cx="382" cy="368" r="1.6" fill="var(--ink)" stroke="none"/>
+            <path d="M388 372 L398 368 L388 378 Z"/>
+            <path d="M330 388 Q345 365 360 388 Q345 378 330 388 Z"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="caption-row">
+        <div class="caption-main">Deus criou tudo perfeito para <span class="child-name-slot">Gabriel</span> aproveitar!</div>
+        <div class="signature-note">Arte criada com carinho por<br><span class="child-name-slot">Gabriel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 4 · O ARCO-ÍRIS DA ALIANÇA — Gênesis 9:13 -->
+  <!-- ======================================================= -->
+  <section class="page">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--coral)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--violet)"/><circle cx="34" cy="10" r="6" fill="var(--pink)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <div class="page-tag">PÁGINA 3</div>
+
+    <div class="page-inner">
+      <div class="eyebrow">🌈 Gênesis 9:13</div>
+      <h2 class="page-title">O Arco-íris da Aliança</h2>
+      <div class="page-ref">"Porei o meu arco nas nuvens, e ele será por sinal de aliança." — Gênesis 9:13</div>
+
+      <div class="art-frame">
+        <svg viewBox="0 0 400 380">
+          <!-- arco-iris: 4 arcos separados para colorir cada faixa -->
+          <path d="M30 260 A170 170 0 0 1 370 260" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M55 260 A145 145 0 0 1 345 260" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M80 260 A120 120 0 0 1 320 260" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M105 260 A95 95 0 0 1 295 260" fill="none" stroke="var(--ink)" stroke-width="3"/>
+
+          <!-- pomba com ramo -->
+          <g fill="none" stroke="var(--ink)" stroke-width="2.8">
+            <ellipse cx="300" cy="90" rx="26" ry="16"/>
+            <circle cx="326" cy="82" r="11"/>
+            <path d="M290 78 Q300 55 315 62 Q305 72 300 82 Z"/>
+            <path d="M274 96 L258 100 L274 106 Z"/>
+            <path d="M336 80 L346 84 L338 88 Z"/>
+            <circle cx="330" cy="79" r="1.4" fill="var(--ink)" stroke="none"/>
+          </g>
+
+          <!-- nuvens -->
+          <path d="M30 100 Q20 100 20 90 Q20 80 32 80 Q35 70 48 72 Q60 65 68 75 Q80 73 82 84 Q90 86 88 94 Q88 100 80 100 Z" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+
+          <!-- agua -->
+          <path d="M0 320 Q30 310 60 320 T120 320 T180 320 T240 320 T300 320 T360 320 T400 320" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M0 340 Q30 330 60 340 T120 340 T180 340 T240 340 T300 340 T360 340 T400 340" fill="none" stroke="var(--ink)" stroke-width="3"/>
+
+          <!-- arca -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round">
+            <path d="M90 300 Q200 330 310 300 L295 325 Q200 345 105 325 Z"/>
+            <rect x="140" y="255" width="120" height="48" rx="6"/>
+            <path d="M140 255 Q200 232 260 255"/>
+            <circle cx="170" cy="278" r="11"/>
+            <circle cx="230" cy="278" r="11"/>
+            <line x1="200" y1="255" x2="200" y2="303"/>
+            <!-- girafinha espiando -->
+            <path d="M175 260 Q178 240 185 224 Q190 218 195 224 Q198 232 194 240"/>
+            <ellipse cx="185" cy="220" rx="8" ry="7"/>
+            <line x1="180" y1="215" x2="178" y2="207"/><line x1="190" y1="215" x2="192" y2="207"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="legend-row">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--coral)"></span> Vermelho = Amor</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--sun)"></span> Amarelo = Alegria</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--grass)"></span> Verde = Vida</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--sky)"></span> Azul = Paz</div>
+      </div>
+
+      <div class="caption-row">
+        <div class="caption-main">Deus prometeu cuidar sempre de <span class="child-name-slot">Gabriel</span> e de toda a sua família!</div>
+        <div class="signature-note">Arte criada com carinho por<br><span class="child-name-slot">Gabriel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 5 · A LUZ DO MUNDO — Mateus 5:14 -->
+  <!-- ======================================================= -->
+  <section class="page">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--violet)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--coral)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--pink)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--violet)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <div class="page-tag">PÁGINA 4</div>
+
+    <div class="page-inner">
+      <div class="eyebrow">🕯️ Mateus 5:14</div>
+      <h2 class="page-title">A Luz do Mundo Brilha em Mim</h2>
+      <div class="page-ref">"Vós sois a luz do mundo." — Mateus 5:14</div>
+
+      <div class="art-frame">
+        <svg viewBox="0 0 400 430">
+          <!-- lua -->
+          <path d="M330 60 Q345 50 360 58 Q346 60 342 76 Q338 92 352 100 Q338 106 326 94 Q316 78 330 60 Z" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+
+          <!-- montanhas -->
+          <path d="M0 340 L70 260 L130 320 L190 240 L260 330 L320 270 L400 340" fill="none" stroke="var(--ink)" stroke-width="3"/>
+          <line x1="0" y1="340" x2="400" y2="340" stroke="var(--ink)" stroke-width="3"/>
+
+          <!-- caminho de estrelas em curva -->
+          <path d="M120 340 Q160 260 210 220 Q250 190 290 130" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="3 10"/>
+
+          <g fill="none" stroke="var(--ink)" stroke-width="2.2">
+            <polygon points="150,300 153,308 161,308 154,313 157,321 150,316 143,321 146,313 139,308 147,308"/>
+            <polygon points="185,270 189,280 199,280 191,287 194,297 185,291 176,297 179,287 171,280 181,280"/>
+            <polygon points="222,238 225,246 233,246 227,251 229,259 222,254 215,259 217,251 211,246 219,246"/>
+            <polygon points="255,205 259,215 269,215 261,222 264,232 255,226 246,232 249,222 241,215 251,215"/>
+          </g>
+
+          <!-- vela -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round">
+            <ellipse cx="290" cy="128" rx="34" ry="10"/>
+            <rect x="266" y="80" width="48" height="48" rx="6"/>
+            <line x1="290" y1="80" x2="290" y2="60"/>
+            <path d="M290 26 Q276 44 286 58 Q290 62 294 58 Q304 44 290 26 Z"/>
+            <path d="M290 40 Q284 50 289 58"/>
+          </g>
+
+          <!-- raios de luz -->
+          <g stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 8">
+            <line x1="290" y1="10" x2="290" y2="0"/>
+            <line x1="250" y1="30" x2="240" y2="20"/>
+            <line x1="330" y1="30" x2="340" y2="20"/>
+            <line x1="230" y1="65" x2="216" y2="60"/>
+            <line x1="350" y1="65" x2="364" y2="60"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="caption-row">
+        <div class="caption-main"><span class="child-name-slot">Gabriel</span> é a luz do mundo!</div>
+        <div class="signature-note">Arte criada com carinho por<br><span class="child-name-slot">Gabriel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 6 · OS FRUTOS DO ESPÍRITO — Gálatas 5:22 -->
+  <!-- ======================================================= -->
+  <section class="page">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--grass)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--violet)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--pink)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <div class="page-tag">PÁGINA 5</div>
+
+    <div class="page-inner">
+      <div class="eyebrow">🍎 Gálatas 5:22</div>
+      <h2 class="page-title">Os Frutos do Espírito</h2>
+      <div class="page-ref">"Mas o fruto do Espírito é: amor, alegria, paz, longanimidade, benignidade..." — Gálatas 5:22</div>
+
+      <div class="art-frame">
+        <svg viewBox="0 0 400 430">
+          <!-- chao -->
+          <line x1="0" y1="400" x2="400" y2="400" stroke="var(--ink)" stroke-width="3"/>
+          <path d="M20 400 Q30 388 40 400" fill="none" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M340 400 Q350 388 360 400" fill="none" stroke="var(--ink)" stroke-width="2"/>
+
+          <!-- tronco -->
+          <path d="M188 400 Q182 320 190 260 Q182 220 196 190 M212 400 Q218 320 210 260 Q218 220 204 190" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- copa (nuvem de folhas) -->
+          <path d="M100 220 Q70 220 68 190 Q64 160 96 152 Q92 118 130 110 Q140 82 180 92 Q200 68 240 84 Q270 70 292 100 Q328 100 330 136 Q356 148 342 180 Q356 200 332 218 Q330 246 296 244 Q276 268 240 254 Q210 276 176 254 Q136 268 116 244 Q92 244 100 220 Z" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+
+          <!-- macas com palavras -->
+          <g font-family="Outfit, sans-serif" font-weight="800" fill="var(--ink)" text-anchor="middle">
+            <g stroke="var(--ink)" stroke-width="3" fill="none">
+              <circle cx="130" cy="150" r="28"/>
+              <circle cx="210" cy="120" r="28"/>
+              <circle cx="290" cy="150" r="28"/>
+              <circle cx="150" cy="215" r="28"/>
+              <circle cx="255" cy="215" r="28"/>
+            </g>
+            <g stroke="var(--ink)" stroke-width="2.5" fill="none">
+              <path d="M130 122 Q128 112 134 106"/><path d="M210 92 Q208 82 214 76"/>
+              <path d="M290 122 Q288 112 294 106"/><path d="M150 187 Q148 177 154 171"/>
+              <path d="M255 187 Q253 177 259 171"/>
+              <path d="M134 106 Q142 100 148 106" fill="var(--ink)" stroke="none" opacity=".85"/>
+            </g>
+            <text x="130" y="155" font-size="11" textLength="42" lengthAdjust="spacingAndGlyphs">AMOR</text>
+            <text x="210" y="125" font-size="11" textLength="44" lengthAdjust="spacingAndGlyphs">ALEGRIA</text>
+            <text x="290" y="155" font-size="11" textLength="34" lengthAdjust="spacingAndGlyphs">PAZ</text>
+            <text x="150" y="212" font-size="9.5" textLength="44" lengthAdjust="spacingAndGlyphs">PACIÊNCIA</text>
+            <text x="255" y="220" font-size="10.5" textLength="44" lengthAdjust="spacingAndGlyphs">BONDADE</text>
+          </g>
+
+          <!-- cesta com macas no chao -->
+          <g fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round">
+            <path d="M150 400 L170 360 L230 360 L250 400 Z"/>
+            <path d="M150 400 Q200 412 250 400"/>
+            <line x1="164" y1="378" x2="236" y2="378"/>
+            <line x1="170" y1="392" x2="230" y2="392"/>
+            <circle cx="188" cy="352" r="14"/>
+            <circle cx="212" cy="354" r="13"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="caption-row">
+        <div class="caption-main">Quando <span class="child-name-slot">Gabriel</span> deixa o Espírito Santo agir, esses frutos crescem no coração!</div>
+        <div class="signature-note">Arte criada com carinho por<br><span class="child-name-slot">Gabriel</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- PÁGINA 7 · CERTIFICADO -->
+  <!-- ======================================================= -->
+  <section class="page cert">
+    <div class="frame"></div>
+    <svg class="blob tl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--coral)"/><circle cx="34" cy="10" r="6" fill="var(--sun)"/></svg>
+    <svg class="blob tr" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sky)"/><circle cx="34" cy="10" r="6" fill="var(--grass)"/></svg>
+    <svg class="blob bl" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--violet)"/><circle cx="34" cy="10" r="6" fill="var(--pink)"/></svg>
+    <svg class="blob br" viewBox="0 0 60 60"><circle cx="14" cy="14" r="9" fill="var(--sun)"/><circle cx="34" cy="10" r="6" fill="var(--coral)"/></svg>
+
+    <div class="page-inner">
+      <svg class="cert-crest" viewBox="0 0 100 100">
+        <path d="M40 4 C10 4 -8 26 -8 46 C-8 66 8 80 28 80 C36 80 40 74 36 68 C33 63 36 58 42 58 L54 58 C70 58 78 46 78 34 C78 16 62 4 40 4 Z" transform="translate(10,10) scale(.8)" fill="#fff" stroke="var(--ink)" stroke-width="3"/>
+        <circle cx="24" cy="34" r="6" fill="var(--coral)"/>
+        <circle cx="42" cy="24" r="6" fill="var(--sun)"/>
+        <circle cx="60" cy="34" r="6" fill="var(--sky)"/>
+        <circle cx="30" cy="52" r="6" fill="var(--grass)"/>
+        <circle cx="54" cy="54" r="6" fill="var(--violet)"/>
+      </svg>
+      <div class="cert-kicker">Colorindo com Propósito</div>
+      <h2 class="cert-title">Certificado de<br>Artista da Fé</h2>
+      <p class="cert-body">Este certificado comprova que o(a) artista</p>
+      <div class="cert-name child-name-slot">Gabriel</div>
+      <p class="cert-body">
+        pintou com carinho as seis páginas deste livro — Jesus e as crianças, o jardim da criação, o arco-íris da
+        aliança, a luz do mundo e a árvore dos frutos do Espírito — usando cores, criatividade e fé para guardar
+        a Palavra de Deus no coração.
+      </p>
+
+      <div class="cert-badges">
+        <div class="badge"><svg viewBox="0 0 100 100"><path d="M50 90 C20 70 10 50 10 32 C10 16 24 6 40 12 C46 14 50 20 50 20 C50 20 54 14 60 12 C76 6 90 16 90 32 C90 50 80 70 50 90 Z" fill="var(--pink)" stroke="var(--ink)" stroke-width="3"/></svg><span>AMOR PELA ARTE</span></div>
+        <div class="badge"><svg viewBox="0 0 100 100"><path d="M50 8 L58 34 L86 34 L62 50 L70 78 L50 60 L30 78 L38 50 L14 34 L42 34 Z" fill="var(--sun)" stroke="var(--ink)" stroke-width="2.5"/></svg><span>CRIATIVIDADE</span></div>
+        <div class="badge"><svg viewBox="0 0 100 100"><path d="M40 4 C10 4 -8 26 -8 46 C-8 66 8 80 28 80 C36 80 40 74 36 68 C33 63 36 58 42 58 L54 58 C70 58 78 46 78 34 C78 16 62 4 40 4 Z" transform="translate(10,10) scale(.8)" fill="#fff" stroke="var(--ink)" stroke-width="3"/><circle cx="24" cy="34" r="6" fill="var(--coral)"/><circle cx="54" cy="54" r="6" fill="var(--grass)"/></svg><span>FÉ E CORES</span></div>
+      </div>
+
+      <div class="cert-sign-row">
+        <div class="cert-sign"><div class="line" id="certDate"></div>Data</div>
+        <div class="cert-sign"><div class="line">&nbsp;</div>Assinatura do responsável</div>
+      </div>
+    </div>
+
+    <div class="cert-stamp-final">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="var(--coral)" stroke-width="3"/>
+        <circle cx="50" cy="50" r="38" fill="none" stroke="var(--coral)" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <text x="50" y="44" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="11" fill="var(--coral)">ARTISTA</text>
+        <text x="50" y="58" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="11" fill="var(--coral)">DA FÉ</text>
+      </svg>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  function getInitialName(){
+    try{
+      var params = new URLSearchParams(window.location.search);
+      var fromUrl = params.get('nome');
+      if(fromUrl && fromUrl.trim()) return fromUrl.trim();
+    }catch(e){}
+    try{
+      var fromStorage = window.localStorage.getItem('childName');
+      if(fromStorage && fromStorage.trim()) return fromStorage.trim();
+    }catch(e){}
+    return 'Gabriel';
+  }
+
+  function applyName(name){
+    var clean = (name && name.trim()) ? name.trim() : 'Gabriel';
+    var slots = document.querySelectorAll('.child-name-slot');
+    slots.forEach(function(el){ el.textContent = clean; });
+    try{ window.localStorage.setItem('childName', clean); }catch(e){}
+  }
+
+  var input = document.getElementById('nomeInput');
+  var initial = getInitialName();
+  if(input) input.value = initial;
+  applyName(initial);
+
+  if(input){
+    input.addEventListener('input', function(){ applyName(input.value); });
+  }
+
+  var certDate = document.getElementById('certDate');
+  if(certDate){
+    var hoje = new Date();
+    certDate.textContent = hoje.toLocaleDateString('pt-BR');
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendendo a Orar</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600&display=swap');
+
+:root{
+  --sky:#7dd3fc;
+  --sky-dark:#0284c7;
+  --sun:#fde68a;
+  --sun-dark:#f59e0b;
+  --lilac:#c4b5fd;
+  --lilac-dark:#7c3aed;
+  --bg:#f8f9fd;
+  --ink:#2e3550;
+  --ink-soft:#5c6288;
+  --card:#ffffff;
+  --page-w:210mm;
+  --page-h:297mm;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  font-family:'Plus Jakarta Sans','Outfit','Segoe UI',Arial,sans-serif;
+  background:#dfe2ee;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,.title-font{ font-family:'Outfit','Plus Jakarta Sans',sans-serif; }
+
+/* ============ BARRA DE CONTROLE ============ */
+.control-bar{
+  position:sticky; top:0; z-index:999;
+  background:linear-gradient(135deg, var(--lilac-dark), var(--sky-dark));
+  color:#fff; padding:14px 20px;
+  display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.control-bar .group{
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.16); padding:6px 10px 6px 14px; border-radius:30px;
+}
+.control-bar label{font-size:13px; font-weight:600; opacity:.95;}
+.control-bar input[type="text"]{
+  border:none; outline:none; border-radius:20px;
+  padding:7px 12px; font-family:inherit; font-size:14px; width:150px;
+}
+.control-bar button{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  border-radius:24px; padding:9px 16px; font-size:14px; transition:transform .15s ease;
+}
+.control-bar button:hover{ transform:translateY(-1px); }
+.btn-save{ background:#22c55e; color:#fff; }
+.btn-print{
+  background:var(--sun); color:#5c4300; font-size:15px;
+  padding:11px 22px; box-shadow:0 3px 10px rgba(0,0,0,.2); font-weight:800;
+}
+
+/* ============ CONTAINER DE PÁGINAS ============ */
+.book{ display:flex; flex-direction:column; align-items:center; gap:26px; padding:30px 10px 60px; }
+
+.page{
+  width:var(--page-w);
+  height:var(--page-h);
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
+  flex-shrink:0;
+}
+
+.corner-frame{
+  position:absolute; inset:9mm;
+  border:3px solid var(--frame-color, var(--lilac-dark));
+  border-radius:20px;
+  pointer-events:none;
+}
+.corner-frame.inner{
+  inset:12.5mm;
+  border:1.5px dashed rgba(2,132,199,.35);
+  border-radius:16px;
+}
+
+.page-number{
+  position:absolute; bottom:7mm; right:14mm;
+  font-size:11px; color:var(--ink-soft); font-weight:600; letter-spacing:.5px;
+}
+
+.ribbon-title{
+  display:inline-block; color:#fff; padding:6px 22px; border-radius:30px;
+  font-weight:700; font-size:12.5px; letter-spacing:1.3px; text-transform:uppercase;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+.child-name{ color:var(--lilac-dark); font-weight:800; white-space:nowrap; }
+
+.verse-card{
+  background:var(--card); border-left:5px solid var(--sun-dark); border-radius:12px;
+  padding:14px 18px; box-shadow:0 4px 14px rgba(0,0,0,.08);
+  font-style:italic; color:var(--ink-soft); font-size:13.5px; line-height:1.6;
+}
+.verse-card strong{ display:block; font-style:normal; color:var(--sun-dark); margin-top:6px; font-size:12px; letter-spacing:.5px; }
+
+.story-card{
+  background:var(--card); border-radius:18px; padding:18px 22px;
+  box-shadow:0 6px 20px rgba(0,0,0,.08); border:1px solid rgba(124,58,237,.10);
+}
+.story-card p{ font-size:13.8px; line-height:1.68; color:var(--ink); margin-bottom:8px; }
+.story-card p:last-child{ margin-bottom:0; }
+
+.activity-box{
+  border:2.5px dashed var(--lilac-dark); border-radius:18px;
+  background:#fff; padding:14px 16px;
+}
+.activity-title{
+  font-size:12.5px; font-weight:800; color:var(--lilac-dark);
+  text-transform:uppercase; letter-spacing:1px; text-align:center; margin-bottom:8px;
+}
+
+/* ============================================================
+   CAPA
+============================================================ */
+.cover{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(196,181,253,.30), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(125,211,252,.28), transparent 45%),
+    radial-gradient(circle at 80% 88%, rgba(253,230,138,.30), transparent 50%),
+    linear-gradient(180deg, #eef2ff 0%, #f8f9fd 55%, #fff8e8 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:18mm;
+}
+.cover .frame-outer{ position:absolute; inset:9mm; border:4px solid var(--sun-dark); border-radius:22px; }
+.cover .frame-inner{ position:absolute; inset:13mm; border:1.5px solid rgba(124,58,237,.35); border-radius:18px; }
+.cover .eyebrow{
+  font-size:13px; letter-spacing:4px; color:var(--sky-dark); font-weight:700;
+  margin-bottom:16px; text-transform:uppercase;
+}
+.cover h1.main-title{
+  font-size:44px; font-weight:800; color:var(--lilac-dark); line-height:1.15;
+  text-shadow:0 2px 0 rgba(255,255,255,.6); margin-bottom:12px;
+}
+.cover .gold-underline{
+  width:120px; height:5px; background:linear-gradient(90deg, var(--sun-dark), var(--sun));
+  border-radius:6px; margin:6px auto 20px;
+}
+.cover .subtitle{
+  font-size:18px; color:var(--ink-soft); font-weight:600; max-width:135mm;
+  line-height:1.5; margin-bottom:28px;
+}
+.cover-illustration{ margin-bottom:22px; }
+.cover .footer-tag{
+  position:absolute; bottom:16mm; font-size:12px; color:var(--ink-soft);
+  letter-spacing:2px; font-weight:600; text-transform:uppercase;
+}
+
+/* ============================================================
+   PÁGINAS DE CONTEÚDO GENÉRICAS
+============================================================ */
+.content-page{ padding:14mm 17mm 12mm; display:flex; flex-direction:column; gap:10px; }
+.content-header{ text-align:center; margin-bottom:2px; }
+.content-header .ribbon-title{ margin-bottom:8px; }
+.content-header h2{ font-size:21px; color:var(--ink); font-weight:800; line-height:1.25; margin-top:6px;}
+.content-illustration{ display:flex; justify-content:center; margin:2px 0 4px; }
+
+/* atividade: desenhar pessoas */
+.draw-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+.draw-box{
+  background:#fff; border:2px dashed var(--lilac-dark); border-radius:14px;
+  padding:10px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.draw-box .draw-space{
+  width:100%; height:70px; border-radius:10px;
+  background:repeating-linear-gradient(45deg, #f4f2fd, #f4f2fd 10px, #ece8fb 10px, #ece8fb 20px);
+}
+.draw-box .draw-label{ font-size:12px; font-weight:800; color:var(--ink); }
+
+/* passos P.A.I.S */
+.pais-grid{ display:flex; flex-direction:column; gap:10px; }
+.pais-card{
+  display:flex; gap:14px; align-items:center; background:#fff; border-radius:16px;
+  padding:12px 16px; box-shadow:0 4px 14px rgba(0,0,0,.08); border-left:6px solid var(--step-color, #7c3aed);
+}
+.pais-letter{
+  width:46px; height:46px; border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--step-color, #7c3aed); color:#fff; font-weight:800; font-size:22px;
+  font-family:'Outfit', sans-serif;
+}
+.pais-text h3{ font-size:14.5px; color:var(--ink); margin-bottom:3px; }
+.pais-text p{ font-size:12.8px; color:var(--ink-soft); line-height:1.5; font-style:italic; }
+
+/* pai nosso */
+.paternoster-grid{ display:flex; flex-direction:column; gap:8px; }
+.paternoster-line{
+  display:flex; gap:12px; align-items:flex-start; background:#fff; border-radius:14px;
+  padding:9px 14px; box-shadow:0 3px 10px rgba(0,0,0,.06);
+}
+.paternoster-line .pn-icon{ font-size:20px; flex-shrink:0; margin-top:1px; }
+.paternoster-line .pn-original{ font-size:12px; font-style:italic; color:var(--lilac-dark); font-weight:700; margin-bottom:2px; }
+.paternoster-line .pn-explain{ font-size:12px; color:var(--ink-soft); line-height:1.45; }
+
+/* orações diárias */
+.daily-prayers{ display:flex; flex-direction:column; gap:12px; }
+.daily-card{
+  background:#fff; border-radius:16px; padding:14px 18px;
+  box-shadow:0 4px 14px rgba(0,0,0,.08); border:1px solid rgba(124,58,237,.08);
+}
+.daily-card h3{ font-size:14.5px; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.daily-card p{ font-size:12.6px; line-height:1.6; color:var(--ink); font-style:italic; }
+
+/* mural de pedidos */
+.mural-columns{ display:flex; gap:14px; flex:1; }
+.mural-col{ flex:1; display:flex; flex-direction:column; gap:10px; }
+.mural-col-title{
+  text-align:center; font-size:12.5px; font-weight:800; color:#fff;
+  padding:6px; border-radius:10px;
+}
+.mural-row{
+  background:#fff; border-radius:10px; border:1.5px dashed #cfc7ea; height:34px;
+}
+
+/* certificado */
+.certificate-page{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20mm; text-align:center;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(253,230,138,.24), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(196,181,253,.26), transparent 45%),
+    #fffdf7;
+}
+.cert-eyebrow{
+  font-size:13px; letter-spacing:3px; color:var(--sun-dark); font-weight:800;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.certificate-page h2{ font-size:27px; color:var(--lilac-dark); font-weight:800; margin-bottom:6px; }
+.certificate-page h3.subtitle-cert{ font-size:14px; color:var(--ink-soft); font-weight:600; margin-bottom:22px; }
+.cert-granted-to{ font-size:14px; color:var(--ink-soft); margin-bottom:6px; }
+.cert-name{
+  font-size:32px; font-weight:800; color:var(--sky-dark);
+  margin-bottom:18px; font-family:'Outfit',sans-serif;
+}
+.cert-text{ font-size:13.5px; color:var(--ink); max-width:135mm; line-height:1.7; margin-bottom:22px; }
+.cert-signatures{ display:flex; gap:60px; margin-top:6px; }
+.cert-sign-block{ text-align:center; }
+.cert-sign-line{ width:150px; border-bottom:1.5px solid var(--ink-soft); margin-bottom:6px; height:26px; }
+.cert-sign-label{ font-size:11px; color:var(--ink-soft); letter-spacing:.5px; }
+
+/* ============================================================
+   IMPRESSÃO / PDF
+============================================================ */
+@media print{
+  @page{ size:A4 portrait; margin:0; }
+  html,body{ width:210mm; height:297mm; background:#fff; }
+  .control-bar{ display:none !important; }
+  .book{ padding:0; gap:0; }
+  .page{
+    box-shadow:none; page-break-after:always; break-after:page;
+    margin:0; width:210mm; height:297mm;
+  }
+  .page:last-child{ page-break-after:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ BARRA DE CONTROLE ============ -->
+<div class="control-bar no-print">
+  <div class="group">
+    <label for="nameInput">Nome da criança:</label>
+    <input type="text" id="nameInput" placeholder="Ex: Gabriel">
+    <button class="btn-save" id="saveNameBtn">✔ Salvar nome</button>
+  </div>
+  <button class="btn-print" onclick="window.print()">🖨️ BAIXAR BÔNUS EM PDF</button>
+</div>
+
+<div class="book" id="bookContainer">
+
+  <!-- ============================================================
+       PÁGINA 1 — CAPA
+  ============================================================ -->
+  <section class="page cover">
+    <div class="frame-outer"></div>
+    <div class="frame-inner"></div>
+
+    <div class="eyebrow">Diário de Oração Infantil</div>
+
+    <div class="cover-illustration">
+      <svg width="220" height="160" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- nuvens -->
+        <g fill="#ffffff" opacity="0.9">
+          <ellipse cx="45" cy="35" rx="26" ry="14"/>
+          <ellipse cx="65" cy="28" rx="18" ry="12"/>
+          <ellipse cx="175" cy="30" rx="24" ry="13"/>
+          <ellipse cx="192" cy="24" rx="16" ry="10"/>
+        </g>
+        <!-- estrelas -->
+        <g fill="#fde68a">
+          <path d="M25 65 l3 8 8 1 -6 6 2 8 -7-4 -7 4 2-8 -6-6 8-1z"/>
+          <path d="M195 70 l3 8 8 1 -6 6 2 8 -7-4 -7 4 2-8 -6-6 8-1z"/>
+          <path d="M110 15 l3 8 8 1 -6 6 2 8 -7-4 -7 4 2-8 -6-6 8-1z"/>
+        </g>
+        <!-- coração radiante -->
+        <g>
+          <circle cx="110" cy="100" r="34" fill="#fde68a" opacity="0.35"/>
+          <path d="M110 125 C90 108 76 95 76 78 C76 65 86 56 98 56 C104 56 110 60 110 68 C110 60 116 56 122 56 C134 56 144 65 144 78 C144 95 130 108 110 125 Z" fill="#c4b5fd"/>
+        </g>
+        <!-- mãos postas -->
+        <g fill="#f2c19d">
+          <path d="M90 150 Q90 128 110 122 Q130 128 130 150 Z"/>
+        </g>
+        <path d="M110 122 L110 150" stroke="#e0a578" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <h1 class="main-title">APRENDENDO<br>A ORAR</h1>
+    <div class="gold-underline"></div>
+    <p class="subtitle">O Diário de Oração de <span class="child-name">Gabriel</span> com Jesus</p>
+
+    <div class="footer-tag">Edição Especial • Feito com Amor para Você</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 2 — O QUE É A ORAÇÃO?
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0284c7;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0284c7;">Primeiros Passos</span>
+      <h2>O que é a oração?</h2>
+    </div>
+
+    <div class="content-illustration">
+      <svg width="180" height="90" viewBox="0 0 180 90" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="90" cy="45" r="38" fill="#c4b5fd" opacity="0.35"/>
+        <path d="M70 78 Q70 55 90 48 Q110 55 110 78 Z" fill="#f2c19d"/>
+        <path d="M90 48 L90 78" stroke="#e0a578" stroke-width="2"/>
+        <path d="M60 20 Q90 5 120 20" fill="none" stroke="#fde68a" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="story-card">
+      <p>Orar não é usar palavras difíceis nem enfeitadas. Orar é simplesmente abrir o coração e
+      conversar com Jesus, como se fosse com o melhor amigo do mundo!</p>
+      <p><span class="child-name">Gabriel</span> pode contar para Jesus tudo o que sente: as
+      alegrias, os medos, os sonhos e até as coisas engraçadas do dia. Jesus adora ouvir a voz de
+      <span class="child-name">Gabriel</span>, a qualquer hora e em qualquer lugar!</p>
+      <p>Não precisa de roupas especiais nem de um lugar especial — o coração de
+      <span class="child-name">Gabriel</span> já é o lugar perfeito para encontrar Jesus.</p>
+    </div>
+
+    <div class="verse-card">
+      "Orai sem cessar." <strong>1 TESSALONICENSES 5:17</strong>
+    </div>
+
+    <div class="activity-box">
+      <div class="activity-title">✏️ Atividade: Desenhe por quem <span class="child-name">Gabriel</span> quer orar hoje</div>
+      <div class="draw-grid">
+        <div class="draw-box">
+          <div class="draw-space"></div>
+          <div class="draw-label">👪 Família</div>
+        </div>
+        <div class="draw-box">
+          <div class="draw-space"></div>
+          <div class="draw-label">🤗 Amigos</div>
+        </div>
+        <div class="draw-box">
+          <div class="draw-space"></div>
+          <div class="draw-label">⛪ Igreja</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-number">2</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 3 — OS 4 PASSOS DA ORAÇÃO (P.A.I.S)
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#7c3aed;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#7c3aed;">Método da Oração</span>
+      <h2>Os 4 passos da oração de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p>Existe um jeitinho simples de orar que <span class="child-name">Gabriel</span> pode
+      usar todos os dias — é só lembrar das 4 letrinhas mágicas: <strong>P.A.I.S</strong>!</p>
+    </div>
+
+    <div class="pais-grid">
+      <div class="pais-card" style="--step-color:#0284c7;">
+        <div class="pais-letter">P</div>
+        <div class="pais-text">
+          <h3>Adorar a Deus</h3>
+          <p>"Deus, Tu és incrível!" — comece dizendo a Deus como Ele é maravilhoso, poderoso e cheio de amor.</p>
+        </div>
+      </div>
+      <div class="pais-card" style="--step-color:#f59e0b;">
+        <div class="pais-letter">A</div>
+        <div class="pais-text">
+          <h3>Agradecer</h3>
+          <p>"Obrigado por..." — agradeça a Deus pelas coisas boas do dia, grandes ou pequenas.</p>
+        </div>
+      </div>
+      <div class="pais-card" style="--step-color:#22c55e;">
+        <div class="pais-letter">I</div>
+        <div class="pais-text">
+          <h3>Interceder pelos outros</h3>
+          <p>"Abençoe o meu amigo..." — ore pelas pessoas que <span class="child-name">Gabriel</span> ama.</p>
+        </div>
+      </div>
+      <div class="pais-card" style="--step-color:#ec4899;">
+        <div class="pais-letter">S</div>
+        <div class="pais-text">
+          <h3>Socorro e Pedidos</h3>
+          <p>"Me ajude a..." — peça a Deus ajuda para os desafios e sonhos de <span class="child-name">Gabriel</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Não andeis ansiosos por coisa alguma; antes, em tudo, sejam conhecidas, diante de Deus, as
+      vossas petições, pela oração." <strong>FILIPENSES 4:6</strong>
+    </div>
+
+    <div class="page-number">3</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 4 — O PAI NOSSO ILUSTRADO
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#f59e0b;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#f59e0b;">A Oração que Jesus Ensinou</span>
+      <h2>O Pai Nosso para <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="paternoster-grid">
+      <div class="paternoster-line">
+        <div class="pn-icon">👨‍👧</div>
+        <div>
+          <div class="pn-original">"Pai nosso, que estás nos céus,"</div>
+          <div class="pn-explain">Deus é o melhor Pai que existe, e mora no céu cuidando de <span class="child-name">Gabriel</span> com muito amor.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">✨</div>
+        <div>
+          <div class="pn-original">"santificado seja o teu nome;"</div>
+          <div class="pn-explain">O nome de Deus é muito especial e santo — cheio de bondade e poder.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">👑</div>
+        <div>
+          <div class="pn-original">"venha o teu reino, seja feita a tua vontade, assim na terra como no céu;"</div>
+          <div class="pn-explain">Queremos que tudo aconteça do jeitinho lindo que Deus planejou, aqui na terra como acontece no céu.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">🍞</div>
+        <div>
+          <div class="pn-original">"o pão nosso de cada dia nos dá hoje;"</div>
+          <div class="pn-explain">Deus cuida do que <span class="child-name">Gabriel</span> precisa, todos os dias, sem faltar nada.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">🤝</div>
+        <div>
+          <div class="pn-original">"perdoa as nossas dívidas, assim como nós perdoamos aos nossos devedores;"</div>
+          <div class="pn-explain">Deus nos perdoa quando erramos, e nós também aprendemos a perdoar quem nos machuca.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">🛡️</div>
+        <div>
+          <div class="pn-original">"e não nos deixes cair em tentação, mas livra-nos do mal;"</div>
+          <div class="pn-explain">Pedimos a Deus ajuda para fazer sempre o que é certo, e proteção contra tudo que é mau.</div>
+        </div>
+      </div>
+      <div class="paternoster-line">
+        <div class="pn-icon">🌟</div>
+        <div>
+          <div class="pn-original">"pois teu é o reino, e o poder, e a glória, para sempre. Amém."</div>
+          <div class="pn-explain">Tudo pertence a Deus, para sempre — Ele é o Rei mais poderoso e amoroso que existe!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card" style="margin-top:2px;">
+      "Vós, pois, orareis assim..." <strong>MATEUS 6:9-13</strong>
+    </div>
+
+    <div class="page-number">4</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 5 — GUIA DE ORAÇÃO DIÁRIA
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#0284c7;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#0284c7;">Guia de Oração Diária</span>
+      <h2>3 orações especiais para <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="daily-prayers">
+      <div class="daily-card">
+        <h3>🌅 Oração da Manhã</h3>
+        <p>Bom dia, Jesus! Obrigado por mais um dia lindo para viver. Enche o coração de
+        <span class="child-name">Gabriel</span> de alegria, energia e amor para compartilhar com
+        todos hoje. Que <span class="child-name">Gabriel</span> brilhe a Tua luz por onde passar.
+        Amém! ☀️</p>
+      </div>
+
+      <div class="daily-card">
+        <h3>🍽️ Oração do Alimento</h3>
+        <p>Obrigado, Jesus, pelo pão de cada dia! Obrigado por essa comida gostosa que
+        <span class="child-name">Gabriel</span> vai comer agora. Abençoa as mãozinhas que
+        prepararam essa refeição, e cuida de quem não tem o que comer hoje. Amém! 🙏</p>
+      </div>
+
+      <div class="daily-card">
+        <h3>🌙 Oração da Noite</h3>
+        <p>Jesus, obrigado por cuidar de <span class="child-name">Gabriel</span> durante todo esse
+        dia. Perdoa se <span class="child-name">Gabriel</span> errou em algo, e abençoa esse sono
+        com muita paz e sem nenhum medinho. Que amanhã seja mais um dia lindo ao Teu lado. Amém! 💤</p>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Deitei-me e dormi; acordei, porque o Senhor me sustinha." <strong>SALMOS 3:5</strong>
+    </div>
+
+    <div class="page-number">5</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 6 — MURAL DE PEDIDOS E RESPOSTAS
+  ============================================================ -->
+  <section class="page content-page" style="--frame-color:#7c3aed;">
+    <div class="corner-frame"></div>
+    <div class="corner-frame inner"></div>
+
+    <div class="content-header">
+      <span class="ribbon-title" style="background:#7c3aed;">Meu Mural de Fé</span>
+      <h2>Pedidos e Respostas de Oração de <span class="child-name">Gabriel</span></h2>
+    </div>
+
+    <div class="story-card" style="margin-bottom:2px;">
+      <p>Jesus quer ouvir a voz de <span class="child-name">Gabriel</span> hoje! Anote aqui embaixo
+      o que <span class="child-name">Gabriel</span> está pedindo a Deus, e depois volte para
+      escrever como Deus respondeu. Vai ser muito lindo ver o cuidado de Deus registrado aqui!</p>
+    </div>
+
+    <div class="mural-columns">
+      <div class="mural-col">
+        <div class="mural-col-title" style="background:#0284c7;">💭 O que eu pedi a Deus</div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+      </div>
+      <div class="mural-col">
+        <div class="mural-col-title" style="background:#f59e0b;">✅ Como Deus me respondeu</div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+        <div class="mural-row"></div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      "Pedi, e dar-se-vos-á; buscai, e encontrareis; batei, e abrir-se-vos-á." <strong>MATEUS 7:7</strong>
+    </div>
+
+    <div class="page-number">6</div>
+  </section>
+
+  <!-- ============================================================
+       PÁGINA 7 — CERTIFICADO
+  ============================================================ -->
+  <section class="page certificate-page">
+    <div class="corner-frame" style="--frame-color:#f59e0b; inset:9mm; border:5px double #f59e0b;"></div>
+    <div class="corner-frame inner"></div>
+
+    <svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px;">
+      <circle cx="36" cy="30" r="20" fill="#fde68a"/>
+      <circle cx="36" cy="30" r="13" fill="#fffbea"/>
+      <path d="M36 19 l3.5 8 8.5 1 -6.5 5.5 2.3 8.5 -7.8-4.7 -7.8 4.7 2.3-8.5 -6.5-5.5 8.5-1z" fill="#f59e0b"/>
+      <path d="M24 46 L16 65 L36 57 L56 65 L48 46 Z" fill="#7c3aed"/>
+    </svg>
+
+    <div class="cert-eyebrow">Certificado Especial</div>
+    <h2>Guerreiro(a) da Oração</h2>
+    <h3 class="subtitle-cert">Aprendendo a Orar • Jornada Completa</h3>
+
+    <div class="cert-granted-to">Este certificado é concedido, com muito carinho, a</div>
+    <div class="cert-name">✦ <span class="child-name">Gabriel</span> ✦</div>
+
+    <p class="cert-text">
+      por aprender que orar é simplesmente conversar com Jesus como um melhor amigo — praticando
+      os 4 passos da oração, conhecendo o Pai Nosso e criando o hábito de orar de manhã, nas
+      refeições e antes de dormir. Deus se alegra muito com cada oração de
+      <span class="child-name">Gabriel</span>!
+    </p>
+
+    <div class="cert-signatures">
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">DATA: <span id="certDate"></span></div>
+      </div>
+      <div class="cert-sign-block">
+        <div class="cert-sign-line"></div>
+        <div class="cert-sign-label">ASSINATURA DOS PAIS</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+
+  /* ============================================================
+     PERSONALIZAÇÃO DO NOME DA CRIANÇA
+  ============================================================ */
+  const DEFAULT_NAME = "Gabriel";
+  const STORAGE_KEY = "childName";
+
+  function getNameFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    const n = params.get("nome");
+    return n && n.trim() ? n.trim() : null;
+  }
+  function getSavedName(){
+    try{
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved && saved.trim() ? saved.trim() : null;
+    }catch(e){ return null; }
+  }
+  function applyName(name){
+    const finalName = (name && name.trim()) ? name.trim() : DEFAULT_NAME;
+    document.querySelectorAll(".child-name").forEach(function(el){ el.textContent = finalName; });
+    const input = document.getElementById("nameInput");
+    if(input){ input.value = finalName; }
+    try{ window.localStorage.setItem(STORAGE_KEY, finalName); }catch(e){ /* segue sem salvar */ }
+  }
+  function initName(){
+    const urlName = getNameFromURL();
+    if(urlName){ applyName(urlName); return; }
+    const savedName = getSavedName();
+    if(savedName){ applyName(savedName); return; }
+    applyName(DEFAULT_NAME);
+  }
+  function initCertDate(){
+    const el = document.getElementById("certDate");
+    if(!el) return;
+    const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+    const d = new Date();
+    el.textContent = d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear();
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    initName();
+    initCertDate();
+
+    const saveBtn = document.getElementById("saveNameBtn");
+    const input = document.getElementById("nameInput");
+    if(saveBtn && input){
+      saveBtn.addEventListener("click", function(){ applyName(input.value); });
+      input.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){ applyName(input.value); }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
